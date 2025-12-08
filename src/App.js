@@ -416,9 +416,9 @@ const SuffernResultsPage = ({onViewMethodology}) => {
 };
 
 const MethodologyModal = ({content,onClose}) => (
-  <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-12 pb-12 overflow-y-auto">
-    <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl my-auto">
-      <div className="sticky top-0 bg-white p-6 border-b border-gray-100 flex items-center justify-between rounded-t-2xl z-10">
+  <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
+      <div className="p-6 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
           <span className="text-2xl">{content.icon}</span>
           <h2 className="text-xl font-semibold text-slate-900">{content.title}</h2>
@@ -427,7 +427,7 @@ const MethodologyModal = ({content,onClose}) => (
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
-      <div className="p-6">
+      <div className="p-6 overflow-y-auto flex-1">
         <div className="prose prose-slate prose-sm max-w-none">
           {content.content.split('\n\n').map((paragraph, i) => (
             <p key={i} className="text-slate-600 mb-4 leading-relaxed whitespace-pre-wrap">
@@ -436,7 +436,7 @@ const MethodologyModal = ({content,onClose}) => (
           ))}
         </div>
       </div>
-      <div className="sticky bottom-0 bg-white p-4 border-t border-gray-100 rounded-b-2xl">
+      <div className="p-4 border-t border-gray-100 flex-shrink-0">
         <button onClick={onClose} className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors">Close</button>
       </div>
     </div>
@@ -478,14 +478,21 @@ export default function App() {
   const [showMemoryPassage, setShowMemoryPassage] = useState(false);
   const [isSuffernMode, setIsSuffernMode] = useState(false);
 
-  const handleStart = () => { setShowMemoryPassage(true); setPage('test'); };
+  const handleStart = () => { setPage('test'); };
   const handleMemoryContinue = () => setShowMemoryPassage(false);
   const handleAnswer = (answerIndex) => {
     const newAnswers = {...answers, [currentQuestion]: answerIndex};
     setAnswers(newAnswers);
     setTimeout(() => {
-      if (currentQuestion < questions.length - 1) setCurrentQuestion(currentQuestion + 1);
-      else setPage('results');
+      if (currentQuestion < questions.length - 1) {
+        // Show memory passage before question 17 (index 16)
+        if (currentQuestion === 15) {
+          setShowMemoryPassage(true);
+        }
+        setCurrentQuestion(currentQuestion + 1);
+      } else {
+        setPage('results');
+      }
     }, 300);
   };
   const handleSuffernConfirm = () => { setShowSuffernModal(false); setIsSuffernMode(true); setPage('suffernResults'); };
