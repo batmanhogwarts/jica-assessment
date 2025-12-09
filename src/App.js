@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
+import { Analytics } from '@vercel/analytics/react';
 
 const questions = [
   {id:1,category:"Analytical Reasoning",difficulty:"Easy",question:"All managers at a company must complete leadership training. Sarah is a manager at the company. Which conclusion is valid?",options:["Sarah has not completed leadership training","Sarah must complete leadership training","Sarah is the only manager at the company","Leadership training is optional for managers"],correct:1,weights:{analytical:100},correctIndicates:"Strong deductive reasoning ability. Candidate can follow logical rules and draw valid conclusions from given premises.",incorrectIndicates:"May struggle with formal logic or fail to recognize when conclusions necessarily follow from stated conditions."},
@@ -14,7 +15,7 @@ const questions = [
   {id:10,category:"Pattern Recognition",difficulty:"Easy",question:"What comes next in the sequence? A, C, F, J, ___",options:["N","O","M","P"],correct:1,weights:{pattern:100},correctIndicates:"Can identify patterns with increasing intervals. Flexible pattern recognition.",incorrectIndicates:"May assume constant intervals or struggle with accelerating/decelerating patterns."},
   {id:11,category:"Pattern Recognition",difficulty:"Medium",question:"In a sequence, each term is formed by taking the previous term, multiplying by 2, then subtracting 3. If the 4th term is 27, what is the 2nd term?",options:["9","12","15","18"],correct:0,weights:{pattern:80,analytical:20},correctIndicates:"Can reverse-engineer patterns and work backwards from known values. Strong algebraic reasoning.",incorrectIndicates:"May struggle with inverse operations or working backwards through multi-step transformations."},
   {id:12,category:"Pattern Recognition",difficulty:"Medium",question:"Look at the pattern: 1, 1, 2, 3, 5, 8, 13, 21, ___. What comes next?",options:["29","32","34","36"],correct:2,weights:{pattern:100},correctIndicates:"Recognizes the Fibonacci pattern (sum of previous two terms). Familiar with common mathematical sequences.",incorrectIndicates:"May not recognize additive-recursive patterns or may look for simpler rules."},
-  {id:13,category:"Pattern Recognition",difficulty:"Medium",question:"The pattern shows: ○ □ △ ○ □ △ ○ □ △. If this pattern continues, what shape will be in the 25th position?",options:["Circle (○)","Square (□)","Triangle (△)","Cannot be determined"],correct:0,weights:{pattern:100},correctIndicates:"Understands modular/cyclic patterns and can calculate positions within repeating sequences.",incorrectIndicates:"May struggle with modular arithmetic or counting positions in cycles."},
+  {id:13,category:"Pattern Recognition",difficulty:"Medium",question:"The pattern shows: ○ □ △ ○ □ △ ○ □ △. If this pattern continues, what shape will be in the 25th position?",options:["Circle (○)","Square (□)","Triangle (��)","Cannot be determined"],correct:0,weights:{pattern:100},correctIndicates:"Understands modular/cyclic patterns and can calculate positions within repeating sequences.",incorrectIndicates:"May struggle with modular arithmetic or counting positions in cycles."},
   {id:14,category:"Pattern Recognition",difficulty:"Hard",question:"In a number grid, each cell contains a value based on its position. Row 1: 1, 2, 3, 4. Row 2: 2, 4, 6, 8. Row 3: 3, 6, 9, 12. What value would be in Row 5, Column 3?",options:["12","15","18","20"],correct:1,weights:{pattern:100},correctIndicates:"Can identify two-dimensional patterns and generalize rules from examples. Strong abstract pattern recognition.",incorrectIndicates:"May struggle to see relationships in multi-dimensional patterns or fail to generalize from examples."},
   {id:15,category:"Pattern Recognition",difficulty:"Hard",question:"Examine the sequence: 3, 4, 7, 11, 18, 29, ___. What comes next?",options:["40","43","47","52"],correct:2,weights:{pattern:100},correctIndicates:"Identifies complex recursive patterns similar to Lucas sequences. High-level pattern recognition.",incorrectIndicates:"May not recognize that each term is the sum of the two preceding terms in non-obvious sequences."},
   {id:16,category:"Pattern Recognition",difficulty:"Hard",question:"A code translates words by summing the position of each letter in the alphabet (A=1, B=2, ... Z=26). CAT → 24, DOG → 26, FISH → 42. What would HELP translate to?",options:["32","37","41","46"],correct:2,weights:{pattern:85,analytical:15},correctIndicates:"Can decode cipher patterns by analyzing examples. Strong inductive reasoning from examples.",incorrectIndicates:"May struggle to identify the underlying rule when only given input-output examples."},
@@ -497,10 +498,21 @@ export default function App() {
   };
   const handleSuffernConfirm = () => { setShowSuffernModal(false); setIsSuffernMode(true); setPage('suffernResults'); };
 
-  if (page === 'landing') return (<><LandingPage onStart={handleStart} onSuffernAccess={() => setShowSuffernModal(true)}/>{showSuffernModal && <SuffernModal onConfirm={handleSuffernConfirm} onCancel={() => setShowSuffernModal(false)}/>}</>);
-  if (page === 'test') { if (showMemoryPassage) return <MemoryPassagePage onContinue={handleMemoryContinue}/>; return <QuestionPage question={questions[currentQuestion]} questionNumber={currentQuestion + 1} totalQuestions={questions.length} onAnswer={handleAnswer} selectedAnswer={answers[currentQuestion]}/>; }
-  if (page === 'results') return <ResultsPage answers={answers} onViewMethodology={() => setPage('methodology')}/>;
-  if (page === 'suffernResults') return <SuffernResultsPage onViewMethodology={() => setPage('methodology')}/>;
-  if (page === 'methodology') return <MethodologyPage onBack={() => setPage(isSuffernMode ? 'suffernResults' : 'results')}/>;
-  return null;
+  return (
+    <>
+      <Analytics />
+      {page === 'landing' && (
+        <>
+          <LandingPage onStart={handleStart} onSuffernAccess={() => setShowSuffernModal(true)}/>
+          {showSuffernModal && <SuffernModal onConfirm={handleSuffernConfirm} onCancel={() => setShowSuffernModal(false)}/>}
+        </>
+      )}
+      {page === 'test' && (
+        showMemoryPassage ? <MemoryPassagePage onContinue={handleMemoryContinue}/> : <QuestionPage question={questions[currentQuestion]} questionNumber={currentQuestion + 1} totalQuestions={questions.length} onAnswer={handleAnswer} selectedAnswer={answers[currentQuestion]}/>
+      )}
+      {page === 'results' && <ResultsPage answers={answers} onViewMethodology={() => setPage('methodology')}/>}
+      {page === 'suffernResults' && <SuffernResultsPage onViewMethodology={() => setPage('methodology')}/>}
+      {page === 'methodology' && <MethodologyPage onBack={() => setPage(isSuffernMode ? 'suffernResults' : 'results')}/>}
+    </>
+  );
 }
