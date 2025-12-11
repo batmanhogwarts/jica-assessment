@@ -56,16 +56,6 @@ const categoryNames = {analytical:"Analytical Reasoning",pattern:"Pattern Recogn
 
 const LandingPage = ({onStart,onSuffernAccess}) => (
   <div className="min-h-screen bg-white flex flex-col">
-    <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 py-2">
-      <div className="flex items-center justify-center gap-3">
-        <div className="h-px w-12 bg-gradient-to-r from-transparent to-slate-500"></div>
-        <a href="https://jica.app" className="flex items-center gap-2 text-white font-medium tracking-wider">
-          <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-          <span className="text-sm">jica.app</span>
-        </a>
-        <div className="h-px w-12 bg-gradient-to-l from-transparent to-slate-500"></div>
-      </div>
-    </div>
     <header className="border-b border-gray-100">
       <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -88,6 +78,7 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
             <p className="text-xl text-slate-500 leading-relaxed mb-8 font-light">A comprehensive assessment measuring problem-solving, information retention, adaptive thinking, and processing efficiency.</p>
             <button onClick={onStart} className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">Begin Assessment<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg></button>
             <p className="mt-6 text-sm text-slate-400">Approximately 20-30 minutes to complete</p>
+            <p className="mt-4 text-lg text-slate-500">Visit us at <span className="text-slate-900 font-semibold">jica.app</span></p>
           </div>
           <div className="bg-slate-50 rounded-2xl p-8 lg:p-12">
             <div className="grid grid-cols-2 gap-8">
