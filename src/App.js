@@ -105,6 +105,7 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                     <span className="animate-morph-text">&nbsp;</span>
                     <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 animate-letter-float animation-delay-300">A</span>
                     <span className="text-slate-400 animate-morph-text">ssessment</span>
+                    <span className="animate-morph-text">&nbsp;</span>
                     <span className="animate-morph-space">&nbsp;</span>
                     <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-600 animate-letter-float animation-delay-400">A</span>
                     <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">pp</span>
