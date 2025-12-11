@@ -21,111 +21,121 @@ const FortyStudiesPage = () => {
       title: "One Brain or Two?",
       authors: "Gazzaniga & Sperry",
       questions: [
-        "If split-brain patients have two hemispheres that can operate somewhat independently, how unified is consciousness for people with intact brains?",
-        "Do split-brain findings tell us anything about how multitasking works, or is that a completely different mechanism?",
-        "Could long-term neural plasticity allow split-brain patients to \"reconnect\" functions over time, or are the hemispheres truly separate forever?"
+        "If the two hemispheres can function independently in split-brain patients, how much independence exists in people who have a fully connected corpus callosum?",
+        "Could a split-brain patient develop a completely separate sense of self in each hemisphere if the separation existed from childhood?",
+        "What does this study tell us about the idea of \"free will\" if one hemisphere can take actions that the other hemisphere cannot explain?"
       ],
       chosenIndex: 0,
       answer: [
-        "The Gazzaniga and Sperry work suggests that consciousness might not be as unified as it feels. In split-brain patients, each hemisphere processes information on its own and can even hold different preferences or perceptions. The Myers textbook describes consciousness as having \"dual processing,\" meaning the brain constantly works on both conscious and unconscious tracks at the same time (Myers, 8e).",
-        "For people with intact brains, the corpus callosum keeps this dual system coordinated. Information passes between hemispheres so quickly that we experience a single, seamless awareness. But functionally, the brain still divides tasks. For example, language is mostly left-lateralized and spatial reasoning is more right-lateralized. Even in typical brains, each hemisphere specializes and processes independently before integrating its work with the other side.",
-        "Neuroscience research also suggests that consciousness is built from distributed networks rather than one single area. The Global Workspace Theory proposes that different brain modules compete for attention, and the \"winner\" becomes conscious thought. This lines up with the idea that consciousness is already fragmented, but normally we just don't notice because communication between regions is fast and automatic.",
-        "So the answer is that consciousness is unified in experience but not in structure. Split-brain patients make the separation obvious because the communication bridge is cut. In the rest of us, the bridge hides the fragmentation by stitching everything together."
-      ],
-      sources: [
-        "Myers, D. G. \"Psychology,\" 8e. Modules on consciousness and brain structure.",
-        "Gazzaniga, M. (2005). Forty Studies That Changed Psychology.",
-        "Baars, B. (2005). Global Workspace Theory overview, Trends in Cognitive Sciences."
+        "The split-brain research shows that the two hemispheres are capable of acting on their own when the communication bridge between them is cut. What surprised me most was how fully developed each hemisphere's abilities are. One side can name an object while the other side can draw something completely different. That kind of separation makes it easy to think of the hemispheres as two minds in one head.",
+        "But in people with an intact brain, the hemispheres are constantly sharing information. The connection is so quick and automatic that it creates the illusion of a single unified mind. The independence still exists at the level of specialization. For example, the left hemisphere tends to organize language while the right recognizes faces or emotional tone. The difference is that both hemispheres automatically update each other, so the person never notices the split.",
+        "The split-brain research is what makes this clear. When the hemispheres cannot communicate, their natural differences are exposed. When they can communicate, the differences are blended into something that feels seamless. So the independence is there, but healthy brains smooth over the edges so well that we rarely notice we have two systems working together."
       ]
     },
     {
       id: 3,
       title: "Are You a 'Natural'?",
-      authors: "Bouchard, Minnesota Twin Study",
+      authors: "Bouchard — Minnesota Twin Study",
       questions: [
-        "If identical twins raised apart are extremely similar, what does that suggest about free will?",
-        "How much can environment actually change intelligence or personality compared to genetic predispositions?",
-        "Are there traits that seem genetic at first but actually depend heavily on culture in order to show up?"
+        "If identical twins who were raised apart turn out so similar, what does that say about the choices people think they make freely?",
+        "How much room is left for personal change if personality seems to stay stable even when the environment changes?",
+        "Are there traits that only look genetic because people in different environments end up being pushed in similar directions?"
       ],
       chosenIndex: 1,
       answer: [
-        "The Minnesota Twin Study found that identical twins raised apart still show striking similarities in personality, intelligence, and even preferences. This suggests that genes play a major role in shaping who we are. However, the study does not mean environment is powerless.",
-        "According to the Myers textbook, heritability refers to the proportion of variation in a group that can be attributed to genes. It does not mean that genes determine a set percentage of your traits as an individual. Heritability of intelligence is about 50 percent, meaning half the differences between people can be linked to genetics (Myers, Module 64).",
-        "Environment can still have huge effects. Severe deprivation or trauma can reduce cognitive development. Rich environments with strong education can increase measurable intelligence. The Flynn Effect, which is the global rise in IQ scores over generations, proves that environmental change can shift intelligence across entire populations.",
-        "Personality is more genetically stable than intelligence. Even then, environment matters in how traits get expressed. The field of epigenetics shows that environmental experiences can switch genes on or off. For example, chronic stress can activate genes linked to anxiety. Parenting, culture, and socioeconomic status shape how natural tendencies are reinforced or suppressed.",
-        "So genetics sets the range, but environment influences where within that range someone actually ends up. The Minnesota study shows that genes are powerful, but they aren't destiny."
-      ],
-      sources: [
-        "Myers, D. G. \"Psychology,\" 8e. Modules 62–64 on intelligence and genetics.",
-        "Bouchard, T. J. (1990). \"Sources of Human Psychological Differences,\" Science.",
-        "Flynn, J. R. (1987). \"Massive IQ Gains,\" Psychological Bulletin.",
-        "National Institute of Mental Health. Overview of epigenetics and environmental influence."
+        "This study showed that identical twins raised in completely different homes can still grow up to have strikingly similar personalities. That makes it tempting to think personality is fixed and cannot change. But the research does not say that. What it really shows is that people start life with a strong foundation of natural tendencies. Some people are naturally more outgoing. Some are naturally anxious or calm. Some take more risks without thinking about the consequences.",
+        "What the study does not remove is the idea that people can change how these tendencies are expressed. Someone who is naturally anxious can still learn coping strategies. Someone who is naturally introverted can still develop social skills. The core traits might stay steady, but how someone uses them or manages them can shift a lot. The twins in the study show that the starting point is similar, not that the pathway through life is predetermined.",
+        "If anything, the study suggests that self-change is less about becoming a different kind of person and more about learning how to work with the kind of person you already are. That feels realistic and honestly more comforting. There is a clear natural base, but there is still a lot you can do with it."
       ]
     }
   ];
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-neutral-50">
       {/* Progress bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-stone-100 z-50">
+      <div className="fixed top-0 left-0 w-full h-[3px] bg-neutral-200/50 z-50">
         <div 
-          className="h-full bg-gradient-to-r from-stone-400 via-stone-500 to-stone-400 transition-all duration-150"
+          className="h-full bg-gradient-to-r from-neutral-300 via-neutral-400 to-neutral-300 transition-all duration-300 ease-out"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
 
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-stone-200 sticky top-0 z-40">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-bold text-stone-900">Forty Studies</h1>
-            <p className="text-xs text-stone-500">Readings 1 & 3</p>
-          </div>
-          <a href="/" className="text-sm text-stone-400 hover:text-stone-600 transition-colors">← Back</a>
+      {/* Minimal header */}
+      <header className="fixed top-0 left-0 right-0 z-40">
+        <div className="max-w-4xl mx-auto px-8 pt-8 flex items-start justify-between">
+          <a href="/" className="text-xs tracking-widest text-neutral-400 hover:text-neutral-600 transition-colors uppercase">
+            ← Back
+          </a>
         </div>
       </header>
 
+      {/* Hero */}
+      <div className="pt-32 pb-20 px-8">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-xs tracking-[0.3em] text-neutral-400 uppercase mb-6">AP Psychology</p>
+          <h1 className="text-4xl md:text-5xl font-light text-neutral-800 tracking-tight mb-4">
+            Forty Studies
+          </h1>
+          <p className="text-lg text-neutral-400 font-light">Readings 1 & 3</p>
+        </div>
+      </div>
+
       {/* Main content */}
-      <main className="max-w-3xl mx-auto px-6 py-12">
+      <main className="max-w-4xl mx-auto px-8 pb-32">
         
         {readings.map((reading, rIndex) => (
-          <section key={reading.id} className="mb-20 animate-fadeIn" style={{ animationDelay: `${rIndex * 0.15}s` }}>
+          <section 
+            key={reading.id} 
+            className="mb-32 animate-fadeIn"
+            style={{ animationDelay: `${rIndex * 0.2}s` }}
+          >
             
-            {/* Reading title */}
-            <div className="mb-10">
-              <span className="text-xs text-stone-400 uppercase tracking-widest">Reading {reading.id}</span>
-              <h2 className="text-2xl font-serif text-stone-800 mt-1">"{reading.title}"</h2>
-              <p className="text-stone-500 text-sm mt-1">{reading.authors}</p>
+            {/* Reading header */}
+            <div className="mb-16 pb-8 border-b border-neutral-200">
+              <span className="text-xs tracking-[0.3em] text-neutral-400 uppercase">Reading {reading.id}</span>
+              <h2 className="text-2xl md:text-3xl font-light text-neutral-800 mt-3 tracking-tight">
+                {reading.title}
+              </h2>
+              <p className="text-sm text-neutral-400 mt-2 font-light">{reading.authors}</p>
             </div>
 
             {/* Three questions */}
-            <div className="mb-10">
-              <h3 className="text-sm font-medium text-stone-700 mb-4">Three Questions</h3>
-              <ol className="space-y-3">
+            <div className="mb-16">
+              <h3 className="text-xs tracking-[0.2em] text-neutral-400 uppercase mb-8">Three Questions</h3>
+              <div className="space-y-4">
                 {reading.questions.map((q, qIndex) => (
-                  <li 
+                  <div 
                     key={qIndex} 
-                    className={`flex gap-3 p-3 rounded-lg transition-all duration-300 hover:translate-x-1 ${
+                    className={`group flex gap-6 p-6 rounded-sm transition-all duration-500 cursor-default ${
                       qIndex === reading.chosenIndex 
-                        ? 'bg-stone-200/70' 
-                        : 'bg-stone-100/50'
+                        ? 'bg-neutral-100' 
+                        : 'hover:bg-neutral-50'
                     }`}
                   >
-                    <span className="text-stone-400 font-mono text-sm">{qIndex + 1}.</span>
-                    <span className={qIndex === reading.chosenIndex ? 'text-stone-800' : 'text-stone-600'}>
-                      {q}
+                    <span className={`text-sm font-light transition-colors ${
+                      qIndex === reading.chosenIndex ? 'text-neutral-800' : 'text-neutral-300 group-hover:text-neutral-400'
+                    }`}>
+                      {String(qIndex + 1).padStart(2, '0')}
                     </span>
-                  </li>
+                    <p className={`text-base leading-relaxed font-light ${
+                      qIndex === reading.chosenIndex ? 'text-neutral-800' : 'text-neutral-500'
+                    }`}>
+                      {q}
+                    </p>
+                  </div>
                 ))}
-              </ol>
+              </div>
             </div>
 
             {/* Answer section */}
-            <div className="mb-8">
-              <h3 className="text-sm font-medium text-stone-700 mb-4">Response to Question {reading.chosenIndex + 1}</h3>
-              <div className="space-y-4">
+            <div>
+              <h3 className="text-xs tracking-[0.2em] text-neutral-400 uppercase mb-8">Response</h3>
+              <div className="space-y-6 pl-6 border-l border-neutral-200">
                 {reading.answer.map((para, pIndex) => (
-                  <p key={pIndex} className="text-stone-700 leading-relaxed">
+                  <p 
+                    key={pIndex} 
+                    className="text-base md:text-lg text-neutral-700 leading-relaxed font-light"
+                  >
                     {para}
                   </p>
                 ))}
@@ -134,8 +144,8 @@ const FortyStudiesPage = () => {
 
             {/* Divider between readings */}
             {rIndex < readings.length - 1 && (
-              <div className="mt-16 flex justify-center">
-                <div className="w-16 h-px bg-stone-200" />
+              <div className="mt-32 flex justify-center">
+                <div className="w-24 h-px bg-gradient-to-r from-transparent via-neutral-300 to-transparent" />
               </div>
             )}
           </section>
@@ -144,20 +154,22 @@ const FortyStudiesPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-stone-200 py-8">
-        <div className="max-w-3xl mx-auto px-6 text-center text-sm text-stone-400">
-          AP Psychology • Forty Studies That Changed Psychology
+      <footer className="border-t border-neutral-100 py-12">
+        <div className="max-w-4xl mx-auto px-8 text-center">
+          <p className="text-xs tracking-[0.2em] text-neutral-300 uppercase">
+            Forty Studies That Changed Psychology
+          </p>
         </div>
       </footer>
 
       <style>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(30px); }
           to { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeIn {
           opacity: 0;
-          animation: fadeIn 0.6s ease-out forwards;
+          animation: fadeIn 0.8s ease-out forwards;
         }
       `}</style>
     </div>
