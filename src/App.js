@@ -48,7 +48,7 @@ const methodologyContent = {
   purpose:{title:"Purpose & Application",icon:"🎯",content:"**Primary Purpose:** The J-Industries Cognitive Assessment (JICA) is a pre-employment cognitive screening tool designed to evaluate foundational mental abilities that predict workplace success across all roles and departments.\n\n**What It Measures:**\n\nRather than testing job-specific knowledge or technical skills, JICA assesses the underlying cognitive capabilities that enable employees to learn, adapt, and solve problems effectively in any professional context:\n\n• **Problem Solving** — Ability to analyze novel situations, identify patterns, and reach logical conclusions\n• **Information Retention** — Capacity to hold and recall information without reference materials\n• **Adaptive Learning** — Ability to apply feedback and adjust approach when circumstances change\n• **Processing Efficiency** — Speed and accuracy under time pressure\n\n**Role-Fit Analysis:**\n\nJICA now includes role-specific profiling that matches cognitive profiles to job requirements. Different roles prioritize different cognitive abilities, and the system provides fit scores for:\n• Data Analyst (emphasizes analytical + pattern recognition)\n• Software Developer (emphasizes pattern + adaptive thinking)\n• Manager (emphasizes adaptive + memory)\n• Customer Service (emphasizes adaptive + memory)\n• Creative Roles (emphasizes pattern + adaptive)\n\n**Cognitive Style Profiling:**\n\nBeyond raw scores, JICA infers behavioral tendencies from problem-solving patterns, including thinking style, adaptability, attention to detail, pressure response, and learning speed.\n\n**End-Users:**\n\nThe primary end-users are HR professionals and hiring managers at J-Industries. They receive a multi-dimensional profile of each candidate showing relative strengths across cognitive domains, role-fit recommendations, and behavioral insights."},
   theoretical:{title:"Theoretical Foundation",icon:"🧠",content:"**Theoretical Framework:**\n\nJICA is grounded in the **Cattell-Horn-Carroll (CHC) theory** of cognitive abilities, specifically drawing on the distinction between fluid intelligence (Gf) and crystallized intelligence (Gc), while incorporating elements of working memory capacity from Baddeley's model.\n\n**Core Constructs Measured:**\n\n**1. Fluid Intelligence (Gf):** The ability to reason, identify patterns, and solve novel problems independent of previously acquired knowledge. This includes:\n• Inductive reasoning (identifying rules from examples)\n• Deductive reasoning (applying rules to reach conclusions)\n• Abstract pattern recognition\n\n**2. Working Memory:** The capacity to hold, manipulate, and retrieve information over short periods during cognitive tasks.\n\n**3. Adaptive Learning:** The ability to integrate feedback and apply new information to improve performance within the assessment itself.\n\n**4. Processing Speed:** The ability to perform cognitive tasks quickly and accurately, particularly under time pressure.\n\n**Why This Framework?**\n\nResearch consistently shows that fluid intelligence is the single best cognitive predictor of job performance across occupations (Schmidt & Hunter, 1998), while working memory capacity underlies the ability to manage complex tasks and learn new information efficiently.\n\n**Cognitive Style Inference:**\n\nBased on patterns of responding (not just accuracy), JICA infers behavioral tendencies such as methodical vs. intuitive thinking, adaptability to change, attention to detail, and performance under pressure. These inferences are based on response patterns rather than self-report, providing behavioral evidence of cognitive style."},
   psychometric:{title:"Psychometric Properties",icon:"📊",content:"**Standardization Procedures:**\n\n**Representative Norming Sample:** JICA requires administration to a minimum of 2,000 participants stratified by age (18-25, 26-35, 36-45, 46-55, 56-65), gender, education level, geographic region, and industry background.\n\n**Uniform Administration:** All test administrations follow identical procedures—browser-based delivery, scripted on-screen instructions, programmatic timing enforcement, and recommended testing conditions.\n\n**Norm Establishment:** From the norming sample, mean, standard deviation, and percentile ranks (1st-99th) are calculated for each category and composite score.\n\n---\n\n**Reliability Procedures:**\n\n**Internal Consistency (Cronbach's Alpha):** Target α ≥ .80 for each subscale; α ≥ .85 for total score.\n\n**Split-Half Reliability:** Items divided into matched halves, correlation calculated with Spearman-Brown correction. Target: ≥ .80.\n\n**Test-Retest Reliability:** Subset of 300 participants tested twice with 2-4 week interval. Target: r ≥ .75 for subscales; r ≥ .80 for total score.\n\n**Consistency Analysis:** Performance across difficulty levels is analyzed to detect response patterns indicative of guessing, fatigue, or inattention.\n\n---\n\n**Validity Procedures:**\n\n**Content Validity:** Panel of 5-7 subject matter experts rate each item for relevance, clarity, and appropriateness. Target Content Validity Index (CVI) ≥ .90.\n\n**Construct Validity:**\n• Convergent: JICA scores correlated with Raven's Progressive Matrices (target r ≥ .60), Wechsler Digit Span (r ≥ .55), Wonderlic (r ≥ .65)\n• Discriminant: Low correlations with personality measures (r < .30)\n• Factor Analysis: Confirmatory factor analysis verifying five-factor structure (CFI ≥ .95, RMSEA ≤ .06)\n\n**Criterion-Related Validity:**\n• Predictive study: 500 hired candidates assessed, correlated with 6-12 month performance ratings (target r ≥ .30)\n• Concurrent study: 300 current employees, correlated with existing performance data\n\n**Confidence Intervals:** All scores are reported with margin of error (±) based on standard error of measurement, acknowledging that a single test administration provides an estimate, not a precise value."},
-  biasMitigation:{title:"Bias Mitigation",icon:"⚖️",content:"**Understanding Stereotype Threat:**\n\nStereotype threat occurs when individuals are aware of negative stereotypes about their group's intellectual abilities, leading to anxiety that impairs performance (Steele & Aronson, 1995). Stereotype lift is the complementary effect where non-stereotyped groups experience performance boosts.\n\n---\n\n**Test Design Elements:**\n\n**1. Reframing the Assessment:** JICA is framed as a \"problem-solving exercise\" rather than an \"intelligence test.\" Research shows this reduces stereotype threat effects by ~0.3 standard deviations (Walton & Spencer, 2009).\n\n**2. Growth Mindset Priming:** Candidates read a brief passage explaining cognitive skills are malleable and improve with practice (Dweck, 2006).\n\n**3. Self-Affirmation:** Before testing, candidates select and briefly write about a personal value important to them. This intervention reduced racial achievement gaps by 40% in Cohen et al. (2006).\n\n**4. Demographics After Testing:** Any demographic questions are collected AFTER test completion. Stricker & Ward (2004) showed this improves performance among stereotyped groups.\n\n**5. Culturally Neutral Content:** All items minimize reliance on culturally-specific knowledge. Differential Item Functioning (DIF) analysis identifies and removes biased items.\n\n---\n\n**Administrative Procedures:**\n\n**6. Practice Items:** Each section begins with unscored practice items to reduce initial anxiety.\n\n**7. Transparent Feedback:** Detailed results shift attribution from fixed ability to specific, developable skills.\n\n**8. Adverse Impact Monitoring:** Quarterly analysis using the 4/5ths rule (EEOC guidelines) with corrective action if disparities emerge."},
+  biasMitigation:{title:"Bias Mitigation",icon:"⚖️",content:"**Understanding Stereotype Threat:**\n\nStereotype threat occurs when individuals are aware of negative stereotypes about their group's intellectual abilities, leading to anxiety that impairs performance (Steele & Aronson, 1995). Stereotype lift is the complementary effect where non-stereotyped groups experience performance boosts.\n\n---\n\n**Test Design Elements:**\n\n**1. Reframing the Assessment:** JICA is framed as a \"problem-solving exercise\" rather than an \"intelligence test.\" Research shows this reduces stereotype threat effects by ~0.3 standard deviations (Walton & Spencer, 2009).\n\n**2. Growth Mindset Priming:** Candidates read a brief passage explaining cognitive skills are malleable and improve with practice (Dweck, 2006).\n\n**3. Self-Affirmation:** Before testing, candidates select and briefly write about a personal value important to them. This intervention reduced racial achievement gaps by 40% in Cohen et al. (2006).\n\n**4. Demographics After Testing:** Any demographic questions are collected AFTER test completion. Stricker & Ward (2004) showed this improves performance among stereotyped groups.\n\n**5. Culturally Neutral Content:** All items minimize reliance on culturally-specific knowledge. Differential Item Functioning (DIF) analysis identifies and removes biased items.\n\n---\n\n**Response Pattern Controls:**\n\n**6. Answer Option Randomization:** Answer choices (A, B, C, D) are randomly shuffled for each question on each test administration. This prevents:\n• Pattern memorization from prior test-takers\n• Position bias (tendency to select middle options)\n• Strategic guessing based on answer distribution\n• Cheating through answer-position sharing\n\nThe system maps displayed positions to correct answers internally, ensuring accurate scoring regardless of shuffle order.\n\n**7. Rush Detection & Validity Screening:** JICA monitors response timing to detect potentially invalid administrations:\n• **Severe concern:** <5 minutes total or >10 questions answered in <3 seconds\n• **Moderate concern:** <10 minutes total or >15 questions answered in <5 seconds\n• **Mild note:** Average <8 seconds per question\n\nResults flagged as rushed display prominent warnings indicating reduced validity. This prevents gaming the system and identifies candidates who may not have engaged authentically.\n\n---\n\n**Administrative Procedures:**\n\n**8. Practice Items:** Each section begins with unscored practice items to reduce initial anxiety.\n\n**9. Transparent Feedback:** Detailed results shift attribution from fixed ability to specific, developable skills.\n\n**10. Adverse Impact Monitoring:** Quarterly analysis using the 4/5ths rule (EEOC guidelines) with corrective action if disparities emerge.\n\n**11. Consistency Analysis:** Performance across difficulty levels is analyzed. Unusual patterns (e.g., missing easy questions while getting hard ones correct) are flagged as potential indicators of inattention, guessing, or other validity concerns."},
   algorithm:{title:"Scoring Algorithm",icon:"⚙️",content:"**Step 1: Response Scoring with IRT Weighting**\nEach question scored dichotomously: correct = 1 point, incorrect = 0 points. No penalty for guessing.\n\n**Item Response Theory (IRT) Difficulty Multipliers:**\n• Easy questions: 0.8× weight (less informative when correct)\n• Medium questions: 1.0× weight (baseline)\n• Hard questions: 1.3× weight (more informative when correct)\n\nThis means getting a Hard question right contributes more to your score than an Easy question, reflecting the greater ability required.\n\n**Step 2: Category Weight Application**\nEach question has predefined category weights summing to 100%. Correct answers distribute IRT-weighted points across categories.\n\n*Example:* Hard question with 70% Analytical, 30% Pattern weights → correct answer gives AR 0.91 points (0.70 × 1.3), PR 0.39 points (0.30 × 1.3).\n\n**Step 3: Raw Category Scores**\nSum IRT-weighted points per category across all questions.\n\n**Step 4: Percentile Conversion**\nRaw scores converted to percentiles using norm tables from standardization sample.\n\n**Step 5: Role-Specific Composite Scores**\nDifferent roles use different category weights:\n• **General:** AR 25% | PR 20% | WM 20% | AT 20% | PE 15%\n• **Data Analyst:** AR 35% | PR 30% | WM 15% | AT 10% | PE 10%\n• **Developer:** AR 25% | PR 35% | WM 10% | AT 20% | PE 10%\n• **Manager:** AR 20% | PR 10% | WM 25% | AT 30% | PE 15%\n• **Customer Service:** AR 10% | PR 10% | WM 30% | AT 35% | PE 15%\n• **Creative:** AR 15% | PR 35% | WM 15% | AT 25% | PE 10%\n\n**Step 6: Critical Threshold Check**\n• Analytical Reasoning: 25th percentile minimum\n• Pattern Recognition: 20th percentile minimum\n• Working Memory: 25th percentile minimum\n• Adaptive Thinking: 30th percentile minimum (highest—inability to adapt is most problematic)\n• Processing Efficiency: 15th percentile minimum\n\n**Step 7: Red Flag Detection**\nAutomatic flagging of concerning patterns:\n• Very low scores (<20th) in any category\n• Inconsistent difficulty performance (e.g., better on Hard than Easy)\n• Specific cognitive combinations (e.g., high analytical but low processing)\n• Adaptive section transition failures\n\n**Step 8: Consistency Analysis**\nPerformance across Easy/Medium/Hard questions is compared. Consistent patterns (Easy > Medium > Hard) indicate reliable results. Inconsistent patterns suggest caution in interpretation.\n\n**Step 9: Confidence Interval Calculation**\nMargin of error calculated as: ±(15 / √n × 2) where n = number of questions.\nWith 35 questions: approximately ±5 points.\n\n**Step 10: Recommendation**\n• **STRONG HIRE:** Composite ≥ 75th, no threshold breaches, no high-severity flags\n• **RECOMMEND HIRE:** Composite 50th-74th, no threshold breaches, no high-severity flags\n• **CONDITIONAL:** Composite 35th-49th, or one threshold breach, or medium-severity flags\n• **DO NOT RECOMMEND:** Composite < 35th, or multiple threshold breaches, or multiple high-severity flags\n\n**Step 11: Cognitive Style Inference**\nBehavioral tendencies inferred from response patterns:\n• Thinking Style (methodical vs. intuitive)\n• Adaptability (structured vs. flexible)\n• Attention to Detail (big-picture vs. detail-focused)\n• Pressure Response (careful vs. quick)\n• Learning Curve (gradual vs. rapid)\n• Analytical Depth (practical vs. theoretical)\n\n**Step 12: Rationale Generation**\nNatural language summary identifying strengths (>65th), adequate areas (35th-65th), and concerns (<35th) with practical implications for job performance and role fit."}
 };
 
@@ -322,9 +322,54 @@ const QuestionPage = ({question,questionNumber,totalQuestions,onAnswer,selectedA
   );
 };
 
-const ResultsPage = ({answers,onViewMethodology}) => {
+const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology}) => {
   const [selectedRole, setSelectedRole] = useState('general');
   const [expandedQuestion, setExpandedQuestion] = useState(null);
+  
+  // Rush detection thresholds
+  const MIN_SECONDS_PER_QUESTION = 3; // Less than 3 seconds is definitely rushing
+  const MIN_TOTAL_TEST_TIME = 5 * 60 * 1000; // 5 minutes minimum for 35 questions
+  const EXPECTED_MIN_TIME = 10 * 60 * 1000; // 10 minutes is reasonable minimum
+  
+  // Analyze timing data
+  const timingAnalysis = useMemo(() => {
+    if (!questionTimes || !totalTestTime) return { isRushed: false, rushLevel: 'none' };
+    
+    const times = Object.values(questionTimes);
+    const avgTimePerQuestion = times.reduce((a, b) => a + b, 0) / times.length;
+    const questionsUnder3Sec = times.filter(t => t < 3000).length;
+    const questionsUnder5Sec = times.filter(t => t < 5000).length;
+    
+    // Determine rush level
+    let rushLevel = 'none';
+    let isRushed = false;
+    let message = '';
+    
+    if (totalTestTime < MIN_TOTAL_TEST_TIME || questionsUnder3Sec > 10) {
+      rushLevel = 'severe';
+      isRushed = true;
+      message = `This assessment was completed in ${Math.round(totalTestTime / 1000)} seconds (${Math.round(totalTestTime / 60000)} minutes), with ${questionsUnder3Sec} questions answered in under 3 seconds. These results are unlikely to represent the candidate's true cognitive abilities and should not be used for hiring decisions.`;
+    } else if (totalTestTime < EXPECTED_MIN_TIME || questionsUnder5Sec > 15) {
+      rushLevel = 'moderate';
+      isRushed = true;
+      message = `This assessment was completed faster than expected (${Math.round(totalTestTime / 60000)} minutes). ${questionsUnder5Sec} questions were answered in under 5 seconds. Results should be interpreted with caution.`;
+    } else if (avgTimePerQuestion < 8000) {
+      rushLevel = 'mild';
+      isRushed = false;
+      message = `Assessment completed at a quick pace. Results appear valid but the candidate may benefit from a more deliberate approach.`;
+    }
+    
+    return {
+      isRushed,
+      rushLevel,
+      message,
+      totalTimeSeconds: Math.round(totalTestTime / 1000),
+      totalTimeMinutes: Math.round(totalTestTime / 60000 * 10) / 10,
+      avgTimePerQuestion: Math.round(avgTimePerQuestion / 1000 * 10) / 10,
+      questionsUnder3Sec,
+      questionsUnder5Sec
+    };
+  }, [questionTimes, totalTestTime]);
   
   // Role profiles for different job types
   const roleProfiles = {
@@ -501,10 +546,81 @@ const ResultsPage = ({answers,onViewMethodology}) => {
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
+        {/* Rush Detection Warning Banner */}
+        {timingAnalysis.rushLevel !== 'none' && (
+          <div className={`mb-8 p-6 rounded-2xl border-2 ${
+            timingAnalysis.rushLevel === 'severe' 
+              ? 'bg-rose-50 border-rose-300' 
+              : timingAnalysis.rushLevel === 'moderate'
+              ? 'bg-amber-50 border-amber-300'
+              : 'bg-blue-50 border-blue-200'
+          }`}>
+            <div className="flex items-start gap-4">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                timingAnalysis.rushLevel === 'severe' 
+                  ? 'bg-rose-200' 
+                  : timingAnalysis.rushLevel === 'moderate'
+                  ? 'bg-amber-200'
+                  : 'bg-blue-200'
+              }`}>
+                <span className="text-2xl">{timingAnalysis.rushLevel === 'severe' ? '⚠️' : timingAnalysis.rushLevel === 'moderate' ? '⏱️' : 'ℹ️'}</span>
+              </div>
+              <div className="flex-1">
+                <h3 className={`text-lg font-semibold mb-2 ${
+                  timingAnalysis.rushLevel === 'severe' 
+                    ? 'text-rose-800' 
+                    : timingAnalysis.rushLevel === 'moderate'
+                    ? 'text-amber-800'
+                    : 'text-blue-800'
+                }`}>
+                  {timingAnalysis.rushLevel === 'severe' 
+                    ? 'Results Validity Concern' 
+                    : timingAnalysis.rushLevel === 'moderate'
+                    ? 'Assessment Completed Quickly'
+                    : 'Quick Completion Noted'}
+                </h3>
+                <p className={`text-sm mb-3 ${
+                  timingAnalysis.rushLevel === 'severe' 
+                    ? 'text-rose-700' 
+                    : timingAnalysis.rushLevel === 'moderate'
+                    ? 'text-amber-700'
+                    : 'text-blue-700'
+                }`}>
+                  {timingAnalysis.message}
+                </p>
+                <div className="flex flex-wrap gap-4 text-xs">
+                  <div className={`px-3 py-1 rounded-full ${
+                    timingAnalysis.rushLevel === 'severe' ? 'bg-rose-200 text-rose-800' : 
+                    timingAnalysis.rushLevel === 'moderate' ? 'bg-amber-200 text-amber-800' : 
+                    'bg-blue-200 text-blue-800'
+                  }`}>
+                    Total time: {timingAnalysis.totalTimeMinutes} minutes
+                  </div>
+                  <div className={`px-3 py-1 rounded-full ${
+                    timingAnalysis.rushLevel === 'severe' ? 'bg-rose-200 text-rose-800' : 
+                    timingAnalysis.rushLevel === 'moderate' ? 'bg-amber-200 text-amber-800' : 
+                    'bg-blue-200 text-blue-800'
+                  }`}>
+                    Avg per question: {timingAnalysis.avgTimePerQuestion}s
+                  </div>
+                  {timingAnalysis.questionsUnder3Sec > 0 && (
+                    <div className="px-3 py-1 rounded-full bg-rose-200 text-rose-800">
+                      {timingAnalysis.questionsUnder3Sec} questions under 3s
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="text-center mb-12">
           <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center mx-auto mb-4"><span className="text-white text-xl font-semibold">J</span></div>
           <h1 className="text-3xl font-light text-slate-900 mb-2">Assessment Complete</h1>
           <p className="text-slate-500">Your cognitive profile has been analyzed using advanced psychometric methods</p>
+          {totalTestTime && (
+            <p className="text-slate-400 text-sm mt-2">Completed in {Math.round(totalTestTime / 60000)} minutes</p>
+          )}
         </div>
         
         {/* Main Recommendation */}
@@ -932,6 +1048,18 @@ const MethodologyPage = ({onBack}) => {
   );
 };
 
+// Utility function to shuffle array and return shuffle map
+const shuffleWithMap = (array) => {
+  const indices = array.map((_, i) => i);
+  const shuffled = [...indices];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  // shuffleMap[displayIndex] = originalIndex
+  return shuffled;
+};
+
 export default function App() {
   const [page, setPage] = useState('landing');
   const [showSuffernModal, setShowSuffernModal] = useState(false);
@@ -939,12 +1067,44 @@ export default function App() {
   const [answers, setAnswers] = useState({});
   const [showMemoryPassage, setShowMemoryPassage] = useState(false);
   const [isSuffernMode, setIsSuffernMode] = useState(false);
+  
+  // Timing tracking
+  const [testStartTime, setTestStartTime] = useState(null);
+  const [questionStartTime, setQuestionStartTime] = useState(null);
+  const [questionTimes, setQuestionTimes] = useState({});
+  const [totalTestTime, setTotalTestTime] = useState(null);
+  
+  // Answer shuffling - generate shuffle maps for all questions once at start
+  const [shuffleMaps, setShuffleMaps] = useState({});
 
-  const handleStart = () => { setPage('test'); };
-  const handleMemoryContinue = () => setShowMemoryPassage(false);
-  const handleAnswer = (answerIndex) => {
-    const newAnswers = {...answers, [currentQuestion]: answerIndex};
+  const handleStart = () => {
+    // Generate shuffle maps for all questions
+    const maps = {};
+    questions.forEach((q, i) => {
+      maps[i] = shuffleWithMap(q.options);
+    });
+    setShuffleMaps(maps);
+    setTestStartTime(Date.now());
+    setQuestionStartTime(Date.now());
+    setPage('test');
+  };
+  
+  const handleMemoryContinue = () => {
+    setShowMemoryPassage(false);
+    setQuestionStartTime(Date.now()); // Reset timer after memory passage
+  };
+  
+  const handleAnswer = (displayIndex) => {
+    // Convert displayed answer index to original answer index using shuffle map
+    const originalIndex = shuffleMaps[currentQuestion][displayIndex];
+    
+    // Record time spent on this question
+    const timeSpent = Date.now() - questionStartTime;
+    setQuestionTimes(prev => ({...prev, [currentQuestion]: timeSpent}));
+    
+    const newAnswers = {...answers, [currentQuestion]: originalIndex};
     setAnswers(newAnswers);
+    
     setTimeout(() => {
       if (currentQuestion < questions.length - 1) {
         // Show memory passage before question 17 (index 16)
@@ -952,12 +1112,29 @@ export default function App() {
           setShowMemoryPassage(true);
         }
         setCurrentQuestion(currentQuestion + 1);
+        setQuestionStartTime(Date.now());
       } else {
+        setTotalTestTime(Date.now() - testStartTime);
         setPage('results');
       }
     }, 300);
   };
+  
   const handleSuffernConfirm = () => { setShowSuffernModal(false); setIsSuffernMode(true); setPage('suffernResults'); };
+
+  // Get shuffled options for current question
+  const getShuffledOptions = (questionIndex) => {
+    if (!shuffleMaps[questionIndex]) return questions[questionIndex].options;
+    return shuffleMaps[questionIndex].map(origIdx => questions[questionIndex].options[origIdx]);
+  };
+  
+  // Get selected answer in display order (for highlighting)
+  const getDisplaySelectedAnswer = (questionIndex) => {
+    const originalAnswer = answers[questionIndex];
+    if (originalAnswer === undefined) return undefined;
+    // Find which display index maps to the original answer
+    return shuffleMaps[questionIndex]?.findIndex(origIdx => origIdx === originalAnswer);
+  };
 
   return (
     <>
@@ -969,9 +1146,26 @@ export default function App() {
         </>
       )}
       {page === 'test' && (
-        showMemoryPassage ? <MemoryPassagePage onContinue={handleMemoryContinue}/> : <QuestionPage question={questions[currentQuestion]} questionNumber={currentQuestion + 1} totalQuestions={questions.length} onAnswer={handleAnswer} selectedAnswer={answers[currentQuestion]}/>
+        showMemoryPassage ? (
+          <MemoryPassagePage onContinue={handleMemoryContinue}/>
+        ) : (
+          <QuestionPage 
+            question={{...questions[currentQuestion], options: getShuffledOptions(currentQuestion)}} 
+            questionNumber={currentQuestion + 1} 
+            totalQuestions={questions.length} 
+            onAnswer={handleAnswer} 
+            selectedAnswer={getDisplaySelectedAnswer(currentQuestion)}
+          />
+        )
       )}
-      {page === 'results' && <ResultsPage answers={answers} onViewMethodology={() => setPage('methodology')}/>}
+      {page === 'results' && (
+        <ResultsPage 
+          answers={answers} 
+          questionTimes={questionTimes}
+          totalTestTime={totalTestTime}
+          onViewMethodology={() => setPage('methodology')}
+        />
+      )}
       {page === 'suffernResults' && <SuffernResultsPage onViewMethodology={() => setPage('methodology')}/>}
       {page === 'methodology' && <MethodologyPage onBack={() => setPage(isSuffernMode ? 'suffernResults' : 'results')}/>}
     </>
