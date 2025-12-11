@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { Analytics } from '@vercel/analytics/react';
 import MnemonicsPage from './Mnemonics';
+import ThanksMemoriesPage from './ThanksMemories';
 
 const questions = [
   {id:1,category:"Analytical Reasoning",difficulty:"Easy",question:"All managers at a company must complete leadership training. Sarah is a manager at the company. Which conclusion is valid?",options:["Sarah has not completed leadership training","Sarah must complete leadership training","Sarah is the only manager at the company","Leadership training is optional for managers"],correct:1,weights:{analytical:100},correctIndicates:"Strong deductive reasoning ability. Candidate can follow logical rules and draw valid conclusions from given premises.",incorrectIndicates:"May struggle with formal logic or fail to recognize when conclusions necessarily follow from stated conditions."},
@@ -2840,6 +2841,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/mnemonics" element={<MnemonicsPage />} />
+      <Route path="/memories" element={<ThanksMemoriesPage />} />
       <Route path="/*" element={
         <>
           <Analytics />
