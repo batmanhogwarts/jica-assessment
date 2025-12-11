@@ -91,18 +91,23 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                   <span className="font-light text-slate-400">.tech</span>
                 </span>
               </a>
-              <div className="mt-3 h-8 flex items-center justify-center">
-                <div className="animate-morph-container">
-                  <span className="inline-flex items-center text-sm">
-                    <span className="font-semibold text-blue-500">J</span>
+              <div className="mt-4 h-10 flex items-center justify-center">
+                <div className="animate-morph-container relative">
+                  <div className="animate-pill-bg absolute inset-0 rounded-full"></div>
+                  <span className="relative inline-flex items-center text-sm tracking-wide">
+                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 animate-letter-float">J</span>
                     <span className="text-slate-400 animate-morph-text">-</span>
-                    <span className="font-semibold text-blue-500">I</span>
-                    <span className="text-slate-400 animate-morph-text">ndustries </span>
-                    <span className="font-semibold text-blue-500">C</span>
-                    <span className="text-slate-400 animate-morph-text">ognitive </span>
-                    <span className="font-semibold text-blue-500">A</span>
-                    <span className="text-slate-400 animate-morph-text">ssessment </span>
-                    <span className="font-semibold text-blue-500">App</span>
+                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 animate-letter-float animation-delay-100">I</span>
+                    <span className="text-slate-400 animate-morph-text">ndustries</span>
+                    <span className="animate-morph-text">&nbsp;</span>
+                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500 animate-letter-float animation-delay-200">C</span>
+                    <span className="text-slate-400 animate-morph-text">ognitive</span>
+                    <span className="animate-morph-text">&nbsp;</span>
+                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 animate-letter-float animation-delay-300">A</span>
+                    <span className="text-slate-400 animate-morph-text">ssessment</span>
+                    <span className="animate-morph-space">&nbsp;</span>
+                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-600 animate-letter-float animation-delay-400">A</span>
+                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">pp</span>
                   </span>
                 </div>
               </div>
@@ -126,15 +131,24 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                 0%, 100% { text-shadow: 0 0 0 transparent; }
                 50% { text-shadow: 0 0 8px rgba(59, 130, 246, 0.5); }
               }
-              @keyframes morph-text {
-                0%, 40% { max-width: 200px; opacity: 1; }
-                50%, 90% { max-width: 0; opacity: 0; }
-                100% { max-width: 200px; opacity: 1; }
+              @keyframes letter-float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-2px); }
               }
-              @keyframes morph-container {
-                0%, 40% { background: transparent; padding: 0; border-radius: 0; box-shadow: none; }
-                50%, 90% { background: white; padding: 4px 12px; border-radius: 9999px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-                100% { background: transparent; padding: 0; border-radius: 0; box-shadow: none; }
+              @keyframes morph-text {
+                0%, 35% { max-width: 150px; opacity: 1; }
+                45%, 85% { max-width: 0; opacity: 0; }
+                95%, 100% { max-width: 150px; opacity: 1; }
+              }
+              @keyframes morph-space {
+                0%, 35% { width: 0; }
+                45%, 85% { width: 6px; }
+                95%, 100% { width: 0; }
+              }
+              @keyframes pill-bg {
+                0%, 35% { opacity: 0; transform: scale(0.8); }
+                45%, 85% { opacity: 1; transform: scale(1); }
+                95%, 100% { opacity: 0; transform: scale(0.8); }
               }
               .animate-sheen {
                 animation: sheen 3s ease-in-out infinite;
@@ -152,13 +166,32 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                 display: inline-block;
                 overflow: hidden;
                 white-space: nowrap;
-                animation: morph-text 6s ease-in-out infinite;
+                animation: morph-text 8s ease-in-out infinite;
+              }
+              .animate-morph-space {
+                display: inline-block;
+                animation: morph-space 8s ease-in-out infinite;
               }
               .animate-morph-container {
-                display: inline-block;
+                display: inline-flex;
+                align-items: center;
+                padding: 6px 16px;
                 transition: all 0.3s ease;
-                animation: morph-container 6s ease-in-out infinite;
               }
+              .animate-pill-bg {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.15) 50%, rgba(59, 130, 246, 0.1) 100%);
+                border: 1px solid rgba(59, 130, 246, 0.2);
+                box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15), inset 0 1px 2px rgba(255,255,255,0.5);
+                animation: pill-bg 8s ease-in-out infinite;
+              }
+              .animate-letter-float {
+                display: inline-block;
+                animation: letter-float 3s ease-in-out infinite;
+              }
+              .animation-delay-100 { animation-delay: 0.1s; }
+              .animation-delay-200 { animation-delay: 0.2s; }
+              .animation-delay-300 { animation-delay: 0.3s; }
+              .animation-delay-400 { animation-delay: 0.4s; }
             `}</style>
             <div className="grid grid-cols-2 gap-8">
               <div className="text-center p-6"><div className="text-4xl font-light text-slate-900 mb-2">35</div><div className="text-sm text-slate-500 uppercase tracking-wide">Questions</div></div>
