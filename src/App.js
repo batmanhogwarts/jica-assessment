@@ -91,12 +91,21 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                   <span className="font-light text-slate-400">.tech</span>
                 </span>
               </a>
-              <p className="mt-3 text-sm text-slate-400">
-                <span className="font-semibold text-blue-500">J</span><span>-Industries </span>
-                <span className="font-semibold text-blue-500">C</span><span>ognitive </span>
-                <span className="font-semibold text-blue-500">A</span><span>ssessment </span>
-                <span className="font-semibold text-blue-500">App</span>
-              </p>
+              <div className="mt-3 h-8 flex items-center justify-center">
+                <div className="animate-morph-container">
+                  <span className="inline-flex items-center text-sm">
+                    <span className="font-semibold text-blue-500">J</span>
+                    <span className="text-slate-400 animate-morph-text">-</span>
+                    <span className="font-semibold text-blue-500">I</span>
+                    <span className="text-slate-400 animate-morph-text">ndustries </span>
+                    <span className="font-semibold text-blue-500">C</span>
+                    <span className="text-slate-400 animate-morph-text">ognitive </span>
+                    <span className="font-semibold text-blue-500">A</span>
+                    <span className="text-slate-400 animate-morph-text">ssessment </span>
+                    <span className="font-semibold text-blue-500">App</span>
+                  </span>
+                </div>
+              </div>
             </div>
             <style>{`
               @keyframes sheen {
@@ -117,6 +126,16 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                 0%, 100% { text-shadow: 0 0 0 transparent; }
                 50% { text-shadow: 0 0 8px rgba(59, 130, 246, 0.5); }
               }
+              @keyframes morph-text {
+                0%, 40% { max-width: 200px; opacity: 1; }
+                50%, 90% { max-width: 0; opacity: 0; }
+                100% { max-width: 200px; opacity: 1; }
+              }
+              @keyframes morph-container {
+                0%, 40% { background: transparent; padding: 0; border-radius: 0; box-shadow: none; }
+                50%, 90% { background: white; padding: 4px 12px; border-radius: 9999px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+                100% { background: transparent; padding: 0; border-radius: 0; box-shadow: none; }
+              }
               .animate-sheen {
                 animation: sheen 3s ease-in-out infinite;
               }
@@ -128,6 +147,17 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
               }
               .group:hover .animate-pulse-subtle {
                 animation: pulse-subtle 0.3s ease-in-out, letter-glow 0.5s ease-in-out infinite;
+              }
+              .animate-morph-text {
+                display: inline-block;
+                overflow: hidden;
+                white-space: nowrap;
+                animation: morph-text 6s ease-in-out infinite;
+              }
+              .animate-morph-container {
+                display: inline-block;
+                transition: all 0.3s ease;
+                animation: morph-container 6s ease-in-out infinite;
               }
             `}</style>
             <div className="grid grid-cols-2 gap-8">
