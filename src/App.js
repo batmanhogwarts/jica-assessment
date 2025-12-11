@@ -2383,9 +2383,9 @@ const SuffernResultsPage = ({onViewMethodology}) => {
   
   if (viewMode === 'sample') {
     return (
-      <div className="min-h-screen bg-slate-50 relative">
-        {/* Mode toggle header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-30">
+      <>
+        {/* Mode toggle header - floats above ResultsPage */}
+        <div className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
@@ -2420,11 +2420,14 @@ const SuffernResultsPage = ({onViewMethodology}) => {
           </div>
         </div>
         
+        {/* Spacer for fixed header */}
+        <div className="h-14"></div>
+        
         {/* Floating instructor tips overlaid on results */}
         {showTips && (
-          <div className="pointer-events-none fixed inset-0 z-20">
+          <div className="pointer-events-none fixed inset-0 z-40" style={{top: '56px'}}>
             {/* Tip near recommendation box - top left area */}
-            <div className="pointer-events-auto absolute top-28 left-[calc(50%-320px)]" style={{maxWidth: '640px'}}>
+            <div className="pointer-events-auto absolute top-20 left-[calc(50%-320px)]">
               <InstructorTooltip 
                 id="recommendation" 
                 position="right" 
@@ -2437,7 +2440,7 @@ const SuffernResultsPage = ({onViewMethodology}) => {
             </div>
             
             {/* Tip near radar chart */}
-            <div className="pointer-events-auto absolute top-72 right-[calc(50%-300px)]">
+            <div className="pointer-events-auto absolute top-64 right-[calc(50%-300px)]">
               <InstructorTooltip 
                 id="radar" 
                 position="left" 
@@ -2450,7 +2453,7 @@ const SuffernResultsPage = ({onViewMethodology}) => {
             </div>
             
             {/* Tip near percentile bars */}
-            <div className="pointer-events-auto absolute top-[420px] left-[calc(50%-280px)]">
+            <div className="pointer-events-auto absolute top-[380px] left-[calc(50%-280px)]">
               <InstructorTooltip 
                 id="percentiles" 
                 position="right" 
@@ -2463,7 +2466,7 @@ const SuffernResultsPage = ({onViewMethodology}) => {
             </div>
             
             {/* Tip near tabs */}
-            <div className="pointer-events-auto absolute top-[580px] right-[calc(50%-200px)]">
+            <div className="pointer-events-auto absolute top-[520px] right-[calc(50%-200px)]">
               <InstructorTooltip 
                 id="analytics" 
                 position="bottom-left" 
@@ -2487,7 +2490,7 @@ const SuffernResultsPage = ({onViewMethodology}) => {
         
         {/* Instructor guide panel - collapsible */}
         {showTips && (
-          <div className="fixed bottom-4 right-4 z-30">
+          <div className="fixed bottom-4 right-4 z-50">
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 max-w-xs">
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center font-bold">?</span>
@@ -2511,7 +2514,7 @@ const SuffernResultsPage = ({onViewMethodology}) => {
             </div>
           </div>
         )}
-      </div>
+      </>
     );
   }
   
