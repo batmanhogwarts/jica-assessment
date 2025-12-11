@@ -874,9 +874,6 @@ const generateCognitiveProfile = (allAnalyses) => {
   
   return profile;
 };
-  
-  return ceilings;
-};
 
 const memoryPassage = {title:"Meridian Technologies Company Memo",content:'Meridian Technologies has announced organizational changes effective Q3. The Engineering division, led by Director Priya Sharma, will merge with the Product team under the new "Innovation Hub." The merger affects 127 employees across three offices: Seattle (58 employees), Austin (42 employees), and Boston (27 employees). Budget allocation for the merged division is $4.2 million, a 15% increase from the combined previous budgets. New reporting structure: all team leads report to Priya Sharma, who reports directly to CEO Marcus Chen. The transition timeline is 90 days, with Phase 1 (communication) lasting 2 weeks, Phase 2 (structural changes) lasting 6 weeks, and Phase 3 (integration) lasting 4 weeks.'};
 
