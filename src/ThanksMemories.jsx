@@ -161,41 +161,11 @@ const ThanksForTheMemoriesPage = () => {
             {/* Decorative elements between sections */}
             {index < essayContent.length - 1 && (
               <div className="mt-10 mb-6 flex items-center justify-center">
-                {index === 0 && (
-                  <div className="flex items-center gap-3 opacity-40">
-                    <div className="w-8 h-px bg-stone-300" />
-                    <span className="text-xs text-stone-400 italic tracking-wide">memory reconstructs</span>
-                    <div className="w-8 h-px bg-stone-300" />
-                  </div>
-                )}
-                {index === 1 && (
-                  <div className="flex items-center gap-3 opacity-40">
-                    <div className="w-8 h-px bg-stone-300" />
-                    <span className="text-xs text-stone-400 italic tracking-wide">confidence ≠ accuracy</span>
-                    <div className="w-8 h-px bg-stone-300" />
-                  </div>
-                )}
-                {index === 2 && (
-                  <div className="flex items-center gap-3 opacity-40">
-                    <div className="w-8 h-px bg-stone-300" />
-                    <span className="text-xs text-stone-400 italic tracking-wide">objective vs subjective</span>
-                    <div className="w-8 h-px bg-stone-300" />
-                  </div>
-                )}
-                {index === 3 && (
-                  <div className="flex items-center gap-3 opacity-40">
-                    <div className="w-8 h-px bg-stone-300" />
-                    <span className="text-xs text-stone-400 italic tracking-wide">privacy vs safety</span>
-                    <div className="w-8 h-px bg-stone-300" />
-                  </div>
-                )}
-                {index === 4 && (
-                  <div className="flex items-center gap-3 opacity-40">
-                    <div className="w-8 h-px bg-stone-300" />
-                    <span className="text-xs text-stone-400 italic tracking-wide">balance</span>
-                    <div className="w-8 h-px bg-stone-300" />
-                  </div>
-                )}
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-px bg-stone-200" />
+                  <span className="text-xs text-stone-400 italic">•</span>
+                  <div className="w-12 h-px bg-stone-200" />
+                </div>
               </div>
             )}
           </section>
