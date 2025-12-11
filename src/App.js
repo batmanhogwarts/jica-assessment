@@ -37,8 +37,319 @@ const questions = [
   {id:32,category:"Processing Efficiency",difficulty:"Medium",question:"A train travels 240 miles in 4 hours. At the same speed, how far will it travel in 7 hours?",options:["380 miles","400 miles","420 miles","480 miles"],correct:2,weights:{processing:100},timed:true,correctIndicates:"Quickly identifies and applies rate relationships. Efficient proportional reasoning.",incorrectIndicates:"May struggle with rate/ratio problems under time pressure."},
   {id:33,category:"Processing Efficiency",difficulty:"Medium",question:"Which number does NOT belong in this set? 4, 9, 16, 25, 32, 49",options:["9","25","32","49"],correct:2,weights:{processing:70,pattern:30},timed:true,correctIndicates:"Rapidly identifies perfect squares and spots the outlier. Fast pattern recognition.",incorrectIndicates:"May not quickly recognize perfect square patterns or identify outliers efficiently."},
   {id:34,category:"Processing Efficiency",difficulty:"Medium",question:"Rearrange the letters 'OLGIC' to form a word. What is the first letter of that word?",options:["C","G","L","O"],correct:2,weights:{processing:100},timed:true,correctIndicates:"Fast mental manipulation and word recognition. Efficient verbal processing.",incorrectIndicates:"May need more time for anagram solving or mental letter rearrangement."},
-  {id:35,category:"Processing Efficiency",difficulty:"Hard",question:"A rectangle has a perimeter of 36 cm. If the length is twice the width, what is the area?",options:["54 cm²","62 cm²","72 cm²","81 cm²"],correct:2,weights:{processing:85,analytical:15},timed:true,correctIndicates:"Rapidly sets up and solves algebraic relationships. Excellent processing under complexity.",incorrectIndicates:"May struggle with multi-step geometric calculations under time pressure."}
+  {id:35,category:"Processing Efficiency",difficulty:"Hard",question:"A rectangle has a perimeter of 36 cm. If the length is twice the width, what is the area?",options:["54 cm²","62 cm²","72 cm²","81 cm²"],correct:2,weights:{processing:85,analytical:15},timed:true,correctIndicates:"Rapidly sets up and solves algebraic relationships. Excellent processing under complexity.",incorrectIndicates:"May struggle with multi-step geometric calculations under time pressure."},
+  // STEALTH Q36: Attention Check - extremely easy, buried in middle
+  {id:36,category:"Processing Efficiency",difficulty:"Easy",question:"This question checks basic attention. What is 12 + 5?",options:["17","18","16","15"],correct:0,weights:{},isAttentionCheck:true,correctIndicates:"Passed attention check.",incorrectIndicates:"Failed basic attention check."},
+  // STEALTH Q37: Consistency Check - rephrased version of Q5 (categorical logic)
+  {id:37,category:"Analytical Reasoning",difficulty:"Medium",question:"Every X is a Y. Some Y are Z. Which must be true?",options:["Every X is a Z","Some X might be Z","No X is a Z","Every Z is an X"],correct:1,weights:{analytical:50},consistencyPairWith:5,correctIndicates:"Consistent logical reasoning.",incorrectIndicates:"May apply logic inconsistently."},
+  // STEALTH Q38: Metacognition Probe
+  {id:38,category:"Adaptive Thinking",difficulty:"Easy",question:"Reflecting on the rule-switching questions earlier (where rules changed multiple times), how confident are you in your answers to those questions?",options:["Very confident - I tracked all rule changes clearly","Somewhat confident - I think I got most right","Not confident - I found it confusing","I mostly guessed"],correct:-1,weights:{},isMetacognition:true,correctIndicates:"N/A",incorrectIndicates:"N/A"},
+  // STEALTH Q39: Anchoring Bias Test
+  {id:39,category:"Analytical Reasoning",difficulty:"Medium",question:"Research shows 78% of employees report preferring collaborative work environments. What percentage of employees do you think actually perform better in collaborative versus independent settings?",options:["75-85% (similar to preference)","40-60% (it varies significantly)","Over 90% (collaboration is usually better)","Under 30% (most work better alone)"],correct:1,weights:{analytical:30},isAnchoringTest:true,anchoredAnswer:0,correctIndicates:"Independent critical thinking - not anchored to given statistic.",incorrectIndicates:"May be susceptible to anchoring bias."},
+  // STEALTH Q40: Delayed Memory Recall (from the memo, at the very end)
+  {id:40,category:"Working Memory",difficulty:"Hard",question:"Thinking back to the company memo from earlier in the assessment: What was the budget allocation for the merged Innovation Hub division?",options:["$3.8 million","$4.2 million","$4.5 million","$5.1 million"],correct:1,weights:{memory:40},isDelayedRecall:true,correctIndicates:"Excellent long-term retention.",incorrectIndicates:"Information decay - short-term memory didn't consolidate."},
+  // STEALTH Q41: Honesty/Social Desirability Check
+  {id:41,category:"Analytical Reasoning",difficulty:"Medium",question:"An employee realizes they accidentally received a $500 overpayment in their paycheck. Based on organizational ethics research, the most professionally sound response is:",options:["Say nothing - it's the company's error","Mention it casually if asked","Report it immediately to payroll","Wait to see if anyone notices first"],correct:2,weights:{analytical:20},isHonestyCheck:true,sociallyDesirableWrong:0,correctIndicates:"Strong ethical reasoning.",incorrectIndicates:"May rationalize ethical shortcuts."},
+  // Q42: Frustration Tolerance / Persistence Test (deliberately very hard)
+  {id:42,category:"Pattern Recognition",difficulty:"Hard",question:"In the sequence 1, 11, 21, 1211, 111221, 312211, what comes next? (This is a 'look-and-say' sequence where each term describes the previous term.)",options:["13112221","212221","111222","1113213211"],correct:0,weights:{pattern:60},isFrustrationTest:true,correctIndicates:"Exceptional pattern recognition and persistence with novel challenges.",incorrectIndicates:"May struggle with highly abstract or unfamiliar problem types."}
 ];
+
+// Algorithm Configuration Constants
+const ALGORITHM_CONFIG = {
+  // Expected time per question by difficulty (milliseconds)
+  expectedTime: { Easy: 20000, Medium: 35000, Hard: 50000 },
+  
+  // Time confidence multipliers
+  timeConfidence: {
+    tooFast: { threshold: 0.25, multiplier: 0.6 },      // <25% of expected = likely guessing
+    fast: { threshold: 0.5, multiplier: 1.1 },          // 50% of expected = confident
+    normal: { threshold: 1.5, multiplier: 1.0 },        // Normal range
+    slow: { threshold: 2.5, multiplier: 0.95 },         // Slow but thoughtful
+    verySlowCorrect: { multiplier: 1.05 },              // Very slow but got it right = effortful success
+    verySlowWrong: { multiplier: 0.85 }                 // Very slow and wrong = genuine difficulty
+  },
+  
+  // IRT difficulty weights
+  difficultyWeight: { Easy: 0.8, Medium: 1.0, Hard: 1.3 },
+  
+  // Stealth question indices (0-indexed)
+  stealthQuestions: {
+    attentionCheck: 35,      // Q36
+    consistencyCheck: 36,    // Q37 (pairs with Q5, index 4)
+    consistencyPairWith: 4,  // Q5
+    metacognition: 37,       // Q38
+    anchoringTest: 38,       // Q39
+    delayedRecall: 39,       // Q40
+    honestyCheck: 40,        // Q41
+    frustrationTest: 41      // Q42
+  },
+  
+  // Category question indices for trajectory analysis (0-indexed)
+  categoryIndices: {
+    analytical: [0, 1, 2, 3, 4, 5, 6, 7, 36, 38, 40],
+    pattern: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 41],
+    memory: [18, 19, 20, 21, 22, 23, 24, 39],
+    adaptive: [25, 26, 27, 28, 29, 30, 31, 37],
+    processing: [32, 33, 34, 35]
+  },
+  
+  // Question dependencies for skill ceiling detection
+  dependencies: {
+    5: [0, 4],      // Q6 depends on Q1 and Q5
+    7: [1, 3],      // Q8 depends on Q2 and Q4
+    16: [8, 13],    // Q17 depends on Q9 and Q14
+    30: [25, 27],   // Q31 depends on Q26 and Q28
+    31: [30]        // Q32 depends on Q31
+  }
+};
+
+// Advanced Analysis Functions
+const analyzeResponseTime = (timeMs, difficulty, isCorrect) => {
+  const expected = ALGORITHM_CONFIG.expectedTime[difficulty];
+  const ratio = timeMs / expected;
+  const tc = ALGORITHM_CONFIG.timeConfidence;
+  
+  let confidence = 1.0;
+  let interpretation = 'normal';
+  
+  if (ratio < tc.tooFast.threshold) {
+    confidence = tc.tooFast.multiplier;
+    interpretation = isCorrect ? 'quick_correct' : 'likely_guess';
+  } else if (ratio < tc.fast.threshold) {
+    confidence = tc.fast.multiplier;
+    interpretation = 'confident';
+  } else if (ratio < tc.normal.threshold) {
+    confidence = tc.normal.multiplier;
+    interpretation = 'normal';
+  } else if (ratio < tc.slow.threshold) {
+    confidence = tc.slow.multiplier;
+    interpretation = 'methodical';
+  } else {
+    confidence = isCorrect ? tc.verySlowCorrect.multiplier : tc.verySlowWrong.multiplier;
+    interpretation = isCorrect ? 'effortful_success' : 'genuine_difficulty';
+  }
+  
+  return { confidence, interpretation, ratio };
+};
+
+const analyzeAnswerPatterns = (answers) => {
+  const patterns = {
+    sameAnswerStreak: 0,
+    alternatingPattern: false,
+    positionBias: { 0: 0, 1: 0, 2: 0, 3: 0 },
+    suspicious: false,
+    details: []
+  };
+  
+  // Check for same-answer streaks
+  let currentStreak = 1;
+  let maxStreak = 1;
+  for (let i = 1; i < Object.keys(answers).length; i++) {
+    if (answers[i] === answers[i-1]) {
+      currentStreak++;
+      maxStreak = Math.max(maxStreak, currentStreak);
+    } else {
+      currentStreak = 1;
+    }
+  }
+  patterns.sameAnswerStreak = maxStreak;
+  
+  // Check position bias
+  Object.values(answers).forEach(a => {
+    if (a >= 0 && a <= 3) patterns.positionBias[a]++;
+  });
+  const total = Object.keys(answers).length;
+  const maxBias = Math.max(...Object.values(patterns.positionBias));
+  
+  // Check for alternating pattern (ABAB...)
+  let alternating = 0;
+  for (let i = 2; i < Object.keys(answers).length; i++) {
+    if (answers[i] === answers[i-2] && answers[i] !== answers[i-1]) {
+      alternating++;
+    }
+  }
+  patterns.alternatingPattern = alternating > total * 0.4;
+  
+  // Determine if suspicious
+  if (maxStreak >= 6) {
+    patterns.suspicious = true;
+    patterns.details.push(`Same answer chosen ${maxStreak} times in a row`);
+  }
+  if (maxBias > total * 0.45) {
+    patterns.suspicious = true;
+    const biasedPosition = Object.entries(patterns.positionBias).find(([_, v]) => v === maxBias)[0];
+    patterns.details.push(`Strong position bias toward option ${String.fromCharCode(65 + parseInt(biasedPosition))}`);
+  }
+  if (patterns.alternatingPattern) {
+    patterns.suspicious = true;
+    patterns.details.push('Alternating answer pattern detected');
+  }
+  
+  return patterns;
+};
+
+const analyzeTrajectory = (answers, questions, categoryIndices) => {
+  const trajectories = {};
+  
+  Object.entries(categoryIndices).forEach(([category, indices]) => {
+    const validIndices = indices.filter(i => answers[i] !== undefined && questions[i] && !questions[i].isMetacognition);
+    if (validIndices.length < 4) {
+      trajectories[category] = { trend: 'insufficient_data', firstHalf: 0, secondHalf: 0 };
+      return;
+    }
+    
+    const midpoint = Math.floor(validIndices.length / 2);
+    const firstHalf = validIndices.slice(0, midpoint);
+    const secondHalf = validIndices.slice(midpoint);
+    
+    const firstCorrect = firstHalf.filter(i => answers[i] === questions[i].correct).length / firstHalf.length;
+    const secondCorrect = secondHalf.filter(i => answers[i] === questions[i].correct).length / secondHalf.length;
+    
+    let trend = 'stable';
+    if (secondCorrect - firstCorrect > 0.2) trend = 'improving';
+    else if (firstCorrect - secondCorrect > 0.2) trend = 'declining';
+    
+    trajectories[category] = {
+      trend,
+      firstHalf: Math.round(firstCorrect * 100),
+      secondHalf: Math.round(secondCorrect * 100),
+      change: Math.round((secondCorrect - firstCorrect) * 100)
+    };
+  });
+  
+  return trajectories;
+};
+
+const analyzeStealthQuestions = (answers, questions, questionTimes) => {
+  const config = ALGORITHM_CONFIG.stealthQuestions;
+  const results = {
+    attentionCheck: { passed: true, concern: null },
+    consistencyCheck: { passed: true, concern: null },
+    metacognition: { response: null, calibration: null },
+    anchoringBias: { detected: false, concern: null },
+    delayedRecall: { passed: true, concern: null },
+    honestyCheck: { passed: true, concern: null },
+    frustrationTolerance: { score: 'normal', timeSpent: 0 },
+    overallValidity: 'high'
+  };
+  
+  // Attention Check (Q36, index 35)
+  if (answers[config.attentionCheck] !== undefined) {
+    const q = questions[config.attentionCheck];
+    if (answers[config.attentionCheck] !== q.correct) {
+      results.attentionCheck.passed = false;
+      results.attentionCheck.concern = 'Failed basic arithmetic attention check';
+    }
+  }
+  
+  // Consistency Check (Q37 vs Q5)
+  const q5Answer = answers[config.consistencyPairWith];
+  const q37Answer = answers[config.consistencyCheck];
+  if (q5Answer !== undefined && q37Answer !== undefined) {
+    // Q5 correct = 1 (Some lawyers cannot be trusted)
+    // Q37 correct = 1 (Some X might be Z)
+    // Both test same logical structure - if one right and one wrong, inconsistent
+    const q5Correct = q5Answer === 1;
+    const q37Correct = q37Answer === 1;
+    if (q5Correct !== q37Correct) {
+      results.consistencyCheck.passed = false;
+      results.consistencyCheck.concern = 'Inconsistent responses on equivalent logic problems';
+    }
+  }
+  
+  // Metacognition (Q38, index 37)
+  if (answers[config.metacognition] !== undefined) {
+    results.metacognition.response = answers[config.metacognition];
+    // Compare confidence to actual adaptive performance
+    const adaptiveIndices = [25, 26, 27, 28, 29, 30, 31];
+    const adaptiveCorrect = adaptiveIndices.filter(i => 
+      answers[i] !== undefined && questions[i] && answers[i] === questions[i].correct
+    ).length;
+    const adaptiveAccuracy = adaptiveCorrect / adaptiveIndices.length;
+    
+    // 0 = Very confident, 1 = Somewhat, 2 = Not confident, 3 = Guessed
+    const confidence = answers[config.metacognition];
+    if (confidence === 0 && adaptiveAccuracy < 0.5) {
+      results.metacognition.calibration = 'overconfident';
+    } else if (confidence >= 2 && adaptiveAccuracy > 0.7) {
+      results.metacognition.calibration = 'underconfident';
+    } else {
+      results.metacognition.calibration = 'well_calibrated';
+    }
+  }
+  
+  // Anchoring Bias (Q39, index 38)
+  if (answers[config.anchoringTest] !== undefined) {
+    if (answers[config.anchoringTest] === 0) { // Chose 75-85% (anchored to 78%)
+      results.anchoringBias.detected = true;
+      results.anchoringBias.concern = 'Susceptible to anchoring - accepted given statistic without critical evaluation';
+    }
+  }
+  
+  // Delayed Recall (Q40, index 39)
+  if (answers[config.delayedRecall] !== undefined) {
+    const q = questions[config.delayedRecall];
+    if (answers[config.delayedRecall] !== q.correct) {
+      results.delayedRecall.passed = false;
+      results.delayedRecall.concern = 'Information decay - details from earlier passage not retained';
+    }
+  }
+  
+  // Honesty Check (Q41, index 40)
+  if (answers[config.honestyCheck] !== undefined) {
+    if (answers[config.honestyCheck] === 0) { // "Say nothing"
+      results.honestyCheck.passed = false;
+      results.honestyCheck.concern = 'May rationalize ethical shortcuts when convenient';
+    }
+  }
+  
+  // Frustration Tolerance (Q42, index 41)
+  if (questionTimes && questionTimes[config.frustrationTest]) {
+    const timeSpent = questionTimes[config.frustrationTest];
+    results.frustrationTolerance.timeSpent = timeSpent;
+    
+    if (timeSpent < 5000) {
+      results.frustrationTolerance.score = 'low';
+    } else if (timeSpent < 15000) {
+      results.frustrationTolerance.score = 'moderate';
+    } else {
+      results.frustrationTolerance.score = 'high';
+    }
+  }
+  
+  // Calculate overall validity
+  let validityConcerns = 0;
+  if (!results.attentionCheck.passed) validityConcerns += 2;
+  if (!results.consistencyCheck.passed) validityConcerns += 1;
+  if (results.metacognition.calibration === 'overconfident') validityConcerns += 0.5;
+  
+  if (validityConcerns >= 2) results.overallValidity = 'low';
+  else if (validityConcerns >= 1) results.overallValidity = 'moderate';
+  else results.overallValidity = 'high';
+  
+  return results;
+};
+
+const analyzeSkillCeilings = (answers, questions) => {
+  const ceilings = [];
+  const deps = ALGORITHM_CONFIG.dependencies;
+  
+  Object.entries(deps).forEach(([advancedIdx, prereqIndices]) => {
+    const idx = parseInt(advancedIdx);
+    const advancedCorrect = answers[idx] === questions[idx]?.correct;
+    const prereqsCorrect = prereqIndices.every(i => answers[i] === questions[i]?.correct);
+    
+    if (prereqsCorrect && !advancedCorrect) {
+      ceilings.push({
+        question: questions[idx]?.id,
+        category: questions[idx]?.category,
+        message: `Mastered prerequisites but struggled with Q${questions[idx]?.id} - potential skill ceiling identified`
+      });
+    }
+  });
+  
+  return ceilings;
+};
 
 const memoryPassage = {title:"Meridian Technologies Company Memo",content:'Meridian Technologies has announced organizational changes effective Q3. The Engineering division, led by Director Priya Sharma, will merge with the Product team under the new "Innovation Hub." The merger affects 127 employees across three offices: Seattle (58 employees), Austin (42 employees), and Boston (27 employees). Budget allocation for the merged division is $4.2 million, a 15% increase from the combined previous budgets. New reporting structure: all team leads report to Priya Sharma, who reports directly to CEO Marcus Chen. The transition timeline is 90 days, with Phase 1 (communication) lasting 2 weeks, Phase 2 (structural changes) lasting 6 weeks, and Phase 3 (integration) lasting 4 weeks.'};
 
@@ -396,13 +707,36 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
     // Track category-level performance for pattern analysis
     const categoryPerformance = {};
     
+    // Track time-confidence weighted scores
+    const timeWeightedScores = {analytical:0,pattern:0,memory:0,adaptive:0,processing:0};
+    const responsePatterns = { fastCorrect: 0, fastWrong: 0, slowCorrect: 0, slowWrong: 0 };
+    
     questions.forEach((q, i) => {
+      // Skip stealth questions from main scoring (they have empty weights or special handling)
+      if (q.isMetacognition || q.isAttentionCheck && Object.keys(q.weights).length === 0) return;
+      
       const isCorrect = answers[i] === q.correct;
-      const diffMult = difficultyMultiplier[q.difficulty];
+      const diffMult = ALGORITHM_CONFIG.difficultyWeight[q.difficulty] || 1.0;
+      
+      // Calculate time confidence if timing data available
+      let timeConfidence = 1.0;
+      if (questionTimes && questionTimes[i]) {
+        const timeAnalysis = analyzeResponseTime(questionTimes[i], q.difficulty, isCorrect);
+        timeConfidence = timeAnalysis.confidence;
+        
+        // Track response patterns
+        const isFast = timeAnalysis.ratio < 0.5;
+        if (isFast && isCorrect) responsePatterns.fastCorrect++;
+        else if (isFast && !isCorrect) responsePatterns.fastWrong++;
+        else if (!isFast && isCorrect) responsePatterns.slowCorrect++;
+        else responsePatterns.slowWrong++;
+      }
       
       // Track difficulty performance
-      difficultyPerformance[q.difficulty].total++;
-      if (isCorrect) difficultyPerformance[q.difficulty].correct++;
+      if (difficultyPerformance[q.difficulty]) {
+        difficultyPerformance[q.difficulty].total++;
+        if (isCorrect) difficultyPerformance[q.difficulty].correct++;
+      }
       
       // Track category performance
       if (!categoryPerformance[q.category]) {
@@ -419,6 +753,7 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
       Object.entries(q.weights).forEach(([category, weight]) => {
         const baseWeight = weight / 100;
         const irtWeight = baseWeight * diffMult;
+        const timeAdjustedWeight = irtWeight * timeConfidence;
         
         maxScores[category] += baseWeight;
         irtMax[category] += irtWeight;
@@ -426,14 +761,19 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
         if (isCorrect) {
           rawScores[category] += baseWeight;
           irtScores[category] += irtWeight;
+          timeWeightedScores[category] += timeAdjustedWeight;
         }
       });
     });
     
-    // Calculate percentiles using IRT-weighted scores
+    // Calculate percentiles using time-weighted scores (most advanced)
     const percentiles = {};
     Object.keys(irtScores).forEach(cat => {
-      percentiles[cat] = Math.round((irtScores[cat] / irtMax[cat]) * 100);
+      // Blend IRT and time-weighted scores (70% IRT, 30% time-weighted for stability)
+      const blendedScore = irtMax[cat] > 0 
+        ? (irtScores[cat] * 0.7 + timeWeightedScores[cat] * 0.3) / irtMax[cat]
+        : 0;
+      percentiles[cat] = Math.round(blendedScore * 100);
     });
     
     // Calculate consistency score (are easy/hard performances aligned?)
@@ -445,19 +785,38 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
     // Calculate confidence interval (±margin based on question count)
     const marginOfError = Math.round(15 / Math.sqrt(questions.length) * 2); // Simplified SE calculation
     
+    // Calculate impulsivity score from response patterns
+    const totalFast = responsePatterns.fastCorrect + responsePatterns.fastWrong;
+    const impulsivityScore = totalFast > 0 
+      ? Math.round((responsePatterns.fastWrong / totalFast) * 100)
+      : 0;
+    
     return {
       raw: rawScores,
       max: maxScores,
       irt: irtScores,
       irtMax: irtMax,
+      timeWeighted: timeWeightedScores,
       percentiles,
       difficultyPerformance,
       categoryPerformance,
+      responsePatterns,
+      impulsivityScore,
       consistencyScore: Math.round(consistencyScore * 100),
       isConsistent,
       marginOfError
     };
-  }, [answers]);
+  }, [answers, questionTimes]);
+
+  // Advanced Analysis
+  const advancedAnalysis = useMemo(() => {
+    return {
+      answerPatterns: analyzeAnswerPatterns(answers),
+      trajectories: analyzeTrajectory(answers, questions, ALGORITHM_CONFIG.categoryIndices),
+      stealthResults: analyzeStealthQuestions(answers, questions, questionTimes),
+      skillCeilings: analyzeSkillCeilings(answers, questions)
+    };
+  }, [answers, questionTimes]);
 
   // Calculate composite score based on selected role
   const getCompositeForRole = (roleKey) => {
@@ -473,10 +832,11 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
 
   const composite = getCompositeForRole(selectedRole);
 
-  // Red flag detection
+  // Red flag detection - enhanced with advanced analysis
   const getRedFlags = () => {
     const flags = [];
     const p = scores.percentiles;
+    const adv = advancedAnalysis;
     
     // Critical cognitive concerns
     if (p.adaptive < 20) flags.push({ severity: 'high', message: 'Very low adaptability — may struggle significantly with changing requirements or new processes', category: 'Adaptive Thinking' });
@@ -488,6 +848,11 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
     if (p.pattern > 70 && p.adaptive < 40) flags.push({ severity: 'medium', message: 'Strong pattern recognition but low adaptability — may resist changing established methods', category: 'Adaptive Thinking' });
     if (p.memory < 35 && p.analytical > 60) flags.push({ severity: 'medium', message: 'Good reasoning but weak memory — may need written references and documentation', category: 'Working Memory' });
     
+    // Impulsivity flag
+    if (scores.impulsivityScore > 50) {
+      flags.push({ severity: 'medium', message: `High impulsivity detected (${scores.impulsivityScore}% of quick answers were wrong) — may rush to conclusions without careful consideration`, category: 'Response Style' });
+    }
+    
     // Consistency flags
     if (!scores.isConsistent) {
       const easyRate = scores.difficultyPerformance.Easy.correct / scores.difficultyPerformance.Easy.total;
@@ -497,18 +862,58 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
       }
     }
     
-    // Adaptive section specific analysis (Q24-29)
-    const adaptiveQuestions = questions.filter(q => q.category === 'Adaptive Thinking');
-    const adaptiveAnswers = adaptiveQuestions.map((q, idx) => answers[questions.indexOf(q)] === q.correct);
-    const ruleTransitions = [
-      { from: 0, to: 2, name: 'Rule 1 to Rule 2' },
-      { from: 2, to: 4, name: 'Rule 2 to Rule 3' }
-    ];
-    ruleTransitions.forEach(({ from, to, name }) => {
-      if (adaptiveAnswers[from] && adaptiveAnswers[from + 1] && !adaptiveAnswers[to] && !adaptiveAnswers[to + 1]) {
-        flags.push({ severity: 'medium', message: `Struggled with ${name} transition — may have difficulty when procedures change`, category: 'Adaptive Thinking' });
+    // Answer pattern flags
+    if (adv.answerPatterns.suspicious) {
+      adv.answerPatterns.details.forEach(detail => {
+        flags.push({ severity: 'medium', message: detail, category: 'Response Pattern' });
+      });
+    }
+    
+    // Trajectory flags
+    Object.entries(adv.trajectories).forEach(([cat, traj]) => {
+      if (traj.trend === 'declining' && traj.change < -25) {
+        flags.push({ severity: 'medium', message: `Performance declined significantly in ${categoryNames[cat] || cat} (${traj.firstHalf}% → ${traj.secondHalf}%) — may indicate fatigue or loss of focus`, category: categoryNames[cat] || cat });
       }
     });
+    
+    // Stealth question flags
+    const stealth = adv.stealthResults;
+    if (!stealth.attentionCheck.passed) {
+      flags.push({ severity: 'high', message: stealth.attentionCheck.concern, category: 'Validity' });
+    }
+    if (!stealth.consistencyCheck.passed) {
+      flags.push({ severity: 'medium', message: stealth.consistencyCheck.concern, category: 'Validity' });
+    }
+    if (stealth.metacognition.calibration === 'overconfident') {
+      flags.push({ severity: 'low', message: 'Metacognitive miscalibration — expressed high confidence despite lower actual performance (Dunning-Kruger pattern)', category: 'Self-Awareness' });
+    }
+    if (stealth.anchoringBias.detected) {
+      flags.push({ severity: 'low', message: stealth.anchoringBias.concern, category: 'Critical Thinking' });
+    }
+    if (!stealth.delayedRecall.passed) {
+      flags.push({ severity: 'low', message: stealth.delayedRecall.concern, category: 'Long-term Retention' });
+    }
+    if (!stealth.honestyCheck.passed) {
+      flags.push({ severity: 'medium', message: stealth.honestyCheck.concern, category: 'Ethical Reasoning' });
+    }
+    if (stealth.frustrationTolerance.score === 'low') {
+      flags.push({ severity: 'low', message: 'Low frustration tolerance — gave up quickly on challenging problem (spent <5 seconds)', category: 'Persistence' });
+    }
+    
+    // Skill ceiling flags
+    adv.skillCeilings.forEach(ceiling => {
+      flags.push({ severity: 'low', message: ceiling.message, category: ceiling.category });
+    });
+    
+    // Adaptive section specific analysis
+    const adaptiveIndices = [25, 26, 27, 28, 29, 30, 31];
+    const adaptiveCorrect = adaptiveIndices.map(i => answers[i] === questions[i]?.correct);
+    if (adaptiveCorrect[0] && adaptiveCorrect[1] && !adaptiveCorrect[2] && !adaptiveCorrect[3]) {
+      flags.push({ severity: 'medium', message: 'Struggled with Rule 1 to Rule 2 transition — may have difficulty when procedures change', category: 'Adaptive Thinking' });
+    }
+    if (adaptiveCorrect[2] && adaptiveCorrect[3] && !adaptiveCorrect[5] && !adaptiveCorrect[6]) {
+      flags.push({ severity: 'medium', message: 'Struggled with Rule 2 to Rule 3 transition — shows pattern of difficulty with cumulative rule changes', category: 'Adaptive Thinking' });
+    }
     
     return flags;
   };
@@ -550,6 +955,7 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
     { id: 'overview', label: 'Overview', icon: '📊' },
     { id: 'roles', label: 'Role Fit', icon: '💼' },
     { id: 'style', label: 'Cognitive Style', icon: '🧠' },
+    { id: 'analytics', label: 'Deep Analytics', icon: '🔬' },
     { id: 'questions', label: 'Questions', icon: '❓' },
   ];
 
@@ -872,6 +1278,171 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
                   It reflects behavioral tendencies during cognitive tasks, not personality traits.
                 </p>
               </div>
+            </div>
+          )}
+
+          {/* Deep Analytics Tab */}
+          {activeTab === 'analytics' && (
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 mb-2">Deep Analytics</h2>
+              <p className="text-slate-500 text-sm mb-6">Advanced psychometric analysis using response timing, patterns, and embedded validity checks.</p>
+              
+              {/* Response Validity Index */}
+              <div className="bg-slate-50 rounded-xl p-4 mb-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">📋 Response Validity Index</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  <div className={`p-3 rounded-lg ${advancedAnalysis.stealthResults.attentionCheck.passed ? 'bg-emerald-50' : 'bg-rose-50'}`}>
+                    <div className="text-xs text-slate-500">Attention Check</div>
+                    <div className={`font-semibold ${advancedAnalysis.stealthResults.attentionCheck.passed ? 'text-emerald-700' : 'text-rose-700'}`}>
+                      {advancedAnalysis.stealthResults.attentionCheck.passed ? '✓ Passed' : '✗ Failed'}
+                    </div>
+                  </div>
+                  <div className={`p-3 rounded-lg ${advancedAnalysis.stealthResults.consistencyCheck.passed ? 'bg-emerald-50' : 'bg-amber-50'}`}>
+                    <div className="text-xs text-slate-500">Consistency Check</div>
+                    <div className={`font-semibold ${advancedAnalysis.stealthResults.consistencyCheck.passed ? 'text-emerald-700' : 'text-amber-700'}`}>
+                      {advancedAnalysis.stealthResults.consistencyCheck.passed ? '✓ Consistent' : '⚠ Inconsistent'}
+                    </div>
+                  </div>
+                  <div className={`p-3 rounded-lg ${advancedAnalysis.stealthResults.overallValidity === 'high' ? 'bg-emerald-50' : advancedAnalysis.stealthResults.overallValidity === 'moderate' ? 'bg-amber-50' : 'bg-rose-50'}`}>
+                    <div className="text-xs text-slate-500">Overall Validity</div>
+                    <div className={`font-semibold ${advancedAnalysis.stealthResults.overallValidity === 'high' ? 'text-emerald-700' : advancedAnalysis.stealthResults.overallValidity === 'moderate' ? 'text-amber-700' : 'text-rose-700'}`}>
+                      {advancedAnalysis.stealthResults.overallValidity.toUpperCase()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Metacognitive & Bias Profile */}
+              <div className="bg-slate-50 rounded-xl p-4 mb-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">🧠 Metacognitive & Bias Profile</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 bg-white rounded-lg">
+                    <div className="text-xs text-slate-500">Self-Assessment Calibration</div>
+                    <div className={`font-semibold ${
+                      advancedAnalysis.stealthResults.metacognition.calibration === 'well_calibrated' ? 'text-emerald-700' :
+                      advancedAnalysis.stealthResults.metacognition.calibration === 'overconfident' ? 'text-amber-700' :
+                      advancedAnalysis.stealthResults.metacognition.calibration === 'underconfident' ? 'text-blue-700' : 'text-slate-500'
+                    }`}>
+                      {advancedAnalysis.stealthResults.metacognition.calibration === 'well_calibrated' ? '✓ Well Calibrated' :
+                       advancedAnalysis.stealthResults.metacognition.calibration === 'overconfident' ? '⚠ Overconfident' :
+                       advancedAnalysis.stealthResults.metacognition.calibration === 'underconfident' ? 'ℹ Underconfident' : '— N/A'}
+                    </div>
+                  </div>
+                  <div className="p-3 bg-white rounded-lg">
+                    <div className="text-xs text-slate-500">Anchoring Bias</div>
+                    <div className={`font-semibold ${advancedAnalysis.stealthResults.anchoringBias.detected ? 'text-amber-700' : 'text-emerald-700'}`}>
+                      {advancedAnalysis.stealthResults.anchoringBias.detected ? '⚠ Susceptible' : '✓ Independent'}
+                    </div>
+                  </div>
+                  <div className="p-3 bg-white rounded-lg">
+                    <div className="text-xs text-slate-500">Ethical Reasoning</div>
+                    <div className={`font-semibold ${advancedAnalysis.stealthResults.honestyCheck.passed ? 'text-emerald-700' : 'text-amber-700'}`}>
+                      {advancedAnalysis.stealthResults.honestyCheck.passed ? '✓ Sound' : '⚠ Concern'}
+                    </div>
+                  </div>
+                  <div className="p-3 bg-white rounded-lg">
+                    <div className="text-xs text-slate-500">Frustration Tolerance</div>
+                    <div className={`font-semibold ${
+                      advancedAnalysis.stealthResults.frustrationTolerance.score === 'high' ? 'text-emerald-700' :
+                      advancedAnalysis.stealthResults.frustrationTolerance.score === 'moderate' ? 'text-blue-700' : 'text-amber-700'
+                    }`}>
+                      {advancedAnalysis.stealthResults.frustrationTolerance.score === 'high' ? '✓ High Persistence' :
+                       advancedAnalysis.stealthResults.frustrationTolerance.score === 'moderate' ? 'Moderate' : '⚠ Low Persistence'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Response Patterns */}
+              <div className="bg-slate-50 rounded-xl p-4 mb-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">⚡ Response Time Analysis</h3>
+                <div className="grid grid-cols-4 gap-2 mb-3">
+                  <div className="p-2 bg-emerald-50 rounded-lg text-center">
+                    <div className="text-xl font-light text-emerald-700">{scores.responsePatterns.fastCorrect}</div>
+                    <div className="text-xs text-slate-500">Fast ✓</div>
+                  </div>
+                  <div className="p-2 bg-rose-50 rounded-lg text-center">
+                    <div className="text-xl font-light text-rose-700">{scores.responsePatterns.fastWrong}</div>
+                    <div className="text-xs text-slate-500">Fast ✗</div>
+                  </div>
+                  <div className="p-2 bg-blue-50 rounded-lg text-center">
+                    <div className="text-xl font-light text-blue-700">{scores.responsePatterns.slowCorrect}</div>
+                    <div className="text-xs text-slate-500">Slow ✓</div>
+                  </div>
+                  <div className="p-2 bg-amber-50 rounded-lg text-center">
+                    <div className="text-xl font-light text-amber-700">{scores.responsePatterns.slowWrong}</div>
+                    <div className="text-xs text-slate-500">Slow ✗</div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-white rounded-lg">
+                  <span className="text-sm text-slate-600">Impulsivity Index</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full ${scores.impulsivityScore > 50 ? 'bg-rose-500' : scores.impulsivityScore > 30 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{width: `${Math.min(scores.impulsivityScore, 100)}%`}} />
+                    </div>
+                    <span className="text-sm font-medium text-slate-700">{scores.impulsivityScore}%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Trajectory Analysis */}
+              <div className="bg-slate-50 rounded-xl p-4 mb-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">📈 Performance Trajectory</h3>
+                <div className="space-y-2">
+                  {Object.entries(advancedAnalysis.trajectories).map(([cat, traj]) => (
+                    <div key={cat} className="flex items-center justify-between p-2 bg-white rounded-lg">
+                      <span className="text-sm text-slate-600">{categoryNames[cat]?.split(' ')[0] || cat}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-slate-400">{traj.firstHalf}%</span>
+                        <span className={`text-base ${traj.trend === 'improving' ? 'text-emerald-600' : traj.trend === 'declining' ? 'text-rose-600' : 'text-slate-400'}`}>
+                          {traj.trend === 'improving' ? '↗' : traj.trend === 'declining' ? '↘' : '→'}
+                        </span>
+                        <span className="text-xs text-slate-400">{traj.secondHalf}%</span>
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${
+                          traj.trend === 'improving' ? 'bg-emerald-100 text-emerald-700' :
+                          traj.trend === 'declining' ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {traj.trend === 'insufficient_data' ? 'N/A' : traj.trend === 'stable' ? 'Stable' : `${traj.change > 0 ? '+' : ''}${traj.change}%`}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Memory & Skill Analysis */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-slate-50 rounded-xl p-4">
+                  <h3 className="text-sm font-semibold text-slate-900 mb-3">💾 Memory Retention</h3>
+                  <div className={`p-3 rounded-lg ${advancedAnalysis.stealthResults.delayedRecall.passed ? 'bg-emerald-50' : 'bg-amber-50'}`}>
+                    <div className="text-xs text-slate-500">Delayed Recall Test</div>
+                    <div className={`font-semibold ${advancedAnalysis.stealthResults.delayedRecall.passed ? 'text-emerald-700' : 'text-amber-700'}`}>
+                      {advancedAnalysis.stealthResults.delayedRecall.passed ? '✓ Information Retained' : '⚠ Information Decay'}
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1">Tested recall of passage details at end of assessment</p>
+                  </div>
+                </div>
+                
+                {advancedAnalysis.skillCeilings.length > 0 && (
+                  <div className="bg-slate-50 rounded-xl p-4">
+                    <h3 className="text-sm font-semibold text-slate-900 mb-3">🎯 Skill Ceilings Detected</h3>
+                    <div className="space-y-2">
+                      {advancedAnalysis.skillCeilings.slice(0, 2).map((c, i) => (
+                        <div key={i} className="p-2 bg-amber-50 rounded-lg text-xs text-amber-800">{c.message}</div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {advancedAnalysis.answerPatterns.suspicious && (
+                <div className="mt-4 p-4 bg-rose-50 border border-rose-200 rounded-xl">
+                  <h3 className="text-sm font-semibold text-rose-800 mb-2">⚠ Suspicious Response Patterns</h3>
+                  <ul className="text-rose-700 text-sm space-y-1">
+                    {advancedAnalysis.answerPatterns.details.map((d, i) => <li key={i}>• {d}</li>)}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
 
