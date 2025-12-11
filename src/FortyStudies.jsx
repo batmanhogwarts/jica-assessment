@@ -53,30 +53,35 @@ const FortyStudiesPage = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Progress bar */}
-      <div className="fixed top-0 left-0 w-full h-[3px] bg-neutral-200/50 z-50">
+      <div className="fixed top-0 left-0 w-full h-[2px] bg-neutral-100 z-50">
         <div 
-          className="h-full bg-gradient-to-r from-neutral-300 via-neutral-400 to-neutral-300 transition-all duration-300 ease-out"
+          className="h-full bg-gradient-to-r from-neutral-400 via-neutral-500 to-neutral-400 transition-all duration-300 ease-out"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
 
-      {/* Minimal header */}
-      <header className="fixed top-0 left-0 right-0 z-40">
-        <div className="max-w-4xl mx-auto px-8 pt-8 flex items-start justify-between">
-          <a href="/" className="text-xs tracking-widest text-neutral-400 hover:text-neutral-600 transition-colors uppercase">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-neutral-50/80 backdrop-blur-md border-b border-neutral-100">
+        <div className="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-neutral-800">Forty Studies</span>
+            <span className="text-neutral-300">|</span>
+            <span className="text-xs text-neutral-400">1 & 3</span>
+          </div>
+          <a href="/" className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors">
             ← Back
           </a>
         </div>
       </header>
 
       {/* Hero */}
-      <div className="pt-32 pb-20 px-8">
+      <div className="pt-20 pb-16 px-8">
         <div className="max-w-4xl mx-auto">
-          <p className="text-xs tracking-[0.3em] text-neutral-400 uppercase mb-6">AP Psychology</p>
-          <h1 className="text-4xl md:text-5xl font-light text-neutral-800 tracking-tight mb-4">
+          <p className="text-xs tracking-[0.3em] text-neutral-400 uppercase mb-4">AP Psychology</p>
+          <h1 className="text-4xl md:text-5xl font-light text-neutral-800 tracking-tight shimmer-text">
             Forty Studies
           </h1>
-          <p className="text-lg text-neutral-400 font-light">Readings 1 & 3</p>
+          <div className="mt-6 w-16 h-[2px] shimmer-line" />
         </div>
       </div>
 
@@ -86,12 +91,12 @@ const FortyStudiesPage = () => {
         {readings.map((reading, rIndex) => (
           <section 
             key={reading.id} 
-            className="mb-32 animate-fadeIn"
+            className="mb-20 animate-fadeIn"
             style={{ animationDelay: `${rIndex * 0.2}s` }}
           >
             
             {/* Reading header */}
-            <div className="mb-16 pb-8 border-b border-neutral-200">
+            <div className="mb-12 pb-6 border-b border-neutral-200">
               <span className="text-xs tracking-[0.3em] text-neutral-400 uppercase">Reading {reading.id}</span>
               <h2 className="text-2xl md:text-3xl font-light text-neutral-800 mt-3 tracking-tight">
                 {reading.title}
@@ -100,13 +105,13 @@ const FortyStudiesPage = () => {
             </div>
 
             {/* Three questions */}
-            <div className="mb-16">
-              <h3 className="text-xs tracking-[0.2em] text-neutral-400 uppercase mb-8">Three Questions</h3>
-              <div className="space-y-4">
+            <div className="mb-12">
+              <h3 className="text-xs tracking-[0.2em] text-neutral-400 uppercase mb-6">Three Questions</h3>
+              <div className="space-y-3">
                 {reading.questions.map((q, qIndex) => (
                   <div 
                     key={qIndex} 
-                    className={`group flex gap-6 p-6 rounded-sm transition-all duration-500 cursor-default ${
+                    className={`group flex gap-5 p-5 rounded transition-all duration-500 cursor-default ${
                       qIndex === reading.chosenIndex 
                         ? 'bg-neutral-100' 
                         : 'hover:bg-neutral-50'
@@ -129,8 +134,8 @@ const FortyStudiesPage = () => {
 
             {/* Answer section */}
             <div>
-              <h3 className="text-xs tracking-[0.2em] text-neutral-400 uppercase mb-8">Response</h3>
-              <div className="space-y-6 pl-6 border-l border-neutral-200">
+              <h3 className="text-xs tracking-[0.2em] text-neutral-400 uppercase mb-6">Response</h3>
+              <div className="space-y-5 pl-5 border-l-2 border-neutral-200">
                 {reading.answer.map((para, pIndex) => (
                   <p 
                     key={pIndex} 
@@ -144,8 +149,8 @@ const FortyStudiesPage = () => {
 
             {/* Divider between readings */}
             {rIndex < readings.length - 1 && (
-              <div className="mt-32 flex justify-center">
-                <div className="w-24 h-px bg-gradient-to-r from-transparent via-neutral-300 to-transparent" />
+              <div className="mt-20 flex justify-center">
+                <div className="w-20 h-[2px] shimmer-line" />
               </div>
             )}
           </section>
@@ -154,7 +159,7 @@ const FortyStudiesPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-100 py-12">
+      <footer className="border-t border-neutral-100 py-10">
         <div className="max-w-4xl mx-auto px-8 text-center">
           <p className="text-xs tracking-[0.2em] text-neutral-300 uppercase">
             Forty Studies That Changed Psychology
@@ -164,12 +169,46 @@ const FortyStudiesPage = () => {
 
       <style>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(30px); }
+          from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeIn {
           opacity: 0;
           animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        
+        .shimmer-text {
+          background: linear-gradient(
+            90deg,
+            #262626 0%,
+            #262626 40%,
+            #525252 50%,
+            #262626 60%,
+            #262626 100%
+          );
+          background-size: 200% auto;
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer 8s linear infinite;
+        }
+        
+        .shimmer-line {
+          background: linear-gradient(
+            90deg,
+            #d4d4d4 0%,
+            #d4d4d4 40%,
+            #a3a3a3 50%,
+            #d4d4d4 60%,
+            #d4d4d4 100%
+          );
+          background-size: 200% auto;
+          animation: shimmer 4s linear infinite;
         }
       `}</style>
     </div>
