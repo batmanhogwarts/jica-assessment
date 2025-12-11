@@ -543,374 +543,400 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
   const recStyles = {emerald:{bg:"bg-emerald-50",border:"border-emerald-200",text:"text-emerald-700",icon:"bg-emerald-100"},blue:{bg:"bg-blue-50",border:"border-blue-200",text:"text-blue-700",icon:"bg-blue-100"},amber:{bg:"bg-amber-50",border:"border-amber-200",text:"text-amber-700",icon:"bg-amber-100"},rose:{bg:"bg-rose-50",border:"border-rose-200",text:"text-rose-700",icon:"bg-rose-100"}};
   const style = recStyles[recommendation.color];
 
-  return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Rush Detection Warning Banner */}
-        {timingAnalysis.rushLevel !== 'none' && (
-          <div className={`mb-8 p-6 rounded-2xl border-2 ${
-            timingAnalysis.rushLevel === 'severe' 
-              ? 'bg-rose-50 border-rose-300' 
-              : timingAnalysis.rushLevel === 'moderate'
-              ? 'bg-amber-50 border-amber-300'
-              : 'bg-blue-50 border-blue-200'
-          }`}>
-            <div className="flex items-start gap-4">
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
-                timingAnalysis.rushLevel === 'severe' 
-                  ? 'bg-rose-200' 
-                  : timingAnalysis.rushLevel === 'moderate'
-                  ? 'bg-amber-200'
-                  : 'bg-blue-200'
-              }`}>
-                <span className="text-2xl">{timingAnalysis.rushLevel === 'severe' ? '⚠️' : timingAnalysis.rushLevel === 'moderate' ? '⏱️' : 'ℹ️'}</span>
-              </div>
-              <div className="flex-1">
-                <h3 className={`text-lg font-semibold mb-2 ${
-                  timingAnalysis.rushLevel === 'severe' 
-                    ? 'text-rose-800' 
-                    : timingAnalysis.rushLevel === 'moderate'
-                    ? 'text-amber-800'
-                    : 'text-blue-800'
-                }`}>
-                  {timingAnalysis.rushLevel === 'severe' 
-                    ? 'Results Validity Concern' 
-                    : timingAnalysis.rushLevel === 'moderate'
-                    ? 'Assessment Completed Quickly'
-                    : 'Quick Completion Noted'}
-                </h3>
-                <p className={`text-sm mb-3 ${
-                  timingAnalysis.rushLevel === 'severe' 
-                    ? 'text-rose-700' 
-                    : timingAnalysis.rushLevel === 'moderate'
-                    ? 'text-amber-700'
-                    : 'text-blue-700'
-                }`}>
-                  {timingAnalysis.message}
-                </p>
-                <div className="flex flex-wrap gap-4 text-xs">
-                  <div className={`px-3 py-1 rounded-full ${
-                    timingAnalysis.rushLevel === 'severe' ? 'bg-rose-200 text-rose-800' : 
-                    timingAnalysis.rushLevel === 'moderate' ? 'bg-amber-200 text-amber-800' : 
-                    'bg-blue-200 text-blue-800'
-                  }`}>
-                    Total time: {timingAnalysis.totalTimeMinutes} minutes
-                  </div>
-                  <div className={`px-3 py-1 rounded-full ${
-                    timingAnalysis.rushLevel === 'severe' ? 'bg-rose-200 text-rose-800' : 
-                    timingAnalysis.rushLevel === 'moderate' ? 'bg-amber-200 text-amber-800' : 
-                    'bg-blue-200 text-blue-800'
-                  }`}>
-                    Avg per question: {timingAnalysis.avgTimePerQuestion}s
-                  </div>
-                  {timingAnalysis.questionsUnder3Sec > 0 && (
-                    <div className="px-3 py-1 rounded-full bg-rose-200 text-rose-800">
-                      {timingAnalysis.questionsUnder3Sec} questions under 3s
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+  // Tab state
+  const [activeTab, setActiveTab] = useState('overview');
+  
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: '📊' },
+    { id: 'roles', label: 'Role Fit', icon: '💼' },
+    { id: 'style', label: 'Cognitive Style', icon: '🧠' },
+    { id: 'questions', label: 'Questions', icon: '❓' },
+  ];
 
-        <div className="text-center mb-12">
-          <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center mx-auto mb-4"><span className="text-white text-xl font-semibold">J</span></div>
-          <h1 className="text-3xl font-light text-slate-900 mb-2">Assessment Complete</h1>
-          <p className="text-slate-500">Your cognitive profile has been analyzed using advanced psychometric methods</p>
-          {totalTestTime && (
-            <p className="text-slate-400 text-sm mt-2">Completed in {Math.round(totalTestTime / 60000)} minutes</p>
-          )}
+  // Calculate cognitive style traits (moved outside of render for tabs)
+  const cognitiveStyleTraits = useMemo(() => {
+    const p = scores.percentiles;
+    const dp = scores.difficultyPerformance;
+    
+    const thinkingStyle = scores.isConsistent && p.processing < 60 ? 'Methodical' : p.processing > 70 ? 'Intuitive' : 'Balanced';
+    const thinkingScore = p.processing > 70 ? 80 : p.processing < 40 ? 20 : 50;
+    
+    const adaptability = p.adaptive > 70 ? 'Highly Flexible' : p.adaptive > 50 ? 'Adaptable' : p.adaptive > 30 ? 'Prefers Structure' : 'Rigid';
+    const adaptScore = p.adaptive;
+    
+    const easyRate = dp.Easy.total > 0 ? (dp.Easy.correct / dp.Easy.total) * 100 : 50;
+    const detailLevel = easyRate > 85 ? 'Highly Detail-Oriented' : easyRate > 70 ? 'Attentive' : easyRate > 50 ? 'Moderate' : 'Big-Picture Focus';
+    const detailScore = easyRate;
+    
+    const pressureResponse = p.processing > 70 ? 'Thrives Under Pressure' : p.processing > 50 ? 'Handles Pressure Well' : p.processing > 30 ? 'Needs Time' : 'Struggles Under Pressure';
+    const pressureScore = p.processing;
+    
+    const learningSpeed = p.adaptive > 60 && p.pattern > 60 ? 'Quick Learner' : p.adaptive > 40 ? 'Steady Learner' : 'Needs Reinforcement';
+    const learnScore = (p.adaptive + p.pattern) / 2;
+    
+    const analyticalDepth = p.analytical > 70 ? 'Deep Analyzer' : p.analytical > 50 ? 'Solid Reasoner' : 'Surface-Level';
+    const analyticalScore = p.analytical;
+    
+    return [
+      { name: 'Thinking Style', value: thinkingStyle, score: thinkingScore, left: 'Methodical', right: 'Intuitive', color: 'blue' },
+      { name: 'Adaptability', value: adaptability, score: adaptScore, left: 'Structured', right: 'Flexible', color: 'purple' },
+      { name: 'Attention to Detail', value: detailLevel, score: detailScore, left: 'Big Picture', right: 'Detail-Focused', color: 'emerald' },
+      { name: 'Pressure Response', value: pressureResponse, score: pressureScore, left: 'Careful', right: 'Quick', color: 'amber' },
+      { name: 'Learning Curve', value: learningSpeed, score: learnScore, left: 'Gradual', right: 'Rapid', color: 'cyan' },
+      { name: 'Analytical Depth', value: analyticalDepth, score: analyticalScore, left: 'Practical', right: 'Theoretical', color: 'rose' },
+    ];
+  }, [scores]);
+
+  // Only show high-severity flags in main view
+  const importantFlags = redFlags.filter(f => f.severity === 'high');
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      {/* Sticky Header with Methodology Button */}
+      <header className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-semibold">J</span>
+            </div>
+            <span className="text-slate-900 font-medium">Assessment Results</span>
+            {totalTestTime && (
+              <span className="text-slate-400 text-sm hidden sm:inline">· {Math.round(totalTestTime / 60000)} min</span>
+            )}
+          </div>
+          <button 
+            onClick={onViewMethodology} 
+            className="px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            View Methodology
+          </button>
         </div>
         
-        {/* Main Recommendation */}
-        <div className={`${style.bg} ${style.border} border rounded-2xl p-6 mb-8`}>
-          <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 ${style.icon} rounded-full flex items-center justify-center`}><span className={`text-xl ${style.text}`}>{recommendation.icon}</span></div>
-            <div className="flex-1">
-              <div className={`text-lg font-semibold ${style.text}`}>{recommendation.level}</div>
-              <p className="text-slate-600 text-sm mt-1">{generateRationale()}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Role Fit Selector */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Role Fit Analysis</h2>
-          <p className="text-slate-500 text-sm mb-4">See how this profile matches different job types:</p>
-          <div className="flex flex-wrap gap-2 mb-6">
-            {Object.entries(roleProfiles).map(([key, role]) => (
+        {/* Tab Bar */}
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="flex gap-1 overflow-x-auto">
+            {tabs.map(tab => (
               <button
-                key={key}
-                onClick={() => setSelectedRole(key)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  selectedRole === key
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                  activeTab === tab.id 
+                    ? 'border-slate-900 text-slate-900' 
+                    : 'border-transparent text-slate-500 hover:text-slate-700'
                 }`}
               >
-                {role.icon} {role.name}
+                <span className="mr-2">{tab.icon}</span>
+                {tab.label}
               </button>
             ))}
           </div>
-          <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-            <div>
-              <div className="text-sm text-slate-500">Fit Score for {roleProfiles[selectedRole].name}</div>
-              <div className="text-3xl font-light text-slate-900">{composite}<span className="text-lg text-slate-400">th percentile</span></div>
-              <div className="text-xs text-slate-400 mt-1">Confidence interval: {Math.max(0, composite - scores.marginOfError)} - {Math.min(100, composite + scores.marginOfError)}</div>
-            </div>
-            <div className={`px-4 py-2 rounded-full text-sm font-medium ${
-              composite >= 70 ? 'bg-emerald-100 text-emerald-700' :
-              composite >= 50 ? 'bg-blue-100 text-blue-700' :
-              composite >= 35 ? 'bg-amber-100 text-amber-700' :
-              'bg-rose-100 text-rose-700'
-            }`}>
-              {composite >= 70 ? 'Excellent Fit' : composite >= 50 ? 'Good Fit' : composite >= 35 ? 'Moderate Fit' : 'Poor Fit'}
-            </div>
-          </div>
         </div>
+      </header>
 
-        {/* Red Flags Section */}
-        {redFlags.length > 0 && (
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">⚠️ Insights & Considerations</h2>
-            <div className="space-y-3">
-              {redFlags.map((flag, idx) => (
-                <div
-                  key={idx}
-                  className={`p-4 rounded-xl border ${
-                    flag.severity === 'high' ? 'bg-rose-50 border-rose-200' :
-                    flag.severity === 'medium' ? 'bg-amber-50 border-amber-200' :
-                    'bg-blue-50 border-blue-200'
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <span className={`text-sm font-medium px-2 py-0.5 rounded ${
-                      flag.severity === 'high' ? 'bg-rose-200 text-rose-800' :
-                      flag.severity === 'medium' ? 'bg-amber-200 text-amber-800' :
-                      'bg-blue-200 text-blue-800'
-                    }`}>
-                      {flag.severity === 'high' ? 'Important' : flag.severity === 'medium' ? 'Note' : 'Info'}
-                    </span>
-                    <div>
-                      <p className="text-slate-700 text-sm">{flag.message}</p>
-                      <p className="text-slate-400 text-xs mt-1">Related to: {flag.category}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
+      <main className="max-w-5xl mx-auto px-4 py-6">
+        {/* Rush Warning - Always visible if applicable */}
+        {timingAnalysis.rushLevel === 'severe' && (
+          <div className="mb-6 p-4 bg-rose-50 border-2 border-rose-300 rounded-xl">
+            <div className="flex items-start gap-3">
+              <span className="text-xl">⚠️</span>
+              <div>
+                <h3 className="text-rose-800 font-semibold">Results Validity Concern</h3>
+                <p className="text-rose-700 text-sm mt-1">{timingAnalysis.message}</p>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Performance Consistency */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Performance Consistency</h2>
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            {Object.entries(scores.difficultyPerformance).map(([diff, data]) => (
-              <div key={diff} className="text-center p-4 bg-slate-50 rounded-xl">
-                <div className={`text-xs font-medium uppercase tracking-wide mb-2 ${
-                  diff === 'Easy' ? 'text-emerald-600' : diff === 'Medium' ? 'text-amber-600' : 'text-rose-600'
-                }`}>{diff}</div>
-                <div className="text-2xl font-light text-slate-900">
-                  {data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0}%
+        {/* Important Concerns - Always visible if applicable */}
+        {importantFlags.length > 0 && (
+          <div className="mb-6 space-y-2">
+            {importantFlags.map((flag, idx) => (
+              <div key={idx} className="p-4 bg-rose-50 border border-rose-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <span className="text-xs font-medium px-2 py-0.5 rounded bg-rose-200 text-rose-800">Important</span>
+                  <div>
+                    <p className="text-slate-700 text-sm">{flag.message}</p>
+                    <p className="text-slate-400 text-xs mt-1">Related to: {flag.category}</p>
+                  </div>
                 </div>
-                <div className="text-xs text-slate-400">{data.correct}/{data.total} correct</div>
               </div>
             ))}
           </div>
-          <div className={`p-3 rounded-lg text-sm ${scores.isConsistent ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
-            {scores.isConsistent 
-              ? '✓ Consistent performance across difficulty levels — reliable indicator of true ability'
-              : '⚠ Inconsistent performance pattern — results should be interpreted with caution'}
-          </div>
-        </div>
+        )}
 
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white border border-gray-200 rounded-2xl p-6">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">Cognitive Profile</h2>
-            <div className="h-64">
+        {/* Main Content Grid - Always Visible */}
+        <div className="grid lg:grid-cols-3 gap-6 mb-6">
+          {/* Cognitive Profile (Spider Chart) */}
+          <div className="bg-white border border-gray-200 rounded-2xl p-5">
+            <h2 className="text-sm font-semibold text-slate-900 mb-3">Cognitive Profile</h2>
+            <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={radarData}>
                   <PolarGrid stroke="#e2e8f0"/>
-                  <PolarAngleAxis dataKey="category" tick={{fill:'#64748b',fontSize:11}}/>
-                  <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{fill:'#94a3b8',fontSize:10}}/>
+                  <PolarAngleAxis dataKey="category" tick={{fill:'#64748b',fontSize:10}}/>
+                  <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{fill:'#94a3b8',fontSize:9}}/>
                   <Radar name="Score" dataKey="value" stroke="#0f172a" fill="#0f172a" fillOpacity={0.1} strokeWidth={2}/>
                 </RadarChart>
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col justify-center">
+
+          {/* Composite Score */}
+          <div className="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-center">
             <div className="text-center">
-              <div className="text-6xl font-light text-slate-900 mb-1">{composite}</div>
-              <div className="text-slate-400 text-xs mb-1">±{scores.marginOfError}</div>
-              <div className="text-slate-500 text-sm uppercase tracking-wide mb-6">Composite Percentile</div>
-              <div className="space-y-3">
-                {Object.entries(scores.percentiles).map(([cat, val]) => (
-                  <div key={cat} className="flex items-center justify-between">
-                    <span className="text-slate-600 text-sm">{categoryNames[cat]}</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-2 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-slate-900 rounded-full" style={{width:`${val}%`}}/></div>
-                      <span className="text-slate-900 text-sm font-medium w-8 text-right">{val}</span>
-                    </div>
-                  </div>
-                ))}
+              <div className="text-5xl font-light text-slate-900">{composite}</div>
+              <div className="text-slate-400 text-xs">±{scores.marginOfError}</div>
+              <div className="text-slate-500 text-xs uppercase tracking-wide mt-1 mb-4">Composite Percentile</div>
+              <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${style.bg} ${style.text}`}>
+                {recommendation.level}
               </div>
+            </div>
+          </div>
+
+          {/* Performance Consistency */}
+          <div className="bg-white border border-gray-200 rounded-2xl p-5">
+            <h2 className="text-sm font-semibold text-slate-900 mb-3">Consistency</h2>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              {Object.entries(scores.difficultyPerformance).map(([diff, data]) => (
+                <div key={diff} className="text-center p-2 bg-slate-50 rounded-lg">
+                  <div className={`text-xs font-medium ${
+                    diff === 'Easy' ? 'text-emerald-600' : diff === 'Medium' ? 'text-amber-600' : 'text-rose-600'
+                  }`}>{diff}</div>
+                  <div className="text-lg font-light text-slate-900">
+                    {data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0}%
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className={`p-2 rounded-lg text-xs ${scores.isConsistent ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+              {scores.isConsistent ? '✓ Reliable results' : '⚠ Interpret with caution'}
             </div>
           </div>
         </div>
 
-        {/* Cognitive Style Profile */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-slate-900">🧠 Cognitive Style Profile</h2>
-            <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">Inferred from problem-solving behavior</span>
+        {/* Category Scores Bar */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-6">
+          <div className="grid grid-cols-5 gap-4">
+            {Object.entries(scores.percentiles).map(([cat, val]) => (
+              <div key={cat} className="text-center">
+                <div className="text-xs text-slate-500 mb-1 truncate">{categoryNames[cat].split(' ')[0]}</div>
+                <div className="text-xl font-light text-slate-900">{val}</div>
+                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-1">
+                  <div className="h-full bg-slate-900 rounded-full" style={{width:`${val}%`}}/>
+                </div>
+              </div>
+            ))}
           </div>
-          <p className="text-slate-500 text-sm mb-6">These traits are derived from how you approached the assessment, not from a personality test.</p>
-          
-          {(() => {
-            // Calculate cognitive style traits
-            const p = scores.percentiles;
-            const dp = scores.difficultyPerformance;
-            
-            // Thinking Style: Methodical vs Intuitive (based on consistency and processing speed)
-            const thinkingStyle = scores.isConsistent && p.processing < 60 ? 'Methodical' : p.processing > 70 ? 'Intuitive' : 'Balanced';
-            const thinkingScore = p.processing > 70 ? 80 : p.processing < 40 ? 20 : 50;
-            
-            // Adaptability (directly from adaptive score)
-            const adaptability = p.adaptive > 70 ? 'Highly Flexible' : p.adaptive > 50 ? 'Adaptable' : p.adaptive > 30 ? 'Prefers Structure' : 'Rigid';
-            const adaptScore = p.adaptive;
-            
-            // Attention to Detail (based on easy question performance)
-            const easyRate = dp.Easy.total > 0 ? (dp.Easy.correct / dp.Easy.total) * 100 : 50;
-            const detailLevel = easyRate > 85 ? 'Highly Detail-Oriented' : easyRate > 70 ? 'Attentive' : easyRate > 50 ? 'Moderate' : 'Big-Picture Focus';
-            const detailScore = easyRate;
-            
-            // Pressure Response (processing efficiency category)
-            const pressureResponse = p.processing > 70 ? 'Thrives Under Pressure' : p.processing > 50 ? 'Handles Pressure Well' : p.processing > 30 ? 'Needs Time' : 'Struggles Under Pressure';
-            const pressureScore = p.processing;
-            
-            // Learning Speed (improvement in adaptive section - simplified)
-            const learningSpeed = p.adaptive > 60 && p.pattern > 60 ? 'Quick Learner' : p.adaptive > 40 ? 'Steady Learner' : 'Needs Reinforcement';
-            const learnScore = (p.adaptive + p.pattern) / 2;
-            
-            // Analytical Depth
-            const analyticalDepth = p.analytical > 70 ? 'Deep Analyzer' : p.analytical > 50 ? 'Solid Reasoner' : 'Surface-Level';
-            const analyticalScore = p.analytical;
-            
-            const traits = [
-              { name: 'Thinking Style', value: thinkingStyle, score: thinkingScore, left: 'Methodical', right: 'Intuitive', color: 'blue' },
-              { name: 'Adaptability', value: adaptability, score: adaptScore, left: 'Structured', right: 'Flexible', color: 'purple' },
-              { name: 'Attention to Detail', value: detailLevel, score: detailScore, left: 'Big Picture', right: 'Detail-Focused', color: 'emerald' },
-              { name: 'Pressure Response', value: pressureResponse, score: pressureScore, left: 'Careful', right: 'Quick', color: 'amber' },
-              { name: 'Learning Curve', value: learningSpeed, score: learnScore, left: 'Gradual', right: 'Rapid', color: 'cyan' },
-              { name: 'Analytical Depth', value: analyticalDepth, score: analyticalScore, left: 'Practical', right: 'Theoretical', color: 'rose' },
-            ];
-            
-            return (
+        </div>
+
+        {/* Tab Content */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-6">
+          {/* Overview Tab */}
+          {activeTab === 'overview' && (
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 mb-4">Assessment Summary</h2>
+              <div className={`${style.bg} ${style.border} border rounded-xl p-4 mb-6`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 ${style.icon} rounded-full flex items-center justify-center`}>
+                    <span className={`text-lg ${style.text}`}>{recommendation.icon}</span>
+                  </div>
+                  <div>
+                    <div className={`font-semibold ${style.text}`}>{recommendation.level}</div>
+                    <p className="text-slate-600 text-sm">{generateRationale()}</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* All insights (including medium/low severity) */}
+              {redFlags.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900 mb-3">Insights & Considerations</h3>
+                  <div className="space-y-2">
+                    {redFlags.map((flag, idx) => (
+                      <div key={idx} className={`p-3 rounded-lg border ${
+                        flag.severity === 'high' ? 'bg-rose-50 border-rose-200' :
+                        flag.severity === 'medium' ? 'bg-amber-50 border-amber-200' :
+                        'bg-blue-50 border-blue-200'
+                      }`}>
+                        <div className="flex items-start gap-2">
+                          <span className={`text-xs font-medium px-2 py-0.5 rounded ${
+                            flag.severity === 'high' ? 'bg-rose-200 text-rose-800' :
+                            flag.severity === 'medium' ? 'bg-amber-200 text-amber-800' :
+                            'bg-blue-200 text-blue-800'
+                          }`}>
+                            {flag.severity === 'high' ? 'Important' : flag.severity === 'medium' ? 'Note' : 'Info'}
+                          </span>
+                          <p className="text-slate-700 text-sm flex-1">{flag.message}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {redFlags.length === 0 && (
+                <div className="text-center py-8 text-slate-500">
+                  <span className="text-3xl mb-2 block">✓</span>
+                  No significant concerns identified
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Role Fit Tab */}
+          {activeTab === 'roles' && (
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 mb-2">Role Fit Analysis</h2>
+              <p className="text-slate-500 text-sm mb-4">See how this profile matches different job types</p>
+              
+              <div className="flex flex-wrap gap-2 mb-6">
+                {Object.entries(roleProfiles).map(([key, role]) => (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedRole(key)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      selectedRole === key
+                        ? 'bg-slate-900 text-white'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {role.icon} {role.name}
+                  </button>
+                ))}
+              </div>
+              
+              <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                <div>
+                  <div className="text-sm text-slate-500">Fit Score for {roleProfiles[selectedRole].name}</div>
+                  <div className="text-3xl font-light text-slate-900">{composite}<span className="text-lg text-slate-400">th</span></div>
+                  <div className="text-xs text-slate-400 mt-1">Range: {Math.max(0, composite - scores.marginOfError)} - {Math.min(100, composite + scores.marginOfError)}</div>
+                </div>
+                <div className={`px-4 py-2 rounded-full text-sm font-medium ${
+                  composite >= 70 ? 'bg-emerald-100 text-emerald-700' :
+                  composite >= 50 ? 'bg-blue-100 text-blue-700' :
+                  composite >= 35 ? 'bg-amber-100 text-amber-700' :
+                  'bg-rose-100 text-rose-700'
+                }`}>
+                  {composite >= 70 ? 'Excellent Fit' : composite >= 50 ? 'Good Fit' : composite >= 35 ? 'Moderate Fit' : 'Poor Fit'}
+                </div>
+              </div>
+              
+              <div className="mt-4 p-4 bg-slate-50 rounded-xl">
+                <h3 className="text-sm font-medium text-slate-700 mb-2">Weight Distribution for {roleProfiles[selectedRole].name}</h3>
+                <div className="space-y-2">
+                  {Object.entries(roleProfiles[selectedRole].weights).map(([cat, weight]) => (
+                    <div key={cat} className="flex items-center gap-2">
+                      <span className="text-xs text-slate-600 w-28">{categoryNames[cat]}</span>
+                      <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-slate-700 rounded-full" style={{width:`${weight * 100}%`}}/>
+                      </div>
+                      <span className="text-xs text-slate-500 w-10 text-right">{Math.round(weight * 100)}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Cognitive Style Tab */}
+          {activeTab === 'style' && (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-lg font-semibold text-slate-900">Cognitive Style Profile</h2>
+                <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">Inferred from behavior</span>
+              </div>
+              <p className="text-slate-500 text-sm mb-6">These traits are derived from how you approached the assessment, not from a personality test.</p>
+              
               <div className="space-y-4">
-                {traits.map((trait) => (
+                {cognitiveStyleTraits.map((trait) => (
                   <div key={trait.name} className="p-4 bg-slate-50 rounded-xl">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-slate-700">{trait.name}</span>
-                      <span className={`text-sm font-semibold text-${trait.color}-600`}>{trait.value}</span>
+                      <span className="text-sm font-semibold text-slate-700">{trait.value}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-slate-400 w-20 text-right">{trait.left}</span>
                       <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full bg-gradient-to-r from-${trait.color}-400 to-${trait.color}-600 rounded-full transition-all duration-500`}
-                          style={{ width: `${trait.score}%` }}
-                        />
+                        <div className="h-full bg-slate-600 rounded-full" style={{ width: `${trait.score}%` }}/>
                       </div>
                       <span className="text-xs text-slate-400 w-20">{trait.right}</span>
                     </div>
                   </div>
                 ))}
               </div>
-            );
-          })()}
-          
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-            <p className="text-blue-800 text-xs">
-              <strong>Disclaimer:</strong> This cognitive style profile is inferred from problem-solving patterns observed during the assessment. 
-              It reflects behavioral tendencies during cognitive tasks, not personality traits. For comprehensive personality assessment, 
-              validated instruments like the Big Five should be used.
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Question Breakdown</h2>
-          <div className="space-y-2">
-            {questions.map((q, i) => (
-              <div key={q.id} className="border border-gray-100 rounded-xl overflow-hidden">
-                <button onClick={() => setExpandedQuestion(expandedQuestion === i ? null : i)} className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${answers[i] === q.correct ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>{answers[i] === q.correct ? '✓' : '×'}</span>
-                    <span className="text-slate-700 text-sm">Question {q.id}</span>
-                    <span className="text-slate-400 text-sm">· {q.category}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded ${q.difficulty === 'Easy' ? 'bg-emerald-100 text-emerald-700' : q.difficulty === 'Medium' ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>{q.difficulty}</span>
-                  </div>
-                  <svg className={`w-5 h-5 text-slate-400 transition-transform ${expandedQuestion === i ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                {expandedQuestion === i && (
-                  <div className="p-4 pt-0 border-t border-gray-100 bg-slate-50">
-                    <p className="text-slate-700 text-sm mb-4 mt-4">{q.question}</p>
-                    <div className="grid md:grid-cols-2 gap-4 mb-4">
-                      <div className="bg-white rounded-lg p-3 border border-gray-200">
-                        <div className="text-slate-500 text-xs mb-1">Your Answer</div>
-                        <div className={`text-sm font-medium ${answers[i] === q.correct ? 'text-emerald-700' : 'text-rose-700'}`}>{String.fromCharCode(65 + answers[i])}. {q.options[answers[i]]}</div>
-                      </div>
-                      <div className="bg-white rounded-lg p-3 border border-gray-200">
-                        <div className="text-slate-500 text-xs mb-1">Correct Answer</div>
-                        <div className="text-emerald-700 text-sm font-medium">{String.fromCharCode(65 + q.correct)}. {q.options[q.correct]}</div>
-                      </div>
-                    </div>
-                    
-                    {/* Enhanced Weight Visualization */}
-                    <div className="bg-white rounded-lg p-4 border border-gray-200 mb-4">
-                      <div className="text-slate-500 text-xs mb-3">How This Question Affects Your Score</div>
-                      <div className="space-y-2">
-                        {Object.entries(q.weights).map(([cat, weight]) => (
-                          <div key={cat} className="flex items-center gap-3">
-                            <span className="text-xs text-slate-600 w-32">{categoryNames[cat]}</span>
-                            <div className="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
-                              <div 
-                                className={`h-full rounded-full ${
-                                  cat === 'analytical' ? 'bg-violet-500' :
-                                  cat === 'pattern' ? 'bg-blue-500' :
-                                  cat === 'memory' ? 'bg-emerald-500' :
-                                  cat === 'adaptive' ? 'bg-orange-500' :
-                                  'bg-rose-500'
-                                }`}
-                                style={{ width: `${weight}%` }}
-                              />
-                            </div>
-                            <span className="text-xs font-medium text-slate-700 w-12 text-right">{weight}%</span>
-                          </div>
-                        ))}
-                      </div>
-                      <p className="text-xs text-slate-400 mt-3">
-                        {answers[i] === q.correct 
-                          ? `✓ You earned ${Object.entries(q.weights).map(([cat, w]) => `${w}% toward ${categoryNames[cat]}`).join(', ')}`
-                          : `✗ You missed ${Object.entries(q.weights).map(([cat, w]) => `${w}% toward ${categoryNames[cat]}`).join(', ')}`
-                        }
-                      </p>
-                    </div>
-                    
-                    <div className={`text-sm p-3 rounded-lg ${answers[i] === q.correct ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'}`}>
-                      <div className="font-medium mb-1">{answers[i] === q.correct ? 'What this indicates:' : 'Area for development:'}</div>
-                      {answers[i] === q.correct ? q.correctIndicates : q.incorrectIndicates}
-                    </div>
-                  </div>
-                )}
+              
+              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                <p className="text-blue-800 text-xs">
+                  <strong>Disclaimer:</strong> This cognitive style profile is inferred from problem-solving patterns observed during the assessment. 
+                  It reflects behavioral tendencies during cognitive tasks, not personality traits.
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {/* Questions Tab */}
+          {activeTab === 'questions' && (
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 mb-4">Question Breakdown</h2>
+              <div className="space-y-2 max-h-[500px] overflow-y-auto">
+                {questions.map((q, i) => (
+                  <div key={q.id} className="border border-gray-100 rounded-xl overflow-hidden">
+                    <button onClick={() => setExpandedQuestion(expandedQuestion === i ? null : i)} className="w-full p-3 flex items-center justify-between text-left hover:bg-slate-50 transition-colors">
+                      <div className="flex items-center gap-2">
+                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${answers[i] === q.correct ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>{answers[i] === q.correct ? '✓' : '×'}</span>
+                        <span className="text-slate-700 text-sm">Q{q.id}</span>
+                        <span className="text-slate-400 text-xs hidden sm:inline">· {q.category}</span>
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${q.difficulty === 'Easy' ? 'bg-emerald-100 text-emerald-700' : q.difficulty === 'Medium' ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>{q.difficulty}</span>
+                      </div>
+                      <svg className={`w-4 h-4 text-slate-400 transition-transform ${expandedQuestion === i ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    {expandedQuestion === i && (
+                      <div className="p-4 pt-0 border-t border-gray-100 bg-slate-50">
+                        <p className="text-slate-700 text-sm mb-4 mt-3">{q.question}</p>
+                        <div className="grid md:grid-cols-2 gap-3 mb-3">
+                          <div className="bg-white rounded-lg p-3 border border-gray-200">
+                            <div className="text-slate-500 text-xs mb-1">Your Answer</div>
+                            <div className={`text-sm font-medium ${answers[i] === q.correct ? 'text-emerald-700' : 'text-rose-700'}`}>{String.fromCharCode(65 + answers[i])}. {q.options[answers[i]]}</div>
+                          </div>
+                          <div className="bg-white rounded-lg p-3 border border-gray-200">
+                            <div className="text-slate-500 text-xs mb-1">Correct Answer</div>
+                            <div className="text-emerald-700 text-sm font-medium">{String.fromCharCode(65 + q.correct)}. {q.options[q.correct]}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-white rounded-lg p-3 border border-gray-200 mb-3">
+                          <div className="text-slate-500 text-xs mb-2">Score Impact</div>
+                          <div className="space-y-1">
+                            {Object.entries(q.weights).map(([cat, weight]) => (
+                              <div key={cat} className="flex items-center gap-2">
+                                <span className="text-xs text-slate-600 w-24">{categoryNames[cat].split(' ')[0]}</span>
+                                <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                  <div className={`h-full rounded-full ${
+                                    cat === 'analytical' ? 'bg-violet-500' :
+                                    cat === 'pattern' ? 'bg-blue-500' :
+                                    cat === 'memory' ? 'bg-emerald-500' :
+                                    cat === 'adaptive' ? 'bg-orange-500' : 'bg-rose-500'
+                                  }`} style={{ width: `${weight}%` }}/>
+                                </div>
+                                <span className="text-xs text-slate-500 w-8 text-right">{weight}%</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div className={`text-sm p-3 rounded-lg ${answers[i] === q.correct ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'}`}>
+                          {answers[i] === q.correct ? q.correctIndicates : q.incorrectIndicates}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-        <button onClick={onViewMethodology} className="w-full py-4 bg-slate-900 text-white font-medium rounded-xl hover:bg-slate-800 transition-colors">View Assessment Methodology</button>
-      </div>
+      </main>
     </div>
   );
 };
