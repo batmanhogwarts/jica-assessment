@@ -572,7 +572,6 @@ const MnemonicsPage = () => {
         {/* Intro */}
         <div className="text-center mb-8">
           <p className="text-slate-600">Click any item to expand</p>
-          <p className="text-xs text-slate-400 mt-1">11 items • Matches rubric requirements</p>
         </div>
 
         {/* Items */}
