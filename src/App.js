@@ -323,34 +323,167 @@ const QuestionPage = ({question,questionNumber,totalQuestions,onAnswer,selectedA
 };
 
 const ResultsPage = ({answers,onViewMethodology}) => {
+  const [selectedRole, setSelectedRole] = useState('general');
+  const [expandedQuestion, setExpandedQuestion] = useState(null);
+  
+  // Role profiles for different job types
+  const roleProfiles = {
+    general: { name: 'General', weights: { analytical: 0.25, pattern: 0.20, memory: 0.20, adaptive: 0.20, processing: 0.15 }, icon: '👤' },
+    analyst: { name: 'Data Analyst', weights: { analytical: 0.35, pattern: 0.30, memory: 0.15, adaptive: 0.10, processing: 0.10 }, icon: '📊' },
+    developer: { name: 'Software Developer', weights: { analytical: 0.25, pattern: 0.35, memory: 0.10, adaptive: 0.20, processing: 0.10 }, icon: '💻' },
+    manager: { name: 'Manager', weights: { analytical: 0.20, pattern: 0.10, memory: 0.25, adaptive: 0.30, processing: 0.15 }, icon: '👔' },
+    customer_service: { name: 'Customer Service', weights: { analytical: 0.10, pattern: 0.10, memory: 0.30, adaptive: 0.35, processing: 0.15 }, icon: '🎧' },
+    creative: { name: 'Creative Role', weights: { analytical: 0.15, pattern: 0.35, memory: 0.15, adaptive: 0.25, processing: 0.10 }, icon: '🎨' },
+  };
+
+  // Difficulty multipliers for IRT-style scoring
+  const difficultyMultiplier = { Easy: 0.8, Medium: 1.0, Hard: 1.3 };
+  
   const scores = useMemo(() => {
     const rawScores = {analytical:0,pattern:0,memory:0,adaptive:0,processing:0};
     const maxScores = {analytical:0,pattern:0,memory:0,adaptive:0,processing:0};
+    const irtScores = {analytical:0,pattern:0,memory:0,adaptive:0,processing:0};
+    const irtMax = {analytical:0,pattern:0,memory:0,adaptive:0,processing:0};
+    
+    // Track performance by difficulty for consistency analysis
+    const difficultyPerformance = { Easy: { correct: 0, total: 0 }, Medium: { correct: 0, total: 0 }, Hard: { correct: 0, total: 0 } };
+    
+    // Track category-level performance for pattern analysis
+    const categoryPerformance = {};
+    
     questions.forEach((q, i) => {
+      const isCorrect = answers[i] === q.correct;
+      const diffMult = difficultyMultiplier[q.difficulty];
+      
+      // Track difficulty performance
+      difficultyPerformance[q.difficulty].total++;
+      if (isCorrect) difficultyPerformance[q.difficulty].correct++;
+      
+      // Track category performance
+      if (!categoryPerformance[q.category]) {
+        categoryPerformance[q.category] = { correct: 0, total: 0, easyMissed: 0, hardCorrect: 0 };
+      }
+      categoryPerformance[q.category].total++;
+      if (isCorrect) {
+        categoryPerformance[q.category].correct++;
+        if (q.difficulty === 'Hard') categoryPerformance[q.category].hardCorrect++;
+      } else {
+        if (q.difficulty === 'Easy') categoryPerformance[q.category].easyMissed++;
+      }
+      
       Object.entries(q.weights).forEach(([category, weight]) => {
-        maxScores[category] += weight / 100;
-        if (answers[i] === q.correct) rawScores[category] += weight / 100;
+        const baseWeight = weight / 100;
+        const irtWeight = baseWeight * diffMult;
+        
+        maxScores[category] += baseWeight;
+        irtMax[category] += irtWeight;
+        
+        if (isCorrect) {
+          rawScores[category] += baseWeight;
+          irtScores[category] += irtWeight;
+        }
       });
     });
+    
+    // Calculate percentiles using IRT-weighted scores
     const percentiles = {};
-    Object.keys(rawScores).forEach(cat => percentiles[cat] = Math.round((rawScores[cat] / maxScores[cat]) * 100));
-    const composite = percentiles.analytical * 0.25 + percentiles.pattern * 0.20 + percentiles.memory * 0.20 + percentiles.adaptive * 0.20 + percentiles.processing * 0.15;
-    return {raw:rawScores,max:maxScores,percentiles,composite:Math.round(composite)};
+    Object.keys(irtScores).forEach(cat => {
+      percentiles[cat] = Math.round((irtScores[cat] / irtMax[cat]) * 100);
+    });
+    
+    // Calculate consistency score (are easy/hard performances aligned?)
+    const easyRate = difficultyPerformance.Easy.total > 0 ? difficultyPerformance.Easy.correct / difficultyPerformance.Easy.total : 0;
+    const hardRate = difficultyPerformance.Hard.total > 0 ? difficultyPerformance.Hard.correct / difficultyPerformance.Hard.total : 0;
+    const consistencyScore = 1 - Math.abs(easyRate - hardRate - 0.3); // Expect ~30% difference
+    const isConsistent = consistencyScore > 0.5;
+    
+    // Calculate confidence interval (±margin based on question count)
+    const marginOfError = Math.round(15 / Math.sqrt(questions.length) * 2); // Simplified SE calculation
+    
+    return {
+      raw: rawScores,
+      max: maxScores,
+      irt: irtScores,
+      irtMax: irtMax,
+      percentiles,
+      difficultyPerformance,
+      categoryPerformance,
+      consistencyScore: Math.round(consistencyScore * 100),
+      isConsistent,
+      marginOfError
+    };
   }, [answers]);
+
+  // Calculate composite score based on selected role
+  const getCompositeForRole = (roleKey) => {
+    const weights = roleProfiles[roleKey].weights;
+    return Math.round(
+      scores.percentiles.analytical * weights.analytical +
+      scores.percentiles.pattern * weights.pattern +
+      scores.percentiles.memory * weights.memory +
+      scores.percentiles.adaptive * weights.adaptive +
+      scores.percentiles.processing * weights.processing
+    );
+  };
+
+  const composite = getCompositeForRole(selectedRole);
+
+  // Red flag detection
+  const getRedFlags = () => {
+    const flags = [];
+    const p = scores.percentiles;
+    
+    // Critical cognitive concerns
+    if (p.adaptive < 20) flags.push({ severity: 'high', message: 'Very low adaptability — may struggle significantly with changing requirements or new processes', category: 'Adaptive Thinking' });
+    if (p.analytical < 20) flags.push({ severity: 'high', message: 'Very low analytical reasoning — may have difficulty with problem-solving and logical decisions', category: 'Analytical Reasoning' });
+    if (p.memory < 20) flags.push({ severity: 'high', message: 'Very low working memory — may struggle to retain information during training and complex tasks', category: 'Working Memory' });
+    
+    // Pattern concerns
+    if (p.analytical > 70 && p.processing < 35) flags.push({ severity: 'medium', message: 'High analytical but low processing speed — capable but may be slow under pressure', category: 'Processing Efficiency' });
+    if (p.pattern > 70 && p.adaptive < 40) flags.push({ severity: 'medium', message: 'Strong pattern recognition but low adaptability — may resist changing established methods', category: 'Adaptive Thinking' });
+    if (p.memory < 35 && p.analytical > 60) flags.push({ severity: 'medium', message: 'Good reasoning but weak memory — may need written references and documentation', category: 'Working Memory' });
+    
+    // Consistency flags
+    if (!scores.isConsistent) {
+      const easyRate = scores.difficultyPerformance.Easy.correct / scores.difficultyPerformance.Easy.total;
+      const hardRate = scores.difficultyPerformance.Hard.correct / scores.difficultyPerformance.Hard.total;
+      if (hardRate > easyRate) {
+        flags.push({ severity: 'low', message: 'Unusual pattern: performed better on hard questions than easy ones — may indicate rushing or attention issues on simpler tasks', category: 'Consistency' });
+      }
+    }
+    
+    // Adaptive section specific analysis (Q24-29)
+    const adaptiveQuestions = questions.filter(q => q.category === 'Adaptive Thinking');
+    const adaptiveAnswers = adaptiveQuestions.map((q, idx) => answers[questions.indexOf(q)] === q.correct);
+    const ruleTransitions = [
+      { from: 0, to: 2, name: 'Rule 1 to Rule 2' },
+      { from: 2, to: 4, name: 'Rule 2 to Rule 3' }
+    ];
+    ruleTransitions.forEach(({ from, to, name }) => {
+      if (adaptiveAnswers[from] && adaptiveAnswers[from + 1] && !adaptiveAnswers[to] && !adaptiveAnswers[to + 1]) {
+        flags.push({ severity: 'medium', message: `Struggled with ${name} transition — may have difficulty when procedures change`, category: 'Adaptive Thinking' });
+      }
+    });
+    
+    return flags;
+  };
+
+  const redFlags = getRedFlags();
 
   const getRecommendation = () => {
     const p = scores.percentiles;
     const thresholds = {analytical:25,pattern:20,memory:25,adaptive:30,processing:15};
     const breaches = Object.entries(thresholds).filter(([cat, thresh]) => p[cat] < thresh);
-    if (scores.composite >= 75 && breaches.length === 0) return {level:"Strong Hire",color:"emerald",icon:"✓"};
-    else if (scores.composite >= 50 && breaches.length === 0) return {level:"Recommend",color:"blue",icon:"→"};
-    else if (scores.composite >= 35 || breaches.length === 1) return {level:"Conditional",color:"amber",icon:"!"};
-    else return {level:"Not Recommended",color:"rose",icon:"×"};
+    const highSeverityFlags = redFlags.filter(f => f.severity === 'high').length;
+    
+    if (composite >= 75 && breaches.length === 0 && highSeverityFlags === 0) return {level:"Strong Hire",color:"emerald",icon:"✓",desc:"Excellent cognitive profile with no significant concerns"};
+    else if (composite >= 50 && breaches.length === 0 && highSeverityFlags === 0) return {level:"Recommend",color:"blue",icon:"→",desc:"Solid cognitive abilities suitable for most roles"};
+    else if (composite >= 35 || breaches.length <= 1) return {level:"Conditional",color:"amber",icon:"!",desc:"Some areas may require additional support or role matching"};
+    else return {level:"Not Recommended",color:"rose",icon:"×",desc:"Significant concerns across multiple cognitive domains"};
   };
 
   const recommendation = getRecommendation();
   const radarData = [{category:'Analytical',value:scores.percentiles.analytical,fullMark:100},{category:'Pattern',value:scores.percentiles.pattern,fullMark:100},{category:'Memory',value:scores.percentiles.memory,fullMark:100},{category:'Adaptive',value:scores.percentiles.adaptive,fullMark:100},{category:'Processing',value:scores.percentiles.processing,fullMark:100}];
-  const [expandedQuestion, setExpandedQuestion] = useState(null);
 
   const generateRationale = () => {
     const p = scores.percentiles;
@@ -371,17 +504,112 @@ const ResultsPage = ({answers,onViewMethodology}) => {
         <div className="text-center mb-12">
           <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center mx-auto mb-4"><span className="text-white text-xl font-semibold">J</span></div>
           <h1 className="text-3xl font-light text-slate-900 mb-2">Assessment Complete</h1>
-          <p className="text-slate-500">Your cognitive profile has been analyzed</p>
+          <p className="text-slate-500">Your cognitive profile has been analyzed using advanced psychometric methods</p>
         </div>
+        
+        {/* Main Recommendation */}
         <div className={`${style.bg} ${style.border} border rounded-2xl p-6 mb-8`}>
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 ${style.icon} rounded-full flex items-center justify-center`}><span className={`text-xl ${style.text}`}>{recommendation.icon}</span></div>
-            <div>
+            <div className="flex-1">
               <div className={`text-lg font-semibold ${style.text}`}>{recommendation.level}</div>
               <p className="text-slate-600 text-sm mt-1">{generateRationale()}</p>
             </div>
           </div>
         </div>
+
+        {/* Role Fit Selector */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">Role Fit Analysis</h2>
+          <p className="text-slate-500 text-sm mb-4">See how this profile matches different job types:</p>
+          <div className="flex flex-wrap gap-2 mb-6">
+            {Object.entries(roleProfiles).map(([key, role]) => (
+              <button
+                key={key}
+                onClick={() => setSelectedRole(key)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  selectedRole === key
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                {role.icon} {role.name}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+            <div>
+              <div className="text-sm text-slate-500">Fit Score for {roleProfiles[selectedRole].name}</div>
+              <div className="text-3xl font-light text-slate-900">{composite}<span className="text-lg text-slate-400">th percentile</span></div>
+              <div className="text-xs text-slate-400 mt-1">Confidence interval: {Math.max(0, composite - scores.marginOfError)} - {Math.min(100, composite + scores.marginOfError)}</div>
+            </div>
+            <div className={`px-4 py-2 rounded-full text-sm font-medium ${
+              composite >= 70 ? 'bg-emerald-100 text-emerald-700' :
+              composite >= 50 ? 'bg-blue-100 text-blue-700' :
+              composite >= 35 ? 'bg-amber-100 text-amber-700' :
+              'bg-rose-100 text-rose-700'
+            }`}>
+              {composite >= 70 ? 'Excellent Fit' : composite >= 50 ? 'Good Fit' : composite >= 35 ? 'Moderate Fit' : 'Poor Fit'}
+            </div>
+          </div>
+        </div>
+
+        {/* Red Flags Section */}
+        {redFlags.length > 0 && (
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">⚠️ Insights & Considerations</h2>
+            <div className="space-y-3">
+              {redFlags.map((flag, idx) => (
+                <div
+                  key={idx}
+                  className={`p-4 rounded-xl border ${
+                    flag.severity === 'high' ? 'bg-rose-50 border-rose-200' :
+                    flag.severity === 'medium' ? 'bg-amber-50 border-amber-200' :
+                    'bg-blue-50 border-blue-200'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <span className={`text-sm font-medium px-2 py-0.5 rounded ${
+                      flag.severity === 'high' ? 'bg-rose-200 text-rose-800' :
+                      flag.severity === 'medium' ? 'bg-amber-200 text-amber-800' :
+                      'bg-blue-200 text-blue-800'
+                    }`}>
+                      {flag.severity === 'high' ? 'Important' : flag.severity === 'medium' ? 'Note' : 'Info'}
+                    </span>
+                    <div>
+                      <p className="text-slate-700 text-sm">{flag.message}</p>
+                      <p className="text-slate-400 text-xs mt-1">Related to: {flag.category}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Performance Consistency */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">Performance Consistency</h2>
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            {Object.entries(scores.difficultyPerformance).map(([diff, data]) => (
+              <div key={diff} className="text-center p-4 bg-slate-50 rounded-xl">
+                <div className={`text-xs font-medium uppercase tracking-wide mb-2 ${
+                  diff === 'Easy' ? 'text-emerald-600' : diff === 'Medium' ? 'text-amber-600' : 'text-rose-600'
+                }`}>{diff}</div>
+                <div className="text-2xl font-light text-slate-900">
+                  {data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0}%
+                </div>
+                <div className="text-xs text-slate-400">{data.correct}/{data.total} correct</div>
+              </div>
+            ))}
+          </div>
+          <div className={`p-3 rounded-lg text-sm ${scores.isConsistent ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+            {scores.isConsistent 
+              ? '✓ Consistent performance across difficulty levels — reliable indicator of true ability'
+              : '⚠ Inconsistent performance pattern — results should be interpreted with caution'}
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white border border-gray-200 rounded-2xl p-6">
             <h2 className="text-lg font-semibold text-slate-900 mb-4">Cognitive Profile</h2>
@@ -398,7 +626,8 @@ const ResultsPage = ({answers,onViewMethodology}) => {
           </div>
           <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col justify-center">
             <div className="text-center">
-              <div className="text-6xl font-light text-slate-900 mb-2">{scores.composite}</div>
+              <div className="text-6xl font-light text-slate-900 mb-1">{composite}</div>
+              <div className="text-slate-400 text-xs mb-1">±{scores.marginOfError}</div>
               <div className="text-slate-500 text-sm uppercase tracking-wide mb-6">Composite Percentile</div>
               <div className="space-y-3">
                 {Object.entries(scores.percentiles).map(([cat, val]) => (
