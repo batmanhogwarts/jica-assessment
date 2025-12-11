@@ -351,6 +351,533 @@ const analyzeSkillCeilings = (answers, questions) => {
   return ceilings;
 };
 
+// ERROR TYPE CLASSIFICATION
+// Analyzes HOW someone got questions wrong
+const classifyErrors = (answers, questions) => {
+  const errorTypes = {
+    nearMiss: 0,        // Close but not quite (numeric off by small amount)
+    conceptual: 0,      // Fundamentally wrong approach
+    careless: 0,        // Easy question, wrong answer, fast time
+    overthinking: 0,    // Hard question, took long, chose complex wrong answer
+    distracted: 0,      // Pattern suggests not reading carefully
+    total: 0
+  };
+  
+  const errorDetails = [];
+  
+  questions.forEach((q, i) => {
+    if (answers[i] === undefined || answers[i] === q.correct) return;
+    if (q.isMetacognition) return;
+    
+    errorTypes.total++;
+    const chosenAnswer = answers[i];
+    
+    // Check for near-miss on numeric questions
+    if (q.category === 'Processing Efficiency' || q.category === 'Analytical Reasoning') {
+      const correctOpt = q.options[q.correct];
+      const chosenOpt = q.options[chosenAnswer];
+      
+      // Try to parse numbers from options
+      const correctNum = parseFloat(correctOpt.replace(/[^0-9.-]/g, ''));
+      const chosenNum = parseFloat(chosenOpt.replace(/[^0-9.-]/g, ''));
+      
+      if (!isNaN(correctNum) && !isNaN(chosenNum)) {
+        const diff = Math.abs(correctNum - chosenNum);
+        const percentDiff = diff / correctNum;
+        if (percentDiff < 0.15) { // Within 15%
+          errorTypes.nearMiss++;
+          errorDetails.push({ q: q.id, type: 'near_miss', note: `Chose ${chosenNum} instead of ${correctNum}` });
+          return;
+        }
+      }
+    }
+    
+    // Check for careless errors (easy questions, got wrong)
+    if (q.difficulty === 'Easy') {
+      errorTypes.careless++;
+      errorDetails.push({ q: q.id, type: 'careless', note: 'Missed easy question' });
+      return;
+    }
+    
+    // Check if they chose adjacent option (might indicate misreading)
+    if (Math.abs(chosenAnswer - q.correct) === 1) {
+      errorTypes.distracted++;
+      errorDetails.push({ q: q.id, type: 'adjacent', note: 'Chose adjacent option' });
+      return;
+    }
+    
+    // Default to conceptual error
+    errorTypes.conceptual++;
+    errorDetails.push({ q: q.id, type: 'conceptual', note: 'Wrong approach' });
+  });
+  
+  // Calculate percentages
+  const total = errorTypes.total || 1;
+  const profile = {
+    nearMissRate: Math.round((errorTypes.nearMiss / total) * 100),
+    carelessRate: Math.round((errorTypes.careless / total) * 100),
+    conceptualRate: Math.round((errorTypes.conceptual / total) * 100),
+    distractedRate: Math.round((errorTypes.distracted / total) * 100)
+  };
+  
+  // Determine primary error type
+  let primaryError = 'mixed';
+  if (profile.nearMissRate > 40) primaryError = 'near_miss';
+  else if (profile.carelessRate > 40) primaryError = 'careless';
+  else if (profile.conceptualRate > 50) primaryError = 'conceptual';
+  else if (profile.distractedRate > 30) primaryError = 'distracted';
+  
+  return { counts: errorTypes, profile, primaryError, details: errorDetails };
+};
+
+// RECOVERY ANALYSIS
+// How do they respond after getting a question wrong?
+const analyzeRecovery = (answers, questions) => {
+  let afterErrorCorrect = 0;
+  let afterErrorWrong = 0;
+  let streaksAfterError = [];
+  let currentStreak = 0;
+  let inErrorRecovery = false;
+  
+  questions.forEach((q, i) => {
+    if (q.isMetacognition || answers[i] === undefined) return;
+    
+    const isCorrect = answers[i] === q.correct;
+    const prevQ = questions[i - 1];
+    const prevCorrect = prevQ && answers[i - 1] === prevQ.correct;
+    
+    // Check if previous was wrong (and not a metacognition q)
+    if (i > 0 && prevQ && !prevQ.isMetacognition && !prevCorrect) {
+      if (isCorrect) {
+        afterErrorCorrect++;
+        if (inErrorRecovery) currentStreak++;
+      } else {
+        afterErrorWrong++;
+        inErrorRecovery = true;
+        if (currentStreak > 0) streaksAfterError.push(currentStreak);
+        currentStreak = 0;
+      }
+    } else if (isCorrect && inErrorRecovery) {
+      currentStreak++;
+    } else if (isCorrect) {
+      inErrorRecovery = false;
+      if (currentStreak > 0) streaksAfterError.push(currentStreak);
+      currentStreak = 0;
+    }
+  });
+  
+  if (currentStreak > 0) streaksAfterError.push(currentStreak);
+  
+  const totalAfterError = afterErrorCorrect + afterErrorWrong;
+  const recoveryRate = totalAfterError > 0 ? Math.round((afterErrorCorrect / totalAfterError) * 100) : 50;
+  
+  // Determine resilience level
+  let resilience = 'moderate';
+  if (recoveryRate >= 70) resilience = 'high';
+  else if (recoveryRate < 40) resilience = 'low';
+  
+  // Check for spiral patterns (3+ wrong in a row after an error)
+  const hasSpiral = streaksAfterError.some(s => s === 0) && afterErrorWrong >= 3;
+  
+  return {
+    recoveryRate,
+    afterErrorCorrect,
+    afterErrorWrong,
+    resilience,
+    hasSpiral,
+    interpretation: resilience === 'high' 
+      ? 'Bounces back quickly after mistakes - resilient learner'
+      : resilience === 'low'
+      ? 'Struggles to recover after errors - may need encouragement'
+      : 'Normal recovery pattern after mistakes'
+  };
+};
+
+// FATIGUE CURVE ANALYSIS
+// Models how performance changes over the test duration
+const analyzeFatigueCurve = (answers, questions, questionTimes) => {
+  // Divide test into quarters
+  const quarterSize = Math.floor(questions.length / 4);
+  const quarters = [
+    { start: 0, end: quarterSize },
+    { start: quarterSize, end: quarterSize * 2 },
+    { start: quarterSize * 2, end: quarterSize * 3 },
+    { start: quarterSize * 3, end: questions.length }
+  ];
+  
+  const quarterStats = quarters.map((range, idx) => {
+    let correct = 0;
+    let total = 0;
+    let totalTime = 0;
+    let timeCount = 0;
+    
+    for (let i = range.start; i < range.end; i++) {
+      if (questions[i]?.isMetacognition || answers[i] === undefined) continue;
+      total++;
+      if (answers[i] === questions[i].correct) correct++;
+      if (questionTimes && questionTimes[i]) {
+        totalTime += questionTimes[i];
+        timeCount++;
+      }
+    }
+    
+    return {
+      quarter: idx + 1,
+      accuracy: total > 0 ? Math.round((correct / total) * 100) : 0,
+      avgTime: timeCount > 0 ? Math.round(totalTime / timeCount / 1000) : 0
+    };
+  });
+  
+  // Determine curve shape
+  const q1 = quarterStats[0].accuracy;
+  const q2 = quarterStats[1].accuracy;
+  const q3 = quarterStats[2].accuracy;
+  const q4 = quarterStats[3].accuracy;
+  
+  let curveType = 'stable';
+  let interpretation = '';
+  
+  const startToEnd = q4 - q1;
+  const midPeak = ((q2 + q3) / 2) - ((q1 + q4) / 2);
+  
+  if (Math.abs(startToEnd) <= 10 && Math.abs(midPeak) <= 10) {
+    curveType = 'stable';
+    interpretation = 'Consistent performance throughout - excellent sustained focus';
+  } else if (startToEnd < -20) {
+    curveType = 'declining';
+    interpretation = 'Performance dropped significantly - possible fatigue or loss of motivation';
+  } else if (startToEnd > 20) {
+    curveType = 'improving';
+    interpretation = 'Started slow but improved - may have needed warm-up time or initial anxiety';
+  } else if (midPeak > 15) {
+    curveType = 'inverted_u';
+    interpretation = 'Peaked mid-test then declined - typical fatigue pattern';
+  } else if (midPeak < -15) {
+    curveType = 'u_shape';
+    interpretation = 'Struggled in middle, recovered at end - possible mid-test difficulty spike';
+  } else if (q1 < q2 && q2 >= q3 && q3 > q4) {
+    curveType = 'gradual_decline';
+    interpretation = 'Gradual performance decrease - normal fatigue, may benefit from breaks';
+  }
+  
+  return {
+    quarters: quarterStats,
+    curveType,
+    interpretation,
+    overallTrend: startToEnd > 10 ? 'improving' : startToEnd < -10 ? 'declining' : 'stable'
+  };
+};
+
+// ATTENTION CONSISTENCY (Time Variance Analysis)
+const analyzeAttentionConsistency = (questionTimes, questions) => {
+  if (!questionTimes) return { variance: 'unknown', coefficient: 0, interpretation: 'No timing data available' };
+  
+  const times = [];
+  const normalizedTimes = [];
+  
+  questions.forEach((q, i) => {
+    if (questionTimes[i] && !q.isMetacognition) {
+      times.push(questionTimes[i]);
+      // Normalize by expected time for difficulty
+      const expected = ALGORITHM_CONFIG.expectedTime[q.difficulty] || 30000;
+      normalizedTimes.push(questionTimes[i] / expected);
+    }
+  });
+  
+  if (times.length < 5) return { variance: 'insufficient', coefficient: 0, interpretation: 'Not enough timing data' };
+  
+  // Calculate coefficient of variation (CV)
+  const mean = times.reduce((a, b) => a + b, 0) / times.length;
+  const squaredDiffs = times.map(t => Math.pow(t - mean, 2));
+  const variance = squaredDiffs.reduce((a, b) => a + b, 0) / times.length;
+  const stdDev = Math.sqrt(variance);
+  const cv = (stdDev / mean) * 100;
+  
+  // Also check for time trending (getting faster or slower)
+  const firstHalfAvg = times.slice(0, Math.floor(times.length / 2)).reduce((a, b) => a + b, 0) / (times.length / 2);
+  const secondHalfAvg = times.slice(Math.floor(times.length / 2)).reduce((a, b) => a + b, 0) / (times.length / 2);
+  const timeTrend = ((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100;
+  
+  let varianceLevel = 'moderate';
+  let interpretation = '';
+  
+  if (cv < 40) {
+    varianceLevel = 'low';
+    interpretation = 'Very consistent pacing - steady, methodical approach';
+  } else if (cv > 80) {
+    varianceLevel = 'high';
+    interpretation = 'Highly variable response times - may indicate inconsistent focus or different strategies per question';
+  } else {
+    varianceLevel = 'moderate';
+    interpretation = 'Normal variation in response times';
+  }
+  
+  // Add trend info
+  if (timeTrend < -20) {
+    interpretation += '. Getting faster over time (possibly rushing toward end)';
+  } else if (timeTrend > 30) {
+    interpretation += '. Slowing down over time (possible fatigue)';
+  }
+  
+  return {
+    variance: varianceLevel,
+    coefficient: Math.round(cv),
+    avgTime: Math.round(mean / 1000),
+    timeTrend: Math.round(timeTrend),
+    interpretation
+  };
+};
+
+// STRATEGY DETECTION
+// Infer problem-solving approach from timing and accuracy patterns
+const detectStrategy = (answers, questions, questionTimes) => {
+  const strategies = {
+    analytical: 0,    // Slower, methodical, higher accuracy on hard
+    intuitive: 0,     // Fast, pattern-based, good on easy/medium
+    elimination: 0,   // Medium-slow on multiple choice, high accuracy
+    rushing: 0,       // Fast across board, lower accuracy
+    struggling: 0     // Slow across board, lower accuracy
+  };
+  
+  let totalWeight = 0;
+  
+  questions.forEach((q, i) => {
+    if (!questionTimes || !questionTimes[i] || q.isMetacognition || answers[i] === undefined) return;
+    
+    const time = questionTimes[i];
+    const expected = ALGORITHM_CONFIG.expectedTime[q.difficulty] || 30000;
+    const ratio = time / expected;
+    const isCorrect = answers[i] === q.correct;
+    
+    totalWeight++;
+    
+    // Fast and correct = intuitive
+    if (ratio < 0.6 && isCorrect) {
+      strategies.intuitive += 1;
+    }
+    // Slow and correct on hard = analytical
+    else if (ratio > 1.0 && isCorrect && q.difficulty === 'Hard') {
+      strategies.analytical += 1.5;
+    }
+    // Medium time, correct = elimination strategy
+    else if (ratio >= 0.6 && ratio <= 1.2 && isCorrect) {
+      strategies.elimination += 1;
+    }
+    // Fast and wrong = rushing
+    else if (ratio < 0.5 && !isCorrect) {
+      strategies.rushing += 1;
+    }
+    // Slow and wrong = struggling
+    else if (ratio > 1.5 && !isCorrect) {
+      strategies.struggling += 1;
+    }
+  });
+  
+  // Normalize
+  if (totalWeight > 0) {
+    Object.keys(strategies).forEach(k => {
+      strategies[k] = Math.round((strategies[k] / totalWeight) * 100);
+    });
+  }
+  
+  // Determine primary strategy
+  const primary = Object.entries(strategies).reduce((a, b) => a[1] > b[1] ? a : b);
+  
+  const descriptions = {
+    analytical: 'Methodical problem-solver - takes time to work through problems systematically',
+    intuitive: 'Pattern recognizer - quickly identifies solutions through intuition',
+    elimination: 'Strategic thinker - systematically eliminates wrong answers',
+    rushing: 'Speed-focused - prioritizes completion over accuracy',
+    struggling: 'May need more time or support - shows effort but difficulty with material'
+  };
+  
+  return {
+    scores: strategies,
+    primary: primary[0],
+    description: descriptions[primary[0]] || 'Mixed approach',
+    confidence: primary[1]
+  };
+};
+
+// DOMAIN TRANSFER ANALYSIS
+// Can they apply skills learned in one context to another?
+const analyzeDomainTransfer = (answers, questions) => {
+  // Define skill pairs (basic → advanced)
+  const transferPairs = [
+    { basic: [0, 1], advanced: [5, 7], skill: 'Logical Reasoning' },           // Q1,2 → Q6,8
+    { basic: [8, 10], advanced: [16, 17], skill: 'Pattern Recognition' },      // Q9,11 → Q17,18
+    { basic: [18, 19], advanced: [23, 24], skill: 'Memory Application' },      // Q19,20 → Q24,25
+    { basic: [25, 26], advanced: [30, 31], skill: 'Rule Learning' }            // Q26,27 → Q31,32
+  ];
+  
+  const transfers = transferPairs.map(pair => {
+    const basicCorrect = pair.basic.filter(i => answers[i] === questions[i]?.correct).length;
+    const basicTotal = pair.basic.length;
+    const advancedCorrect = pair.advanced.filter(i => answers[i] === questions[i]?.correct).length;
+    const advancedTotal = pair.advanced.length;
+    
+    const basicRate = basicTotal > 0 ? basicCorrect / basicTotal : 0;
+    const advancedRate = advancedTotal > 0 ? advancedCorrect / advancedTotal : 0;
+    
+    // Good transfer = high basic AND maintained in advanced
+    // Poor transfer = high basic BUT dropped in advanced
+    let transferQuality = 'moderate';
+    if (basicRate >= 0.75 && advancedRate >= 0.5) transferQuality = 'good';
+    else if (basicRate >= 0.75 && advancedRate < 0.25) transferQuality = 'poor';
+    else if (basicRate < 0.5) transferQuality = 'foundational_gap';
+    
+    return {
+      skill: pair.skill,
+      basicRate: Math.round(basicRate * 100),
+      advancedRate: Math.round(advancedRate * 100),
+      transfer: transferQuality
+    };
+  });
+  
+  const goodTransfers = transfers.filter(t => t.transfer === 'good').length;
+  const poorTransfers = transfers.filter(t => t.transfer === 'poor').length;
+  
+  let overall = 'moderate';
+  let interpretation = '';
+  
+  if (goodTransfers >= 3) {
+    overall = 'strong';
+    interpretation = 'Excellent skill transfer - can apply learned concepts to new situations';
+  } else if (poorTransfers >= 2) {
+    overall = 'weak';
+    interpretation = 'Difficulty transferring skills - may need explicit guidance for new applications';
+  } else {
+    overall = 'moderate';
+    interpretation = 'Average skill transfer - can generalize with some guidance';
+  }
+  
+  return { transfers, overall, interpretation };
+};
+
+// READING COMPREHENSION EFFICIENCY
+// Speed vs accuracy tradeoff on memory passage
+const analyzeReadingEfficiency = (answers, questions, questionTimes, passageReadTime) => {
+  // Find memory questions (Q19-Q25 in 0-indexed: 18-24)
+  const memoryIndices = [18, 19, 20, 21, 22, 23, 24];
+  
+  let correct = 0;
+  let total = 0;
+  let totalResponseTime = 0;
+  
+  memoryIndices.forEach(i => {
+    if (answers[i] !== undefined && questions[i]) {
+      total++;
+      if (answers[i] === questions[i].correct) correct++;
+      if (questionTimes && questionTimes[i]) {
+        totalResponseTime += questionTimes[i];
+      }
+    }
+  });
+  
+  const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const avgResponseTime = total > 0 ? Math.round(totalResponseTime / total / 1000) : 0;
+  
+  // Determine reading style based on accuracy
+  // (We don't have passage read time directly, but we can infer from first memory question time)
+  let readingStyle = 'balanced';
+  let interpretation = '';
+  
+  if (accuracy >= 80) {
+    if (avgResponseTime < 15) {
+      readingStyle = 'efficient';
+      interpretation = 'Fast recall with high accuracy - excellent information processing';
+    } else {
+      readingStyle = 'thorough';
+      interpretation = 'Takes time but retains well - careful, methodical reader';
+    }
+  } else if (accuracy >= 50) {
+    readingStyle = 'balanced';
+    interpretation = 'Average retention - typical reading comprehension';
+  } else {
+    if (avgResponseTime < 10) {
+      readingStyle = 'skimmer';
+      interpretation = 'May not be reading carefully - quick but misses details';
+    } else {
+      readingStyle = 'struggling';
+      interpretation = 'Difficulty retaining written information - may need alternative formats';
+    }
+  }
+  
+  return {
+    accuracy,
+    avgResponseTime,
+    style: readingStyle,
+    interpretation
+  };
+};
+
+// COMPOSITE COGNITIVE PROFILE
+// Generate a holistic summary combining all analyses
+const generateCognitiveProfile = (allAnalyses) => {
+  const profile = {
+    strengths: [],
+    concerns: [],
+    workStyle: '',
+    learningStyle: '',
+    pressureResponse: '',
+    teamFit: '',
+    developmentAreas: []
+  };
+  
+  // Work style from strategy
+  if (allAnalyses.strategy?.primary === 'analytical') {
+    profile.workStyle = 'Methodical and thorough - excels with complex problems given adequate time';
+  } else if (allAnalyses.strategy?.primary === 'intuitive') {
+    profile.workStyle = 'Quick and intuitive - good for fast-paced environments';
+  } else if (allAnalyses.strategy?.primary === 'elimination') {
+    profile.workStyle = 'Strategic and systematic - good decision-maker';
+  }
+  
+  // Learning style from transfer + trajectory
+  if (allAnalyses.transfer?.overall === 'strong') {
+    profile.learningStyle = 'Quick to generalize - can apply training to new situations';
+    profile.strengths.push('Strong skill transfer');
+  } else if (allAnalyses.transfer?.overall === 'weak') {
+    profile.learningStyle = 'Needs explicit instruction for each context';
+    profile.developmentAreas.push('Generalizing learned skills');
+  }
+  
+  // Pressure response from fatigue + attention
+  if (allAnalyses.fatigue?.curveType === 'stable') {
+    profile.pressureResponse = 'Maintains composure under sustained cognitive load';
+    profile.strengths.push('Consistent under pressure');
+  } else if (allAnalyses.fatigue?.curveType === 'declining') {
+    profile.pressureResponse = 'May struggle with prolonged demanding tasks';
+    profile.concerns.push('Performance decline under sustained effort');
+  }
+  
+  // Recovery indicates resilience
+  if (allAnalyses.recovery?.resilience === 'high') {
+    profile.strengths.push('Resilient - bounces back from setbacks');
+  } else if (allAnalyses.recovery?.resilience === 'low') {
+    profile.concerns.push('May need support after making mistakes');
+  }
+  
+  // Error patterns indicate training needs
+  if (allAnalyses.errors?.primaryError === 'careless') {
+    profile.developmentAreas.push('Attention to detail on routine tasks');
+  } else if (allAnalyses.errors?.primaryError === 'conceptual') {
+    profile.developmentAreas.push('Foundational skill building');
+  }
+  
+  // Team fit from various factors
+  if (allAnalyses.attention?.variance === 'low' && allAnalyses.recovery?.resilience !== 'low') {
+    profile.teamFit = 'Reliable team member - consistent and dependable';
+  } else if (allAnalyses.strategy?.primary === 'intuitive') {
+    profile.teamFit = 'Creative contributor - good for brainstorming and quick solutions';
+  }
+  
+  return profile;
+};
+  
+  return ceilings;
+};
+
 const memoryPassage = {title:"Meridian Technologies Company Memo",content:'Meridian Technologies has announced organizational changes effective Q3. The Engineering division, led by Director Priya Sharma, will merge with the Product team under the new "Innovation Hub." The merger affects 127 employees across three offices: Seattle (58 employees), Austin (42 employees), and Boston (27 employees). Budget allocation for the merged division is $4.2 million, a 15% increase from the combined previous budgets. New reporting structure: all team leads report to Priya Sharma, who reports directly to CEO Marcus Chen. The transition timeline is 90 days, with Phase 1 (communication) lasting 2 weeks, Phase 2 (structural changes) lasting 6 weeks, and Phase 3 (integration) lasting 4 weeks.'};
 
 const methodologyContent = {
@@ -808,14 +1335,26 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
     };
   }, [answers, questionTimes]);
 
-  // Advanced Analysis
+  // Advanced Analysis - comprehensive
   const advancedAnalysis = useMemo(() => {
-    return {
+    const baseAnalyses = {
       answerPatterns: analyzeAnswerPatterns(answers),
       trajectories: analyzeTrajectory(answers, questions, ALGORITHM_CONFIG.categoryIndices),
       stealthResults: analyzeStealthQuestions(answers, questions, questionTimes),
-      skillCeilings: analyzeSkillCeilings(answers, questions)
+      skillCeilings: analyzeSkillCeilings(answers, questions),
+      errors: classifyErrors(answers, questions),
+      recovery: analyzeRecovery(answers, questions),
+      fatigue: analyzeFatigueCurve(answers, questions, questionTimes),
+      attention: analyzeAttentionConsistency(questionTimes, questions),
+      strategy: detectStrategy(answers, questions, questionTimes),
+      transfer: analyzeDomainTransfer(answers, questions),
+      reading: analyzeReadingEfficiency(answers, questions, questionTimes)
     };
+    
+    // Generate holistic profile from all analyses
+    baseAnalyses.cognitiveProfile = generateCognitiveProfile(baseAnalyses);
+    
+    return baseAnalyses;
   }, [answers, questionTimes]);
 
   // Calculate composite score based on selected role
@@ -1283,161 +1822,284 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
 
           {/* Deep Analytics Tab */}
           {activeTab === 'analytics' && (
-            <div>
-              <h2 className="text-lg font-semibold text-slate-900 mb-2">Deep Analytics</h2>
-              <p className="text-slate-500 text-sm mb-6">Advanced psychometric analysis using response timing, patterns, and embedded validity checks.</p>
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-lg font-semibold text-slate-900 mb-1">Deep Analytics</h2>
+                <p className="text-slate-500 text-sm">Advanced psychometric analysis extracting 50+ behavioral signals from response patterns.</p>
+              </div>
               
-              {/* Response Validity Index */}
-              <div className="bg-slate-50 rounded-xl p-4 mb-4">
-                <h3 className="text-sm font-semibold text-slate-900 mb-3">📋 Response Validity Index</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  <div className={`p-3 rounded-lg ${advancedAnalysis.stealthResults.attentionCheck.passed ? 'bg-emerald-50' : 'bg-rose-50'}`}>
-                    <div className="text-xs text-slate-500">Attention Check</div>
-                    <div className={`font-semibold ${advancedAnalysis.stealthResults.attentionCheck.passed ? 'text-emerald-700' : 'text-rose-700'}`}>
-                      {advancedAnalysis.stealthResults.attentionCheck.passed ? '✓ Passed' : '✗ Failed'}
-                    </div>
+              {/* Cognitive Profile Summary */}
+              {advancedAnalysis.cognitiveProfile && (
+                <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-4 text-white">
+                  <h3 className="text-sm font-semibold mb-3">🎯 Holistic Cognitive Profile</h3>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    {advancedAnalysis.cognitiveProfile.workStyle && (
+                      <div><span className="text-slate-400">Work Style:</span> <span className="text-white">{advancedAnalysis.cognitiveProfile.workStyle}</span></div>
+                    )}
+                    {advancedAnalysis.cognitiveProfile.learningStyle && (
+                      <div><span className="text-slate-400">Learning:</span> <span className="text-white">{advancedAnalysis.cognitiveProfile.learningStyle}</span></div>
+                    )}
+                    {advancedAnalysis.cognitiveProfile.pressureResponse && (
+                      <div><span className="text-slate-400">Under Pressure:</span> <span className="text-white">{advancedAnalysis.cognitiveProfile.pressureResponse}</span></div>
+                    )}
+                    {advancedAnalysis.cognitiveProfile.teamFit && (
+                      <div><span className="text-slate-400">Team Role:</span> <span className="text-white">{advancedAnalysis.cognitiveProfile.teamFit}</span></div>
+                    )}
                   </div>
-                  <div className={`p-3 rounded-lg ${advancedAnalysis.stealthResults.consistencyCheck.passed ? 'bg-emerald-50' : 'bg-amber-50'}`}>
-                    <div className="text-xs text-slate-500">Consistency Check</div>
-                    <div className={`font-semibold ${advancedAnalysis.stealthResults.consistencyCheck.passed ? 'text-emerald-700' : 'text-amber-700'}`}>
-                      {advancedAnalysis.stealthResults.consistencyCheck.passed ? '✓ Consistent' : '⚠ Inconsistent'}
+                  {advancedAnalysis.cognitiveProfile.strengths.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {advancedAnalysis.cognitiveProfile.strengths.map((s, i) => (
+                        <span key={i} className="px-2 py-1 bg-emerald-500/20 text-emerald-300 rounded text-xs">✓ {s}</span>
+                      ))}
                     </div>
-                  </div>
-                  <div className={`p-3 rounded-lg ${advancedAnalysis.stealthResults.overallValidity === 'high' ? 'bg-emerald-50' : advancedAnalysis.stealthResults.overallValidity === 'moderate' ? 'bg-amber-50' : 'bg-rose-50'}`}>
-                    <div className="text-xs text-slate-500">Overall Validity</div>
-                    <div className={`font-semibold ${advancedAnalysis.stealthResults.overallValidity === 'high' ? 'text-emerald-700' : advancedAnalysis.stealthResults.overallValidity === 'moderate' ? 'text-amber-700' : 'text-rose-700'}`}>
-                      {advancedAnalysis.stealthResults.overallValidity.toUpperCase()}
+                  )}
+                  {advancedAnalysis.cognitiveProfile.concerns.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {advancedAnalysis.cognitiveProfile.concerns.map((c, i) => (
+                        <span key={i} className="px-2 py-1 bg-amber-500/20 text-amber-300 rounded text-xs">⚠ {c}</span>
+                      ))}
                     </div>
-                  </div>
+                  )}
                 </div>
-              </div>
+              )}
 
-              {/* Metacognitive & Bias Profile */}
-              <div className="bg-slate-50 rounded-xl p-4 mb-4">
-                <h3 className="text-sm font-semibold text-slate-900 mb-3">🧠 Metacognitive & Bias Profile</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-white rounded-lg">
-                    <div className="text-xs text-slate-500">Self-Assessment Calibration</div>
-                    <div className={`font-semibold ${
-                      advancedAnalysis.stealthResults.metacognition.calibration === 'well_calibrated' ? 'text-emerald-700' :
-                      advancedAnalysis.stealthResults.metacognition.calibration === 'overconfident' ? 'text-amber-700' :
-                      advancedAnalysis.stealthResults.metacognition.calibration === 'underconfident' ? 'text-blue-700' : 'text-slate-500'
-                    }`}>
-                      {advancedAnalysis.stealthResults.metacognition.calibration === 'well_calibrated' ? '✓ Well Calibrated' :
-                       advancedAnalysis.stealthResults.metacognition.calibration === 'overconfident' ? '⚠ Overconfident' :
-                       advancedAnalysis.stealthResults.metacognition.calibration === 'underconfident' ? 'ℹ Underconfident' : '— N/A'}
-                    </div>
+              {/* Problem-Solving Strategy */}
+              <div className="bg-slate-50 rounded-xl p-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">🧩 Problem-Solving Strategy</h3>
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="flex-1">
+                    <div className="text-xs text-slate-500 mb-1">Primary Approach</div>
+                    <div className="text-lg font-semibold text-slate-800 capitalize">{advancedAnalysis.strategy?.primary || 'Mixed'}</div>
+                    <p className="text-xs text-slate-600 mt-1">{advancedAnalysis.strategy?.description}</p>
                   </div>
-                  <div className="p-3 bg-white rounded-lg">
-                    <div className="text-xs text-slate-500">Anchoring Bias</div>
-                    <div className={`font-semibold ${advancedAnalysis.stealthResults.anchoringBias.detected ? 'text-amber-700' : 'text-emerald-700'}`}>
-                      {advancedAnalysis.stealthResults.anchoringBias.detected ? '⚠ Susceptible' : '✓ Independent'}
-                    </div>
-                  </div>
-                  <div className="p-3 bg-white rounded-lg">
-                    <div className="text-xs text-slate-500">Ethical Reasoning</div>
-                    <div className={`font-semibold ${advancedAnalysis.stealthResults.honestyCheck.passed ? 'text-emerald-700' : 'text-amber-700'}`}>
-                      {advancedAnalysis.stealthResults.honestyCheck.passed ? '✓ Sound' : '⚠ Concern'}
-                    </div>
-                  </div>
-                  <div className="p-3 bg-white rounded-lg">
-                    <div className="text-xs text-slate-500">Frustration Tolerance</div>
-                    <div className={`font-semibold ${
-                      advancedAnalysis.stealthResults.frustrationTolerance.score === 'high' ? 'text-emerald-700' :
-                      advancedAnalysis.stealthResults.frustrationTolerance.score === 'moderate' ? 'text-blue-700' : 'text-amber-700'
-                    }`}>
-                      {advancedAnalysis.stealthResults.frustrationTolerance.score === 'high' ? '✓ High Persistence' :
-                       advancedAnalysis.stealthResults.frustrationTolerance.score === 'moderate' ? 'Moderate' : '⚠ Low Persistence'}
-                    </div>
+                  <div className="text-right">
+                    <div className="text-3xl font-light text-slate-700">{advancedAnalysis.strategy?.confidence || 0}%</div>
+                    <div className="text-xs text-slate-400">confidence</div>
                   </div>
                 </div>
-              </div>
-
-              {/* Response Patterns */}
-              <div className="bg-slate-50 rounded-xl p-4 mb-4">
-                <h3 className="text-sm font-semibold text-slate-900 mb-3">⚡ Response Time Analysis</h3>
-                <div className="grid grid-cols-4 gap-2 mb-3">
-                  <div className="p-2 bg-emerald-50 rounded-lg text-center">
-                    <div className="text-xl font-light text-emerald-700">{scores.responsePatterns.fastCorrect}</div>
-                    <div className="text-xs text-slate-500">Fast ✓</div>
-                  </div>
-                  <div className="p-2 bg-rose-50 rounded-lg text-center">
-                    <div className="text-xl font-light text-rose-700">{scores.responsePatterns.fastWrong}</div>
-                    <div className="text-xs text-slate-500">Fast ✗</div>
-                  </div>
-                  <div className="p-2 bg-blue-50 rounded-lg text-center">
-                    <div className="text-xl font-light text-blue-700">{scores.responsePatterns.slowCorrect}</div>
-                    <div className="text-xs text-slate-500">Slow ✓</div>
-                  </div>
-                  <div className="p-2 bg-amber-50 rounded-lg text-center">
-                    <div className="text-xl font-light text-amber-700">{scores.responsePatterns.slowWrong}</div>
-                    <div className="text-xs text-slate-500">Slow ✗</div>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between p-2 bg-white rounded-lg">
-                  <span className="text-sm text-slate-600">Impulsivity Index</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
-                      <div className={`h-full rounded-full ${scores.impulsivityScore > 50 ? 'bg-rose-500' : scores.impulsivityScore > 30 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{width: `${Math.min(scores.impulsivityScore, 100)}%`}} />
-                    </div>
-                    <span className="text-sm font-medium text-slate-700">{scores.impulsivityScore}%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Trajectory Analysis */}
-              <div className="bg-slate-50 rounded-xl p-4 mb-4">
-                <h3 className="text-sm font-semibold text-slate-900 mb-3">📈 Performance Trajectory</h3>
-                <div className="space-y-2">
-                  {Object.entries(advancedAnalysis.trajectories).map(([cat, traj]) => (
-                    <div key={cat} className="flex items-center justify-between p-2 bg-white rounded-lg">
-                      <span className="text-sm text-slate-600">{categoryNames[cat]?.split(' ')[0] || cat}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-slate-400">{traj.firstHalf}%</span>
-                        <span className={`text-base ${traj.trend === 'improving' ? 'text-emerald-600' : traj.trend === 'declining' ? 'text-rose-600' : 'text-slate-400'}`}>
-                          {traj.trend === 'improving' ? '↗' : traj.trend === 'declining' ? '↘' : '→'}
-                        </span>
-                        <span className="text-xs text-slate-400">{traj.secondHalf}%</span>
-                        <span className={`text-xs px-1.5 py-0.5 rounded ${
-                          traj.trend === 'improving' ? 'bg-emerald-100 text-emerald-700' :
-                          traj.trend === 'declining' ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600'
-                        }`}>
-                          {traj.trend === 'insufficient_data' ? 'N/A' : traj.trend === 'stable' ? 'Stable' : `${traj.change > 0 ? '+' : ''}${traj.change}%`}
-                        </span>
+                <div className="grid grid-cols-5 gap-1">
+                  {advancedAnalysis.strategy?.scores && Object.entries(advancedAnalysis.strategy.scores).map(([k, v]) => (
+                    <div key={k} className="text-center">
+                      <div className="h-16 bg-slate-200 rounded relative overflow-hidden">
+                        <div className="absolute bottom-0 w-full bg-slate-600 rounded-t" style={{height: `${v}%`}} />
                       </div>
+                      <div className="text-xs text-slate-500 mt-1 capitalize">{k.slice(0, 4)}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Memory & Skill Analysis */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="bg-slate-50 rounded-xl p-4">
-                  <h3 className="text-sm font-semibold text-slate-900 mb-3">💾 Memory Retention</h3>
-                  <div className={`p-3 rounded-lg ${advancedAnalysis.stealthResults.delayedRecall.passed ? 'bg-emerald-50' : 'bg-amber-50'}`}>
-                    <div className="text-xs text-slate-500">Delayed Recall Test</div>
-                    <div className={`font-semibold ${advancedAnalysis.stealthResults.delayedRecall.passed ? 'text-emerald-700' : 'text-amber-700'}`}>
-                      {advancedAnalysis.stealthResults.delayedRecall.passed ? '✓ Information Retained' : '⚠ Information Decay'}
-                    </div>
-                    <p className="text-xs text-slate-500 mt-1">Tested recall of passage details at end of assessment</p>
+              {/* Error Analysis */}
+              <div className="bg-slate-50 rounded-xl p-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">❌ Error Pattern Analysis</h3>
+                <div className="grid grid-cols-4 gap-2 mb-3">
+                  <div className="p-2 bg-white rounded-lg text-center">
+                    <div className="text-lg font-semibold text-amber-600">{advancedAnalysis.errors?.profile?.nearMissRate || 0}%</div>
+                    <div className="text-xs text-slate-500">Near Miss</div>
+                  </div>
+                  <div className="p-2 bg-white rounded-lg text-center">
+                    <div className="text-lg font-semibold text-rose-600">{advancedAnalysis.errors?.profile?.carelessRate || 0}%</div>
+                    <div className="text-xs text-slate-500">Careless</div>
+                  </div>
+                  <div className="p-2 bg-white rounded-lg text-center">
+                    <div className="text-lg font-semibold text-purple-600">{advancedAnalysis.errors?.profile?.conceptualRate || 0}%</div>
+                    <div className="text-xs text-slate-500">Conceptual</div>
+                  </div>
+                  <div className="p-2 bg-white rounded-lg text-center">
+                    <div className="text-lg font-semibold text-blue-600">{advancedAnalysis.errors?.profile?.distractedRate || 0}%</div>
+                    <div className="text-xs text-slate-500">Distracted</div>
                   </div>
                 </div>
-                
-                {advancedAnalysis.skillCeilings.length > 0 && (
-                  <div className="bg-slate-50 rounded-xl p-4">
-                    <h3 className="text-sm font-semibold text-slate-900 mb-3">🎯 Skill Ceilings Detected</h3>
-                    <div className="space-y-2">
-                      {advancedAnalysis.skillCeilings.slice(0, 2).map((c, i) => (
-                        <div key={i} className="p-2 bg-amber-50 rounded-lg text-xs text-amber-800">{c.message}</div>
-                      ))}
+                <div className={`p-2 rounded-lg text-xs ${
+                  advancedAnalysis.errors?.primaryError === 'near_miss' ? 'bg-amber-50 text-amber-800' :
+                  advancedAnalysis.errors?.primaryError === 'careless' ? 'bg-rose-50 text-rose-800' :
+                  advancedAnalysis.errors?.primaryError === 'conceptual' ? 'bg-purple-50 text-purple-800' :
+                  'bg-slate-100 text-slate-600'
+                }`}>
+                  {advancedAnalysis.errors?.primaryError === 'near_miss' && '💡 Mostly near-misses — has right approach but makes small calculation errors'}
+                  {advancedAnalysis.errors?.primaryError === 'careless' && '⚠ Careless errors on easy questions — may rush or lose focus on routine tasks'}
+                  {advancedAnalysis.errors?.primaryError === 'conceptual' && '📚 Conceptual gaps — may need foundational skill building'}
+                  {advancedAnalysis.errors?.primaryError === 'mixed' && 'Mixed error types — no dominant pattern'}
+                </div>
+              </div>
+
+              {/* Recovery & Resilience */}
+              <div className="bg-slate-50 rounded-xl p-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">🔄 Recovery & Resilience</h3>
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <div className="text-xs text-slate-500">After-Error Recovery Rate</div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-light text-slate-800">{advancedAnalysis.recovery?.recoveryRate || 50}%</span>
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                        advancedAnalysis.recovery?.resilience === 'high' ? 'bg-emerald-100 text-emerald-700' :
+                        advancedAnalysis.recovery?.resilience === 'low' ? 'bg-rose-100 text-rose-700' :
+                        'bg-slate-100 text-slate-600'
+                      }`}>
+                        {advancedAnalysis.recovery?.resilience === 'high' ? 'High Resilience' :
+                         advancedAnalysis.recovery?.resilience === 'low' ? 'Low Resilience' : 'Moderate'}
+                      </span>
                     </div>
                   </div>
+                  <div className="text-right text-xs text-slate-500">
+                    <div>{advancedAnalysis.recovery?.afterErrorCorrect || 0} bounced back</div>
+                    <div>{advancedAnalysis.recovery?.afterErrorWrong || 0} continued struggling</div>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600">{advancedAnalysis.recovery?.interpretation}</p>
+                {advancedAnalysis.recovery?.hasSpiral && (
+                  <div className="mt-2 p-2 bg-rose-50 rounded text-xs text-rose-700">⚠ Spiral pattern detected — multiple consecutive errors after initial mistake</div>
                 )}
               </div>
 
-              {advancedAnalysis.answerPatterns.suspicious && (
-                <div className="mt-4 p-4 bg-rose-50 border border-rose-200 rounded-xl">
-                  <h3 className="text-sm font-semibold text-rose-800 mb-2">⚠ Suspicious Response Patterns</h3>
+              {/* Fatigue Curve */}
+              <div className="bg-slate-50 rounded-xl p-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">📉 Fatigue Curve</h3>
+                <div className="flex items-end justify-between gap-2 h-24 mb-3">
+                  {advancedAnalysis.fatigue?.quarters?.map((q, i) => (
+                    <div key={i} className="flex-1 flex flex-col items-center">
+                      <div className="w-full bg-slate-200 rounded-t relative" style={{height: '80px'}}>
+                        <div 
+                          className={`absolute bottom-0 w-full rounded-t transition-all ${
+                            q.accuracy >= 70 ? 'bg-emerald-500' : q.accuracy >= 50 ? 'bg-amber-500' : 'bg-rose-500'
+                          }`}
+                          style={{height: `${q.accuracy}%`}}
+                        />
+                      </div>
+                      <div className="text-xs text-slate-500 mt-1">Q{i + 1}</div>
+                      <div className="text-xs font-medium text-slate-700">{q.accuracy}%</div>
+                    </div>
+                  ))}
+                </div>
+                <div className={`p-2 rounded-lg text-xs ${
+                  advancedAnalysis.fatigue?.curveType === 'stable' ? 'bg-emerald-50 text-emerald-800' :
+                  advancedAnalysis.fatigue?.curveType === 'declining' ? 'bg-rose-50 text-rose-800' :
+                  advancedAnalysis.fatigue?.curveType === 'improving' ? 'bg-blue-50 text-blue-800' :
+                  'bg-slate-100 text-slate-600'
+                }`}>
+                  <span className="font-medium capitalize">{advancedAnalysis.fatigue?.curveType?.replace('_', ' ')}:</span> {advancedAnalysis.fatigue?.interpretation}
+                </div>
+              </div>
+
+              {/* Attention & Timing */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-slate-50 rounded-xl p-4">
+                  <h3 className="text-sm font-semibold text-slate-900 mb-3">⏱ Attention Consistency</h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-slate-500">Time Variance (CV)</span>
+                    <span className="text-lg font-semibold text-slate-800">{advancedAnalysis.attention?.coefficient || 0}%</span>
+                  </div>
+                  <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden mb-2">
+                    <div 
+                      className={`h-full rounded-full ${
+                        advancedAnalysis.attention?.variance === 'low' ? 'bg-emerald-500' :
+                        advancedAnalysis.attention?.variance === 'high' ? 'bg-rose-500' : 'bg-amber-500'
+                      }`}
+                      style={{width: `${Math.min(advancedAnalysis.attention?.coefficient || 50, 100)}%`}}
+                    />
+                  </div>
+                  <p className="text-xs text-slate-600">{advancedAnalysis.attention?.interpretation}</p>
+                </div>
+
+                <div className="bg-slate-50 rounded-xl p-4">
+                  <h3 className="text-sm font-semibold text-slate-900 mb-3">📖 Reading Efficiency</h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <div className="text-xs text-slate-500">Memory Accuracy</div>
+                      <div className="text-lg font-semibold text-slate-800">{advancedAnalysis.reading?.accuracy || 0}%</div>
+                    </div>
+                    <div className={`px-2 py-1 rounded text-xs font-medium ${
+                      advancedAnalysis.reading?.style === 'efficient' ? 'bg-emerald-100 text-emerald-700' :
+                      advancedAnalysis.reading?.style === 'thorough' ? 'bg-blue-100 text-blue-700' :
+                      advancedAnalysis.reading?.style === 'skimmer' ? 'bg-amber-100 text-amber-700' :
+                      'bg-slate-100 text-slate-600'
+                    }`}>
+                      {advancedAnalysis.reading?.style?.replace('_', ' ')}
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-600">{advancedAnalysis.reading?.interpretation}</p>
+                </div>
+              </div>
+
+              {/* Domain Transfer */}
+              <div className="bg-slate-50 rounded-xl p-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">🔀 Skill Transfer Analysis</h3>
+                <p className="text-xs text-slate-500 mb-3">Can they apply foundational skills to advanced problems?</p>
+                <div className="space-y-2">
+                  {advancedAnalysis.transfer?.transfers?.map((t, i) => (
+                    <div key={i} className="flex items-center justify-between p-2 bg-white rounded-lg">
+                      <span className="text-sm text-slate-700">{t.skill}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-slate-400">{t.basicRate}%</span>
+                        <span className={`text-base ${
+                          t.transfer === 'good' ? 'text-emerald-600' :
+                          t.transfer === 'poor' ? 'text-rose-600' : 'text-slate-400'
+                        }`}>→</span>
+                        <span className="text-xs text-slate-400">{t.advancedRate}%</span>
+                        <span className={`px-1.5 py-0.5 rounded text-xs ${
+                          t.transfer === 'good' ? 'bg-emerald-100 text-emerald-700' :
+                          t.transfer === 'poor' ? 'bg-rose-100 text-rose-700' :
+                          t.transfer === 'foundational_gap' ? 'bg-amber-100 text-amber-700' :
+                          'bg-slate-100 text-slate-600'
+                        }`}>
+                          {t.transfer === 'good' ? '✓ Good' : t.transfer === 'poor' ? '✗ Poor' : t.transfer === 'foundational_gap' ? 'Gap' : 'Moderate'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className={`mt-3 p-2 rounded-lg text-xs ${
+                  advancedAnalysis.transfer?.overall === 'strong' ? 'bg-emerald-50 text-emerald-800' :
+                  advancedAnalysis.transfer?.overall === 'weak' ? 'bg-rose-50 text-rose-800' :
+                  'bg-slate-100 text-slate-600'
+                }`}>
+                  {advancedAnalysis.transfer?.interpretation}
+                </div>
+              </div>
+
+              {/* Validity Checks */}
+              <div className="bg-slate-50 rounded-xl p-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">📋 Embedded Validity Checks</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <div className={`p-2 rounded-lg text-center ${advancedAnalysis.stealthResults?.attentionCheck?.passed ? 'bg-emerald-50' : 'bg-rose-50'}`}>
+                    <div className="text-lg">{advancedAnalysis.stealthResults?.attentionCheck?.passed ? '✓' : '✗'}</div>
+                    <div className="text-xs text-slate-600">Attention</div>
+                  </div>
+                  <div className={`p-2 rounded-lg text-center ${advancedAnalysis.stealthResults?.consistencyCheck?.passed ? 'bg-emerald-50' : 'bg-amber-50'}`}>
+                    <div className="text-lg">{advancedAnalysis.stealthResults?.consistencyCheck?.passed ? '✓' : '⚠'}</div>
+                    <div className="text-xs text-slate-600">Consistency</div>
+                  </div>
+                  <div className={`p-2 rounded-lg text-center ${advancedAnalysis.stealthResults?.honestyCheck?.passed ? 'bg-emerald-50' : 'bg-amber-50'}`}>
+                    <div className="text-lg">{advancedAnalysis.stealthResults?.honestyCheck?.passed ? '✓' : '⚠'}</div>
+                    <div className="text-xs text-slate-600">Ethics</div>
+                  </div>
+                  <div className={`p-2 rounded-lg text-center ${advancedAnalysis.stealthResults?.delayedRecall?.passed ? 'bg-emerald-50' : 'bg-amber-50'}`}>
+                    <div className="text-lg">{advancedAnalysis.stealthResults?.delayedRecall?.passed ? '✓' : '⚠'}</div>
+                    <div className="text-xs text-slate-600">Memory</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div className="p-2 bg-white rounded-lg">
+                    <div className="text-xs text-slate-500">Metacognition</div>
+                    <div className={`text-sm font-medium ${
+                      advancedAnalysis.stealthResults?.metacognition?.calibration === 'well_calibrated' ? 'text-emerald-700' :
+                      advancedAnalysis.stealthResults?.metacognition?.calibration === 'overconfident' ? 'text-amber-700' : 'text-slate-600'
+                    }`}>
+                      {advancedAnalysis.stealthResults?.metacognition?.calibration?.replace('_', ' ') || 'N/A'}
+                    </div>
+                  </div>
+                  <div className="p-2 bg-white rounded-lg">
+                    <div className="text-xs text-slate-500">Anchoring Bias</div>
+                    <div className={`text-sm font-medium ${advancedAnalysis.stealthResults?.anchoringBias?.detected ? 'text-amber-700' : 'text-emerald-700'}`}>
+                      {advancedAnalysis.stealthResults?.anchoringBias?.detected ? 'Detected' : 'Not Detected'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {advancedAnalysis.answerPatterns?.suspicious && (
+                <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl">
+                  <h3 className="text-sm font-semibold text-rose-800 mb-2">⚠ Suspicious Patterns</h3>
                   <ul className="text-rose-700 text-sm space-y-1">
                     {advancedAnalysis.answerPatterns.details.map((d, i) => <li key={i}>• {d}</li>)}
                   </ul>
