@@ -889,171 +889,122 @@ const methodologyContent = {
 
 const categoryNames = {analytical:"Analytical Reasoning",pattern:"Pattern Recognition",memory:"Working Memory",adaptive:"Adaptive Thinking",processing:"Processing Efficiency"};
 
+
 const LandingPage = ({onStart,onSuffernAccess}) => (
-  <div className="h-screen bg-white flex flex-col overflow-hidden">
-    <header className="border-b border-gray-100 flex-shrink-0">
-      <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 flex flex-col">
+    <header className="border-b border-gray-100/80 backdrop-blur-sm bg-white/70 flex-shrink-0 sticky top-0 z-10">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-slate-900 rounded-lg flex items-center justify-center">
-            <span className="text-white text-base font-semibold">J</span>
+          <div className="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl flex items-center justify-center shadow-lg shadow-slate-900/20">
+            <span className="text-white text-lg font-bold">J</span>
           </div>
           <div>
-            <div className="text-slate-900 font-semibold tracking-tight text-sm">J-Industries</div>
-            <div className="text-slate-400 text-xs tracking-wide uppercase">Talent Assessment</div>
+            <div className="text-slate-900 font-semibold tracking-tight">J-Industries</div>
+            <div className="text-slate-400 text-xs tracking-wide">Talent Assessment Platform</div>
           </div>
+        </div>
+        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500">
+          <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+          Assessment Ready
         </div>
       </div>
     </header>
-    <main className="flex-1 flex items-center overflow-hidden">
-      <div className="max-w-6xl mx-auto px-6 py-6 w-full">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <div className="inline-block px-3 py-1 bg-slate-100 rounded-full text-slate-600 text-xs font-medium mb-4">Cognitive Assessment Platform</div>
-            <h1 className="text-4xl font-light text-slate-900 leading-tight mb-4 tracking-tight">Discover your<br/><span className="font-semibold">cognitive profile</span></h1>
-            <p className="text-lg text-slate-500 leading-relaxed mb-6 font-light">A comprehensive assessment measuring problem-solving, information retention, adaptive thinking, and processing efficiency.</p>
-            <button onClick={onStart} className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors text-sm">Begin Assessment<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg></button>
-            <p className="mt-4 text-xs text-slate-400">Approximately 25-35 minutes to complete</p>
+    <main className="flex-1 flex items-center py-12 px-6">
+      <div className="max-w-6xl mx-auto w-full">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full text-blue-600 text-sm font-medium border border-blue-100">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+              Cognitive Assessment Platform
+            </div>
+            <h1 className="text-5xl sm:text-6xl font-light text-slate-900 leading-[1.1] tracking-tight">
+              Discover your<br/>
+              <span className="font-semibold bg-gradient-to-r from-slate-900 via-blue-800 to-slate-900 bg-clip-text text-transparent">cognitive profile</span>
+            </h1>
+            <p className="text-xl text-slate-500 leading-relaxed font-light max-w-lg">
+              A comprehensive assessment measuring analytical reasoning, pattern recognition, memory, adaptive thinking, and processing efficiency.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button onClick={onStart} className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-slate-800 to-slate-900 text-white font-medium rounded-xl hover:from-slate-700 hover:to-slate-800 transition-all shadow-lg shadow-slate-900/25 hover:shadow-xl hover:shadow-slate-900/30 hover:-translate-y-0.5 text-lg">
+                Begin Assessment
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+              </button>
+              <button onClick={onSuffernAccess} className="inline-flex items-center justify-center gap-2 px-6 py-4 text-slate-600 font-medium rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-white transition-all">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Instructor Access
+              </button>
+            </div>
+            <div className="flex flex-wrap items-center gap-6 pt-2 text-sm text-slate-400">
+              <span className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                25-35 minutes
+              </span>
+              <span className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                No preparation needed
+              </span>
+            </div>
           </div>
-          <div className="bg-slate-50 rounded-2xl p-6">
-            <div className="text-center mb-4">
-              <a href="https://jicaapp.tech" className="group relative inline-block px-5 py-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-slate-300 active:scale-95 hover:animate-wiggle">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100 to-transparent opacity-60 animate-sheen"></div>
-                <span className="relative text-xl tracking-tight flex items-center justify-center">
-                  <span className="font-bold text-blue-600 animate-pulse-subtle">J</span>
-                  <span className="font-medium text-slate-700">ica</span>
-                  <span className="font-bold text-blue-600 animate-pulse-subtle">A</span>
-                  <span className="font-medium text-slate-700">pp</span>
-                  <span className="font-light text-slate-400">.tech</span>
-                </span>
-              </a>
-              <div className="mt-2 h-8 flex items-center justify-center">
-                <div className="animate-morph-container relative">
-                  <div className="animate-pill-bg absolute inset-0 rounded-full"></div>
-                  <span className="relative inline-flex items-center text-xs tracking-wide">
-                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 animate-letter-float">J</span>
-                    <span className="text-slate-400 animate-morph-text">-</span>
-                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 animate-letter-float animation-delay-100">I</span>
-                    <span className="text-slate-400 animate-morph-text">ndustries</span>
-                    <span className="animate-morph-text">&nbsp;</span>
-                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500 animate-letter-float animation-delay-200">C</span>
-                    <span className="text-slate-400 animate-morph-text">ognitive</span>
-                    <span className="animate-morph-text">&nbsp;</span>
-                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 animate-letter-float animation-delay-300">A</span>
-                    <span className="text-slate-400 animate-morph-text">ssessment</span>
-                    <span className="animate-morph-text">&nbsp;</span>
-                    <span className="animate-morph-space">&nbsp;</span>
-                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-600 animate-letter-float animation-delay-400">A</span>
-                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">pp</span>
+          <div className="relative">
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-100/50 to-purple-100/50 rounded-[2rem] blur-2xl"></div>
+            <div className="relative bg-white/90 backdrop-blur rounded-3xl p-8 shadow-2xl shadow-slate-900/10 border border-white/50">
+              <div className="text-center mb-8">
+                <a href="https://jicaapp.tech" className="group relative inline-block px-8 py-4 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <span className="relative text-3xl tracking-tight flex items-center justify-center font-medium">
+                    <span className="text-blue-600 font-bold">J</span>
+                    <span className="text-slate-700">ica</span>
+                    <span className="text-blue-600 font-bold">A</span>
+                    <span className="text-slate-700">pp</span>
+                    <span className="text-slate-400 font-light">.tech</span>
                   </span>
+                </a>
+                <p className="mt-3 text-sm text-slate-400">J-Industries Cognitive Assessment App</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="group bg-gradient-to-br from-slate-50 to-slate-100/80 hover:from-slate-100 hover:to-slate-50 rounded-2xl p-6 text-center border border-slate-100 transition-all cursor-default">
+                  <div className="text-4xl font-light text-slate-800 mb-2 group-hover:scale-110 transition-transform">42</div>
+                  <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Questions</div>
+                </div>
+                <div className="group bg-gradient-to-br from-blue-50 to-blue-100/80 hover:from-blue-100 hover:to-blue-50 rounded-2xl p-6 text-center border border-blue-100 transition-all cursor-default">
+                  <div className="text-4xl font-light text-blue-700 mb-2 group-hover:scale-110 transition-transform">5</div>
+                  <div className="text-xs text-blue-600 uppercase tracking-wider font-semibold">Categories</div>
+                </div>
+                <div className="group bg-gradient-to-br from-emerald-50 to-emerald-100/80 hover:from-emerald-100 hover:to-emerald-50 rounded-2xl p-6 text-center border border-emerald-100 transition-all cursor-default">
+                  <div className="text-4xl font-light text-emerald-700 mb-2 group-hover:scale-110 transition-transform">50+</div>
+                  <div className="text-xs text-emerald-600 uppercase tracking-wider font-semibold">Metrics</div>
+                </div>
+                <div className="group bg-gradient-to-br from-violet-50 to-violet-100/80 hover:from-violet-100 hover:to-violet-50 rounded-2xl p-6 text-center border border-violet-100 transition-all cursor-default">
+                  <div className="text-4xl font-light text-violet-700 mb-2 group-hover:scale-110 transition-transform">6</div>
+                  <div className="text-xs text-violet-600 uppercase tracking-wider font-semibold">Role Profiles</div>
                 </div>
               </div>
-            </div>
-            <style>{`
-              @keyframes sheen {
-                0% { transform: translateX(-100%); }
-                100% { transform: translateX(100%); }
-              }
-              @keyframes wiggle {
-                0%, 100% { transform: rotate(-2deg) scale(1.05); }
-                25% { transform: rotate(2deg) scale(1.05); }
-                50% { transform: rotate(-2deg) scale(1.05); }
-                75% { transform: rotate(2deg) scale(1.05); }
-              }
-              @keyframes pulse-subtle {
-                0%, 100% { opacity: 1; transform: scale(1); }
-                50% { opacity: 0.8; transform: scale(1.05); }
-              }
-              @keyframes letter-glow {
-                0%, 100% { text-shadow: 0 0 0 transparent; }
-                50% { text-shadow: 0 0 8px rgba(59, 130, 246, 0.5); }
-              }
-              @keyframes letter-float {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-2px); }
-              }
-              @keyframes morph-text {
-                0%, 35% { max-width: 150px; opacity: 1; }
-                45%, 85% { max-width: 0; opacity: 0; }
-                95%, 100% { max-width: 150px; opacity: 1; }
-              }
-              @keyframes morph-space {
-                0%, 35% { width: 0; }
-                45%, 85% { width: 6px; }
-                95%, 100% { width: 0; }
-              }
-              @keyframes pill-bg {
-                0%, 35% { opacity: 0; transform: scale(0.8); }
-                45%, 85% { opacity: 1; transform: scale(1); }
-                95%, 100% { opacity: 0; transform: scale(0.8); }
-              }
-              .animate-sheen {
-                animation: sheen 3s ease-in-out infinite;
-              }
-              .hover\\:animate-wiggle:hover {
-                animation: wiggle 0.4s ease-in-out;
-              }
-              .animate-pulse-subtle {
-                animation: letter-glow 2s ease-in-out infinite;
-              }
-              .group:hover .animate-pulse-subtle {
-                animation: pulse-subtle 0.3s ease-in-out, letter-glow 0.5s ease-in-out infinite;
-              }
-              .animate-morph-text {
-                display: inline-block;
-                overflow: hidden;
-                white-space: nowrap;
-                animation: morph-text 8s ease-in-out infinite;
-              }
-              .animate-morph-space {
-                display: inline-block;
-                animation: morph-space 8s ease-in-out infinite;
-              }
-              .animate-morph-container {
-                display: inline-flex;
-                align-items: center;
-                padding: 4px 12px;
-                transition: all 0.3s ease;
-              }
-              .animate-pill-bg {
-                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.15) 50%, rgba(59, 130, 246, 0.1) 100%);
-                border: 1px solid rgba(59, 130, 246, 0.2);
-                box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15), inset 0 1px 2px rgba(255,255,255,0.5);
-                animation: pill-bg 8s ease-in-out infinite;
-              }
-              .animate-letter-float {
-                display: inline-block;
-                animation: letter-float 3s ease-in-out infinite;
-              }
-              .animation-delay-100 { animation-delay: 0.1s; }
-              .animation-delay-200 { animation-delay: 0.2s; }
-              .animation-delay-300 { animation-delay: 0.3s; }
-              .animation-delay-400 { animation-delay: 0.4s; }
-            `}</style>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-3"><div className="text-3xl font-light text-slate-900 mb-1">42</div><div className="text-xs text-slate-500 uppercase tracking-wide">Questions</div></div>
-              <div className="text-center p-3"><div className="text-3xl font-light text-slate-900 mb-1">5</div><div className="text-xs text-slate-500 uppercase tracking-wide">Categories</div></div>
-              <div className="text-center p-3"><div className="text-3xl font-light text-slate-900 mb-1">25</div><div className="text-xs text-slate-500 uppercase tracking-wide">Minutes Avg</div></div>
-              <div className="text-center p-3"><div className="text-3xl font-light text-slate-900 mb-1">50+</div><div className="text-xs text-slate-500 uppercase tracking-wide">Metrics</div></div>
-            </div>
-            <div className="mt-4 pt-4 border-t border-slate-200">
-              <p className="text-xs text-slate-500 leading-relaxed text-center">Research shows that cognitive skills develop with experience and practice. Your results reflect your current profile, which evolves over time.</p>
+              <div className="bg-gradient-to-r from-slate-50 to-blue-50/50 rounded-xl p-4 border border-slate-100">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  </div>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    Research shows cognitive skills develop with practice. Your results reflect your <span className="text-slate-700 font-medium">current profile</span>, which evolves over time.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </main>
-    <footer className="border-t border-gray-100 flex-shrink-0">
-      <div className="max-w-6xl mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-2">
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-          <p className="text-xs text-slate-400">Designed by Jonathan Shiell for AP Psychology</p>
-          <span className="hidden sm:block text-slate-300">•</span>
-          <a href="https://jicaapp.tech" className="text-xs hover:text-slate-700 font-medium transition-colors"><span className="text-blue-500 font-semibold">J</span><span className="text-slate-500">ica</span><span className="text-blue-500 font-semibold">A</span><span className="text-slate-500">pp.tech</span></a>
-        </div>
-        <button onClick={onSuffernAccess} className="text-xs text-slate-400 hover:text-slate-600 transition-colors">Instructor Access →</button>
+    <footer className="border-t border-gray-100 bg-white/50 backdrop-blur-sm py-4">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-sm text-slate-400">Designed by Jonathan Shiell for AP Psychology</p>
+        <a href="https://jicaapp.tech" className="text-sm text-slate-500 hover:text-slate-700 font-medium transition-colors">
+          <span className="text-blue-600 font-bold">J</span>ica<span className="text-blue-600 font-bold">A</span>pp.tech
+        </a>
       </div>
     </footer>
   </div>
 );
+
 
 const SuffernModal = ({onConfirm,onCancel}) => (
   <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -1119,34 +1070,104 @@ const QuestionPage = ({question,questionNumber,totalQuestions,onAnswer,selectedA
   const progress = (questionNumber / totalQuestions) * 100;
   const isAdaptive = question.category === "Adaptive Thinking";
   const isProcessing = question.category === "Processing Efficiency";
-  const categoryColors = {"Analytical Reasoning":"bg-violet-50 text-violet-700 border-violet-200","Pattern Recognition":"bg-blue-50 text-blue-700 border-blue-200","Working Memory":"bg-emerald-50 text-emerald-700 border-emerald-200","Adaptive Thinking":"bg-orange-50 text-orange-700 border-orange-200","Processing Efficiency":"bg-rose-50 text-rose-700 border-rose-200"};
-  const difficultyColors = {Easy:"text-emerald-600",Medium:"text-amber-600",Hard:"text-rose-600"};
+  const categoryColors = {
+    "Analytical Reasoning":"bg-violet-50 text-violet-700 border-violet-200",
+    "Pattern Recognition":"bg-blue-50 text-blue-700 border-blue-200",
+    "Working Memory":"bg-emerald-50 text-emerald-700 border-emerald-200",
+    "Adaptive Thinking":"bg-orange-50 text-orange-700 border-orange-200",
+    "Processing Efficiency":"bg-rose-50 text-rose-700 border-rose-200"
+  };
+  const categoryIcons = {
+    "Analytical Reasoning":"🔍",
+    "Pattern Recognition":"🔷",
+    "Working Memory":"💭",
+    "Adaptive Thinking":"🔄",
+    "Processing Efficiency":"⚡"
+  };
+  const difficultyStyles = {
+    Easy:{bg:"bg-emerald-50",text:"text-emerald-600",border:"border-emerald-200"},
+    Medium:{bg:"bg-amber-50",text:"text-amber-600",border:"border-amber-200"},
+    Hard:{bg:"bg-rose-50",text:"text-rose-600",border:"border-rose-200"}
+  };
+  const ds = difficultyStyles[question.difficulty];
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <header className="bg-white border-b border-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 flex flex-col">
+      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center"><span className="text-white text-sm font-semibold">J</span></div>
-            <span className="text-slate-400 text-sm">Question {questionNumber} of {totalQuestions}</span>
-          </div>
           <div className="flex items-center gap-4">
-            <span className={`text-sm font-medium ${difficultyColors[question.difficulty]}`}>{question.difficulty}</span>
-            {isProcessing && <span className="flex items-center gap-1 text-rose-600 text-sm"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Timed</span>}
+            <div className="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl flex items-center justify-center shadow-md">
+              <span className="text-white font-bold">J</span>
+            </div>
+            <div>
+              <span className="text-slate-800 font-medium">Question {questionNumber}</span>
+              <span className="text-slate-400"> of {totalQuestions}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className={`px-3 py-1 rounded-lg text-sm font-medium ${ds.bg} ${ds.text} ${ds.border} border`}>{question.difficulty}</span>
+            {isProcessing && <span className="flex items-center gap-1.5 px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-sm font-medium border border-rose-200"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Timed</span>}
+          </div>
+        </div>
+        <div className="max-w-3xl mx-auto px-6 pb-3">
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-slate-700 to-slate-900 rounded-full transition-all duration-500 ease-out" style={{width:`${progress}%`}}/>
+            </div>
+            <span className="text-sm text-slate-400 font-medium">{Math.round(progress)}%</span>
           </div>
         </div>
       </header>
-      <div className="bg-white border-b border-gray-100"><div className="max-w-3xl mx-auto"><div className="h-1 bg-slate-100"><div className="h-full bg-slate-900 transition-all duration-500 ease-out" style={{width:`${progress}%`}}/></div></div></div>
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="max-w-2xl w-full">
-          <div className="mb-6"><span className={`inline-block px-3 py-1.5 rounded-full text-sm font-medium border ${categoryColors[question.category]}`}>{question.category}</span></div>
-          {isAdaptive && question.ruleSet === 1 && questionNumber === 24 && <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6"><p className="text-blue-800 text-sm"><strong>Rule:</strong> Reverse the word, then replace all vowels with the next vowel in sequence (A→E, E→I, I→O, O→U, U→A).</p></div>}
-          {isAdaptive && question.ruleSet === 2 && questionNumber === 26 && <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6"><p className="text-orange-800 text-sm"><strong>⚠️ Rule Change:</strong> Reverse the word, then replace all CONSONANTS with the previous consonant in the alphabet. Vowels remain unchanged.</p></div>}
-          {isAdaptive && question.ruleSet === 3 && questionNumber === 28 && <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6"><p className="text-emerald-800 text-sm"><strong>⚠️ New Rule:</strong> Do NOT reverse. Simply double every consonant and remove all vowels.</p></div>}
-          <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-6 shadow-sm"><p className="text-slate-900 text-xl leading-relaxed">{question.question}</p></div>
+          <div className="mb-6 flex items-center gap-3">
+            <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border ${categoryColors[question.category]}`}>
+              <span>{categoryIcons[question.category]}</span>
+              {question.category}
+            </span>
+          </div>
+          {isAdaptive && question.ruleSet === 1 && questionNumber === 24 && (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5 mb-6 shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"><span className="text-blue-600 font-bold">📋</span></div>
+                <p className="text-blue-800"><strong>Rule:</strong> Reverse the word, then replace all vowels with the next vowel in sequence (A→E, E→I, I→O, O→U, U→A).</p>
+              </div>
+            </div>
+          )}
+          {isAdaptive && question.ruleSet === 2 && questionNumber === 26 && (
+            <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-2xl p-5 mb-6 shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0"><span className="text-orange-600 font-bold">⚠️</span></div>
+                <p className="text-orange-800"><strong>Rule Change:</strong> Reverse the word, then replace all CONSONANTS with the previous consonant in the alphabet. Vowels remain unchanged.</p>
+              </div>
+            </div>
+          )}
+          {isAdaptive && question.ruleSet === 3 && questionNumber === 28 && (
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-5 mb-6 shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0"><span className="text-emerald-600 font-bold">🔄</span></div>
+                <p className="text-emerald-800"><strong>New Rule:</strong> Do NOT reverse. Simply double every consonant and remove all vowels.</p>
+              </div>
+            </div>
+          )}
+          <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-6 shadow-sm">
+            <p className="text-slate-800 text-xl leading-relaxed">{question.question}</p>
+          </div>
           <div className="space-y-3">
             {question.options.map((option, index) => (
-              <button key={index} onClick={() => onAnswer(index)} className={`w-full p-5 rounded-xl text-left transition-all duration-200 border ${selectedAnswer === index ? "bg-slate-900 border-slate-900 text-white" : "bg-white border-gray-200 text-slate-700 hover:border-slate-300 hover:shadow-sm"}`}>
-                <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full mr-4 text-sm font-medium ${selectedAnswer === index ? "bg-white text-slate-900" : "bg-slate-100 text-slate-600"}`}>{String.fromCharCode(65 + index)}</span>
+              <button 
+                key={index} 
+                onClick={() => onAnswer(index)} 
+                className={`group w-full p-5 rounded-xl text-left transition-all duration-200 border-2 ${
+                  selectedAnswer === index 
+                    ? "bg-gradient-to-r from-slate-800 to-slate-900 border-slate-900 text-white shadow-lg shadow-slate-900/20" 
+                    : "bg-white border-gray-200 text-slate-700 hover:border-slate-300 hover:shadow-md hover:bg-slate-50"
+                }`}
+              >
+                <span className={`inline-flex items-center justify-center w-8 h-8 rounded-lg mr-4 text-sm font-semibold transition-all ${
+                  selectedAnswer === index 
+                    ? "bg-white text-slate-900" 
+                    : "bg-slate-100 text-slate-600 group-hover:bg-slate-200"
+                }`}>{String.fromCharCode(65 + index)}</span>
                 {option}
               </button>
             ))}
