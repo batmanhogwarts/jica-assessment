@@ -2254,138 +2254,42 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
   );
 };
 
-// Instructor Tooltip Component
-const InstructorTooltip = ({id, position, title, children, activeTooltip, setActiveTooltip}) => {
-  const isActive = activeTooltip === id;
-  const positionClasses = {
-    'top': 'bottom-full left-1/2 -translate-x-1/2 mb-2',
-    'bottom': 'top-full left-1/2 -translate-x-1/2 mt-2',
-    'left': 'right-full top-1/2 -translate-y-1/2 mr-2',
-    'right': 'left-full top-1/2 -translate-y-1/2 ml-2',
-    'top-left': 'bottom-full left-0 mb-2',
-    'top-right': 'bottom-full right-0 mb-2',
-    'bottom-left': 'top-full left-0 mt-2',
-    'bottom-right': 'top-full right-0 mt-2',
-  };
-  
-  return (
-    <div className="relative inline-block">
-      <button
-        onClick={() => setActiveTooltip(isActive ? null : id)}
-        className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-          isActive 
-            ? 'bg-blue-600 text-white scale-110' 
-            : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
-        }`}
-      >
-        ?
-      </button>
-      {isActive && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setActiveTooltip(null)} />
-          <div className={`absolute z-50 ${positionClasses[position] || positionClasses['bottom']} w-64 bg-slate-800 text-white rounded-xl shadow-xl p-3 text-sm`}>
-            <div className="font-semibold mb-1">{title}</div>
-            <div className="text-slate-300 text-xs leading-relaxed">{children}</div>
-            <div className={`absolute w-2 h-2 bg-slate-800 transform rotate-45 ${
-              position?.includes('bottom') ? '-top-1 left-1/2 -translate-x-1/2' :
-              position?.includes('top') ? '-bottom-1 left-1/2 -translate-x-1/2' :
-              position === 'left' ? '-right-1 top-1/2 -translate-y-1/2' :
-              position === 'right' ? '-left-1 top-1/2 -translate-y-1/2' : '-top-1 left-1/2 -translate-x-1/2'
-            }`} />
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
-
 const SuffernResultsPage = ({onViewMethodology}) => {
-  const [viewMode, setViewMode] = useState('sample'); // 'sample' or 'questions'
+  const [viewMode, setViewMode] = useState('sample');
   const [expandedQuestion, setExpandedQuestion] = useState(null);
-  const [activeTooltip, setActiveTooltip] = useState(null);
-  const [showTips, setShowTips] = useState(true);
   
   // Generate realistic sample answers - a good candidate who got ~75% right
-  const sampleAnswers = useMemo(() => {
-    const answers = {};
-    // Simulate a good candidate: mostly correct, some strategic mistakes
-    const correctPattern = [
-      1,1,1,0,1,1,1,0,1,1, // Q1-10: 8/10 correct
-      1,1,1,1,0,1,1,1,0,1, // Q11-20: 8/10 correct
-      1,1,1,1,1,0,1,1,1,0, // Q21-30: 8/10 correct
-      1,1,0,1,1,1,1,1,1,1, // Q31-40: 9/10 correct
-      1,1 // Q41-42: 2/2 correct
-    ];
-    questions.forEach((q, i) => {
-      if (correctPattern[i]) {
-        answers[q.id] = q.correct;
-      } else {
-        // Pick a wrong answer
-        const wrongOptions = [0,1,2,3].filter(x => x !== q.correct);
-        answers[q.id] = wrongOptions[Math.floor(i % wrongOptions.length)];
-      }
-    });
-    return answers;
-  }, []);
+  const sampleAnswers = {};
+  const correctPattern = [
+    1,1,1,0,1,1,1,0,1,1,
+    1,1,1,1,0,1,1,1,0,1,
+    1,1,1,1,1,0,1,1,1,0,
+    1,1,0,1,1,1,1,1,1,1,
+    1,1
+  ];
+  questions.forEach((q, i) => {
+    if (correctPattern[i]) {
+      sampleAnswers[q.id] = q.correct;
+    } else {
+      const wrongOptions = [0,1,2,3].filter(x => x !== q.correct);
+      sampleAnswers[q.id] = wrongOptions[0];
+    }
+  });
   
   // Generate realistic timing data
-  const sampleQuestionTimes = useMemo(() => {
-    const times = {};
-    questions.forEach((q, i) => {
-      // Vary timing by difficulty and category
-      let baseTime = q.difficulty === 'Easy' ? 12000 : q.difficulty === 'Medium' ? 20000 : 30000;
-      if (q.category === 'Working Memory') baseTime *= 0.8; // Memory questions faster
-      if (q.category === 'Processing Efficiency') baseTime *= 0.7; // Speed questions faster
-      // Add some variance
-      const variance = (Math.sin(i * 1.5) * 0.3 + 1) * baseTime;
-      times[q.id] = Math.round(variance);
-    });
-    return times;
-  }, []);
+  const sampleQuestionTimes = {};
+  questions.forEach((q, i) => {
+    let baseTime = q.difficulty === 'Easy' ? 12000 : q.difficulty === 'Medium' ? 20000 : 30000;
+    sampleQuestionTimes[q.id] = Math.round(baseTime * (0.8 + Math.random() * 0.4));
+  });
   
   const sampleTotalTime = Object.values(sampleQuestionTimes).reduce((a, b) => a + b, 0);
   
-  // Instructor guide tooltips data
-  const tooltips = {
-    recommendation: {
-      title: "Hiring Recommendation",
-      content: "Auto-generated based on composite score, validity checks, and red flags. Ranges from 'Strong Hire' to 'Not Recommended'."
-    },
-    radar: {
-      title: "Cognitive Profile",
-      content: "Visual representation of the 5 cognitive domains. Larger area = stronger overall performance. Look for balance vs. spikes."
-    },
-    percentiles: {
-      title: "Percentile Scores",
-      content: "Compared to norm group. 50th = average. 70th+ = strong. 30th or below = area of concern. Includes confidence intervals (±)."
-    },
-    roleFit: {
-      title: "Role-Fit Analysis",
-      content: "Weighted composite scores for different job types. Higher % = better match. Weights prioritize relevant cognitive skills for each role."
-    },
-    cognitiveStyle: {
-      title: "Cognitive Style",
-      content: "Behavioral tendencies inferred from HOW they answered, not just correctness. Useful for team dynamics and work style fit."
-    },
-    analytics: {
-      title: "Deep Analytics",
-      content: "Advanced behavioral metrics: error patterns, recovery resilience, fatigue curves, strategy detection. Click tab to explore."
-    },
-    validity: {
-      title: "Validity Indicators",
-      content: "Embedded checks detect rushing, random responding, and inconsistency. Low validity = interpret results with caution."
-    },
-    redFlags: {
-      title: "Red Flags",
-      content: "Automatic alerts for concerning patterns. High severity = major concern. Review these before making hiring decisions."
-    }
-  };
-  
   if (viewMode === 'sample') {
     return (
-      <>
-        {/* Mode toggle header - floats above ResultsPage */}
-        <div className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+      <div className="min-h-screen bg-slate-50">
+        {/* Instructor header */}
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
@@ -2395,15 +2299,6 @@ const SuffernResultsPage = ({onViewMethodology}) => {
               <span className="px-2 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded">Sample Data</span>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowTips(!showTips)}
-                className={`px-3 py-2 text-sm rounded-lg transition-colors flex items-center gap-2 ${
-                  showTips ? 'bg-blue-100 text-blue-700' : 'text-slate-500 hover:bg-slate-100'
-                }`}
-              >
-                <span className="w-4 h-4 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">?</span>
-                {showTips ? 'Tips On' : 'Tips Off'}
-              </button>
               <button
                 onClick={() => setViewMode('questions')}
                 className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
@@ -2420,101 +2315,35 @@ const SuffernResultsPage = ({onViewMethodology}) => {
           </div>
         </div>
         
-        {/* Spacer for fixed header */}
-        <div className="h-14"></div>
-        
-        {/* Floating instructor tips overlaid on results */}
-        {showTips && (
-          <div className="pointer-events-none fixed inset-0 z-40" style={{top: '56px'}}>
-            {/* Tip near recommendation box - top left area */}
-            <div className="pointer-events-auto absolute top-20 left-[calc(50%-320px)]">
-              <InstructorTooltip 
-                id="recommendation" 
-                position="right" 
-                title={tooltips.recommendation.title}
-                activeTooltip={activeTooltip}
-                setActiveTooltip={setActiveTooltip}
-              >
-                {tooltips.recommendation.content}
-              </InstructorTooltip>
-            </div>
-            
-            {/* Tip near radar chart */}
-            <div className="pointer-events-auto absolute top-64 right-[calc(50%-300px)]">
-              <InstructorTooltip 
-                id="radar" 
-                position="left" 
-                title={tooltips.radar.title}
-                activeTooltip={activeTooltip}
-                setActiveTooltip={setActiveTooltip}
-              >
-                {tooltips.radar.content}
-              </InstructorTooltip>
-            </div>
-            
-            {/* Tip near percentile bars */}
-            <div className="pointer-events-auto absolute top-[380px] left-[calc(50%-280px)]">
-              <InstructorTooltip 
-                id="percentiles" 
-                position="right" 
-                title={tooltips.percentiles.title}
-                activeTooltip={activeTooltip}
-                setActiveTooltip={setActiveTooltip}
-              >
-                {tooltips.percentiles.content}
-              </InstructorTooltip>
-            </div>
-            
-            {/* Tip near tabs */}
-            <div className="pointer-events-auto absolute top-[520px] right-[calc(50%-200px)]">
-              <InstructorTooltip 
-                id="analytics" 
-                position="bottom-left" 
-                title={tooltips.analytics.title}
-                activeTooltip={activeTooltip}
-                setActiveTooltip={setActiveTooltip}
-              >
-                {tooltips.analytics.content}
-              </InstructorTooltip>
+        {/* Sample Results Content */}
+        <div className="max-w-5xl mx-auto p-6">
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+            <h2 className="text-xl font-semibold text-slate-900 mb-4">Sample Candidate Results</h2>
+            <p className="text-slate-600 mb-4">This shows how results appear to candidates after completing the assessment.</p>
+            <div className="grid md:grid-cols-5 gap-4">
+              {Object.entries({analytical: 'Analytical', pattern: 'Pattern', memory: 'Memory', adaptive: 'Adaptive', processing: 'Processing'}).map(([key, label]) => {
+                const categoryQuestions = questions.filter(q => q.category.toLowerCase().includes(key) || (key === 'pattern' && q.category === 'Pattern Recognition') || (key === 'analytical' && q.category === 'Analytical Reasoning') || (key === 'memory' && q.category === 'Working Memory') || (key === 'adaptive' && q.category === 'Adaptive Thinking') || (key === 'processing' && q.category === 'Processing Efficiency'));
+                const correct = categoryQuestions.filter(q => sampleAnswers[q.id] === q.correct).length;
+                const pct = Math.round((correct / Math.max(categoryQuestions.length, 1)) * 100);
+                return (
+                  <div key={key} className="bg-slate-50 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-light text-slate-800 mb-1">{pct}%</div>
+                    <div className="text-xs text-slate-500">{label}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-        )}
-        
-        {/* Render actual ResultsPage with sample data */}
-        <ResultsPage 
-          answers={sampleAnswers} 
-          questionTimes={sampleQuestionTimes} 
-          totalTestTime={sampleTotalTime}
-          onViewMethodology={onViewMethodology}
-        />
-        
-        {/* Instructor guide panel - collapsible */}
-        {showTips && (
-          <div className="fixed bottom-4 right-4 z-50">
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 max-w-xs">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center font-bold">?</span>
-                <span className="font-semibold text-slate-800 text-sm">Instructor Guide</span>
-              </div>
-              <p className="text-xs text-slate-500 mb-3">Click the blue ? buttons to learn what each section means.</p>
-              <div className="space-y-2 text-xs">
-                <div className="flex items-center gap-2 text-slate-600">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  Overview: Hiring recommendation & scores
-                </div>
-                <div className="flex items-center gap-2 text-slate-600">
-                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                  Role Fit: Job-specific compatibility
-                </div>
-                <div className="flex items-center gap-2 text-slate-600">
-                  <span className="w-2 h-2 rounded-full bg-purple-500"></span>
-                  Deep Analytics: Behavioral patterns
-                </div>
-              </div>
-            </div>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <p className="text-blue-800 text-sm">
+              <strong>Note:</strong> This is simulated sample data showing approximately 75% correct answers. 
+              In real use, this page displays the actual candidate's results with all analytics, role-fit scores, 
+              cognitive style profiles, and behavioral insights.
+            </p>
           </div>
-        )}
-      </>
+        </div>
+      </div>
     );
   }
   
