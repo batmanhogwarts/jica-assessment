@@ -56,6 +56,16 @@ const categoryNames = {analytical:"Analytical Reasoning",pattern:"Pattern Recogn
 
 const LandingPage = ({onStart,onSuffernAccess}) => (
   <div className="min-h-screen bg-white flex flex-col">
+    <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 py-2">
+      <div className="flex items-center justify-center gap-3">
+        <div className="h-px w-12 bg-gradient-to-r from-transparent to-slate-500"></div>
+        <a href="https://jica.app" className="flex items-center gap-2 text-white font-medium tracking-wider">
+          <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+          <span className="text-sm">jica.app</span>
+        </a>
+        <div className="h-px w-12 bg-gradient-to-l from-transparent to-slate-500"></div>
+      </div>
+    </div>
     <header className="border-b border-gray-100">
       <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -67,10 +77,6 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
             <div className="text-slate-400 text-xs tracking-wide uppercase">Talent Assessment</div>
           </div>
         </div>
-        <a href="https://jica.app" className="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors">
-          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-          <span className="text-slate-700 text-sm font-medium">jica.app</span>
-        </a>
       </div>
     </header>
     <main className="flex-1 flex items-center">
