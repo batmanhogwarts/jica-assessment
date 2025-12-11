@@ -67,6 +67,10 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
             <div className="text-slate-400 text-xs tracking-wide uppercase">Talent Assessment</div>
           </div>
         </div>
+        <a href="https://jica.app" className="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors">
+          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+          <span className="text-slate-700 text-sm font-medium">jica.app</span>
+        </a>
       </div>
     </header>
     <main className="flex-1 flex items-center">
@@ -95,7 +99,11 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
     </main>
     <footer className="border-t border-gray-100">
       <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-sm text-slate-400">Designed by Jonathan Shiell for AP Psychology</p>
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+          <p className="text-sm text-slate-400">Designed by Jonathan Shiell for AP Psychology</p>
+          <span className="hidden sm:block text-slate-300">•</span>
+          <a href="https://jica.app" className="text-sm text-slate-500 hover:text-slate-700 font-medium transition-colors">jica.app</a>
+        </div>
         <button onClick={onSuffernAccess} className="text-sm text-slate-400 hover:text-slate-600 transition-colors">Instructor Access →</button>
       </div>
     </footer>
