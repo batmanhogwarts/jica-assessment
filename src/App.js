@@ -80,30 +80,6 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
             <p className="mt-6 text-sm text-slate-400">Approximately 20-30 minutes to complete</p>
           </div>
           <div className="bg-slate-50 rounded-2xl p-8 lg:p-12">
-            <div className="text-center mb-8">
-              <a href="https://jica.app" className="group relative inline-block px-6 py-3 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-slate-300 active:scale-95 hover:animate-wiggle">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100 to-transparent opacity-50 animate-sheen"></div>
-                <span className="relative text-2xl font-semibold text-slate-900 tracking-tight">jica.app</span>
-              </a>
-            </div>
-            <style>{`
-              @keyframes sheen {
-                0% { transform: translateX(-100%); }
-                100% { transform: translateX(100%); }
-              }
-              @keyframes wiggle {
-                0%, 100% { transform: rotate(-2deg) scale(1.05); }
-                25% { transform: rotate(2deg) scale(1.05); }
-                50% { transform: rotate(-2deg) scale(1.05); }
-                75% { transform: rotate(2deg) scale(1.05); }
-              }
-              .animate-sheen {
-                animation: sheen 3s ease-in-out infinite;
-              }
-              .hover\\:animate-wiggle:hover {
-                animation: wiggle 0.4s ease-in-out;
-              }
-            `}</style>
             <div className="grid grid-cols-2 gap-8">
               <div className="text-center p-6"><div className="text-4xl font-light text-slate-900 mb-2">35</div><div className="text-sm text-slate-500 uppercase tracking-wide">Questions</div></div>
               <div className="text-center p-6"><div className="text-4xl font-light text-slate-900 mb-2">5</div><div className="text-sm text-slate-500 uppercase tracking-wide">Categories</div></div>
@@ -119,11 +95,7 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
     </main>
     <footer className="border-t border-gray-100">
       <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-          <p className="text-sm text-slate-400">Designed by Jonathan Shiell for AP Psychology</p>
-          <span className="hidden sm:block text-slate-300">•</span>
-          <a href="https://jica.app" className="text-sm text-slate-500 hover:text-slate-700 font-medium transition-colors">jica.app</a>
-        </div>
+        <p className="text-sm text-slate-400">Designed by Jonathan Shiell for AP Psychology</p>
         <button onClick={onSuffernAccess} className="text-sm text-slate-400 hover:text-slate-600 transition-colors">Instructor Access →</button>
       </div>
     </footer>
