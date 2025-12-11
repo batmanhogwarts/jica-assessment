@@ -144,10 +144,10 @@ const ThanksForTheMemoriesPage = () => {
         {essayContent.map((section, index) => (
           <section 
             key={section.id}
-            className="essay-section mb-16 md:mb-24"
+            className="essay-section mb-8"
           >
             {/* Section highlight phrase */}
-            <div className="mb-6">
+            <div className="mb-4">
               <span className="inline-block px-3 py-1 bg-stone-200/50 text-stone-500 text-xs tracking-wider uppercase rounded-full">
                 {section.highlight}
               </span>
@@ -160,10 +160,8 @@ const ThanksForTheMemoriesPage = () => {
 
             {/* Decorative divider (except last) */}
             {index < essayContent.length - 1 && (
-              <div className="mt-16 md:mt-24 flex items-center justify-center">
-                <div className="w-1 h-1 bg-stone-300 rounded-full" />
-                <div className="w-16 h-px bg-stone-200 mx-3" />
-                <div className="w-1 h-1 bg-stone-300 rounded-full" />
+              <div className="mt-8 flex items-center justify-center">
+                <div className="w-12 h-px bg-stone-200" />
               </div>
             )}
           </section>
