@@ -15,7 +15,7 @@ const questions = [
   {id:10,category:"Pattern Recognition",difficulty:"Easy",question:"What comes next in the sequence? A, C, F, J, ___",options:["N","O","M","P"],correct:1,weights:{pattern:100},correctIndicates:"Can identify patterns with increasing intervals. Flexible pattern recognition.",incorrectIndicates:"May assume constant intervals or struggle with accelerating/decelerating patterns."},
   {id:11,category:"Pattern Recognition",difficulty:"Medium",question:"In a sequence, each term is formed by taking the previous term, multiplying by 2, then subtracting 3. If the 4th term is 27, what is the 2nd term?",options:["9","12","15","18"],correct:0,weights:{pattern:80,analytical:20},correctIndicates:"Can reverse-engineer patterns and work backwards from known values. Strong algebraic reasoning.",incorrectIndicates:"May struggle with inverse operations or working backwards through multi-step transformations."},
   {id:12,category:"Pattern Recognition",difficulty:"Medium",question:"Look at the pattern: 1, 1, 2, 3, 5, 8, 13, 21, ___. What comes next?",options:["29","32","34","36"],correct:2,weights:{pattern:100},correctIndicates:"Recognizes the Fibonacci pattern (sum of previous two terms). Familiar with common mathematical sequences.",incorrectIndicates:"May not recognize additive-recursive patterns or may look for simpler rules."},
-  {id:13,category:"Pattern Recognition",difficulty:"Medium",question:"The pattern shows: ○ □ △ ○ □ △ ○ □ △. If this pattern continues, what shape will be in the 25th position?",options:["Circle (○)","Square (□)","Triangle (��)","Cannot be determined"],correct:0,weights:{pattern:100},correctIndicates:"Understands modular/cyclic patterns and can calculate positions within repeating sequences.",incorrectIndicates:"May struggle with modular arithmetic or counting positions in cycles."},
+  {id:13,category:"Pattern Recognition",difficulty:"Medium",question:"The pattern shows: ○ □ △ ○ □ △ ○ □ △. If this pattern continues, what shape will be in the 25th position?",options:["Circle (○)","Square (□)","Triangle (△)","Cannot be determined"],correct:0,weights:{pattern:100},correctIndicates:"Understands modular/cyclic patterns and can calculate positions within repeating sequences.",incorrectIndicates:"May struggle with modular arithmetic or counting positions in cycles."},
   {id:14,category:"Pattern Recognition",difficulty:"Hard",question:"In a number grid, each cell contains a value based on its position. Row 1: 1, 2, 3, 4. Row 2: 2, 4, 6, 8. Row 3: 3, 6, 9, 12. What value would be in Row 5, Column 3?",options:["12","15","18","20"],correct:1,weights:{pattern:100},correctIndicates:"Can identify two-dimensional patterns and generalize rules from examples. Strong abstract pattern recognition.",incorrectIndicates:"May struggle to see relationships in multi-dimensional patterns or fail to generalize from examples."},
   {id:15,category:"Pattern Recognition",difficulty:"Hard",question:"Examine the sequence: 3, 4, 7, 11, 18, 29, ___. What comes next?",options:["40","43","47","52"],correct:2,weights:{pattern:100},correctIndicates:"Identifies complex recursive patterns similar to Lucas sequences. High-level pattern recognition.",incorrectIndicates:"May not recognize that each term is the sum of the two preceding terms in non-obvious sequences."},
   {id:16,category:"Pattern Recognition",difficulty:"Hard",question:"A code translates words by summing the position of each letter in the alphabet (A=1, B=2, ... Z=26). CAT → 24, DOG → 26, FISH → 42. What would HELP translate to?",options:["32","37","41","46"],correct:2,weights:{pattern:85,analytical:15},correctIndicates:"Can decode cipher patterns by analyzing examples. Strong inductive reasoning from examples.",incorrectIndicates:"May struggle to identify the underlying rule when only given input-output examples."},
@@ -973,7 +973,7 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                       <span className="animate-morph-text">&nbsp;</span>
                       <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 animate-letter-float animation-delay-300">A</span>
                       <span className="text-slate-400 animate-morph-text">ssessment</span>
-                      <span className="animate-morph-text">&nbsp;</span>
+                      <span>&nbsp;</span>
                       <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-600 animate-letter-float animation-delay-400">A</span>
                       <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">pp</span>
                     </span>
@@ -2255,40 +2255,145 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
 };
 
 const SuffernResultsPage = ({onViewMethodology}) => {
+  const [viewMode, setViewMode] = useState('sample'); // 'sample' or 'questions'
   const [expandedQuestion, setExpandedQuestion] = useState(null);
-  const sampleRadarData = [{category:'Analytical',value:72,fullMark:100},{category:'Pattern',value:68,fullMark:100},{category:'Memory',value:81,fullMark:100},{category:'Adaptive',value:75,fullMark:100},{category:'Processing',value:64,fullMark:100}];
-  return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center mx-auto mb-4"><span className="text-white text-xl font-semibold">J</span></div>
-          <h1 className="text-3xl font-light text-slate-900 mb-2">Instructor View</h1>
-          <p className="text-slate-500">Complete assessment rationale and question breakdown</p>
-        </div>
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
-          <h2 className="text-lg font-semibold text-slate-900 mb-1">Sample Cognitive Profile</h2>
-          <p className="text-slate-500 text-sm mb-4">This shows how results appear to candidates</p>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={sampleRadarData}>
-                <PolarGrid stroke="#e2e8f0"/>
-                <PolarAngleAxis dataKey="category" tick={{fill:'#64748b',fontSize:11}}/>
-                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{fill:'#94a3b8',fontSize:10}}/>
-                <Radar name="Score" dataKey="value" stroke="#0f172a" fill="#0f172a" fillOpacity={0.1} strokeWidth={2}/>
-              </RadarChart>
-            </ResponsiveContainer>
+  
+  // Generate realistic sample answers - a good candidate who got ~75% right
+  const sampleAnswers = useMemo(() => {
+    const answers = {};
+    // Simulate a good candidate: mostly correct, some strategic mistakes
+    const correctPattern = [
+      1,1,1,0,1,1,1,0,1,1, // Q1-10: 8/10 correct
+      1,1,1,1,0,1,1,1,0,1, // Q11-20: 8/10 correct
+      1,1,1,1,1,0,1,1,1,0, // Q21-30: 8/10 correct
+      1,1,0,1,1,1,1,1,1,1, // Q31-40: 9/10 correct
+      1,1 // Q41-42: 2/2 correct
+    ];
+    questions.forEach((q, i) => {
+      if (correctPattern[i]) {
+        answers[q.id] = q.correct;
+      } else {
+        // Pick a wrong answer
+        const wrongOptions = [0,1,2,3].filter(x => x !== q.correct);
+        answers[q.id] = wrongOptions[Math.floor(i % wrongOptions.length)];
+      }
+    });
+    return answers;
+  }, []);
+  
+  // Generate realistic timing data
+  const sampleQuestionTimes = useMemo(() => {
+    const times = {};
+    questions.forEach((q, i) => {
+      // Vary timing by difficulty and category
+      let baseTime = q.difficulty === 'Easy' ? 12000 : q.difficulty === 'Medium' ? 20000 : 30000;
+      if (q.category === 'Working Memory') baseTime *= 0.8; // Memory questions faster
+      if (q.category === 'Processing Efficiency') baseTime *= 0.7; // Speed questions faster
+      // Add some variance
+      const variance = (Math.sin(i * 1.5) * 0.3 + 1) * baseTime;
+      times[q.id] = Math.round(variance);
+    });
+    return times;
+  }, []);
+  
+  const sampleTotalTime = Object.values(sampleQuestionTimes).reduce((a, b) => a + b, 0);
+  
+  if (viewMode === 'sample') {
+    return (
+      <div className="min-h-screen bg-slate-50">
+        {/* Mode toggle header */}
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-20">
+          <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+                <span className="text-white text-sm font-semibold">J</span>
+              </div>
+              <span className="text-slate-900 font-medium">Instructor View</span>
+              <span className="px-2 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded">Sample Data</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setViewMode('questions')}
+                className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                View Question Bank
+              </button>
+              <button
+                onClick={onViewMethodology}
+                className="px-4 py-2 text-sm bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                Methodology
+              </button>
+            </div>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
+        
+        {/* Render actual ResultsPage with sample data */}
+        <ResultsPage 
+          answers={sampleAnswers} 
+          questionTimes={sampleQuestionTimes} 
+          totalTestTime={sampleTotalTime}
+          onViewMethodology={onViewMethodology}
+        />
+      </div>
+    );
+  }
+  
+  // Questions view
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-20">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-semibold">J</span>
+            </div>
+            <span className="text-slate-900 font-medium">Instructor View</span>
+            <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">Question Bank</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setViewMode('sample')}
+              className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+            >
+              View Sample Results
+            </button>
+            <button
+              onClick={onViewMethodology}
+              className="px-4 py-2 text-sm bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              Methodology
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="max-w-4xl mx-auto py-8 px-4">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-semibold text-slate-900 mb-2">Complete Question Bank</h1>
+          <p className="text-slate-500">{questions.length} questions across 5 cognitive categories</p>
+        </div>
+        
+        {/* Memory Passage */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
           <h2 className="text-lg font-semibold text-slate-900 mb-1">Working Memory Passage</h2>
-          <p className="text-slate-500 text-sm mb-4">Candidates read this before questions 17-23 and cannot refer back</p>
+          <p className="text-slate-500 text-sm mb-4">Candidates read this before memory questions and cannot refer back</p>
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
             <h3 className="text-amber-900 font-medium mb-2">{memoryPassage.title}</h3>
             <p className="text-amber-800 text-sm leading-relaxed">{memoryPassage.content}</p>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Complete Question Bank (35 Questions)</h2>
+        
+        {/* Questions */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-slate-900">All Questions ({questions.length})</h2>
+            <div className="flex gap-2 text-xs">
+              <span className="px-2 py-1 bg-emerald-50 text-emerald-600 rounded">Easy</span>
+              <span className="px-2 py-1 bg-amber-50 text-amber-600 rounded">Medium</span>
+              <span className="px-2 py-1 bg-rose-50 text-rose-600 rounded">Hard</span>
+            </div>
+          </div>
           <div className="space-y-2">
             {questions.map((q, i) => (
               <div key={q.id} className="border border-gray-100 rounded-xl overflow-hidden">
@@ -2296,7 +2401,7 @@ const SuffernResultsPage = ({onViewMethodology}) => {
                   <div className="flex items-center gap-3">
                     <span className="w-8 h-8 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center text-sm font-medium">{q.id}</span>
                     <span className="text-slate-700 text-sm">{q.category}</span>
-                    <span className={`text-xs font-medium ${q.difficulty === "Easy" ? "text-emerald-600" : q.difficulty === "Medium" ? "text-amber-600" : "text-rose-600"}`}>{q.difficulty}</span>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded ${q.difficulty === "Easy" ? "bg-emerald-50 text-emerald-600" : q.difficulty === "Medium" ? "bg-amber-50 text-amber-600" : "bg-rose-50 text-rose-600"}`}>{q.difficulty}</span>
                   </div>
                   <svg className={`w-5 h-5 text-slate-400 transition-transform ${expandedQuestion === i ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/></svg>
                 </button>
@@ -2326,7 +2431,6 @@ const SuffernResultsPage = ({onViewMethodology}) => {
             ))}
           </div>
         </div>
-        <button onClick={onViewMethodology} className="w-full py-4 bg-slate-900 text-white font-medium rounded-xl hover:bg-slate-800 transition-colors">View Assessment Methodology</button>
       </div>
     </div>
   );
