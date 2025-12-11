@@ -2290,9 +2290,11 @@ const InstructorTooltip = ({title, children, position = 'bottom'}) => {
 const SuffernResultsPage = ({onViewMethodology}) => {
   const [viewMode, setViewMode] = useState('sample');
   const [expandedQuestion, setExpandedQuestion] = useState(null);
+  const [showStudentView, setShowStudentView] = useState(false);
   
-  // Generate sample answers
+  // Generate sample answers using INDEX (not question ID) - this matches how real answers work
   const sampleAnswers = {};
+  const sampleQuestionTimes = {};
   const correctPattern = [
     1,1,1,0,1,1,1,0,1,1,
     1,1,1,1,0,1,1,1,0,1,
@@ -2300,14 +2302,21 @@ const SuffernResultsPage = ({onViewMethodology}) => {
     1,1,0,1,1,1,1,1,1,1,
     1,1
   ];
+  
   questions.forEach((q, i) => {
+    // Use INDEX i, not q.id
     if (correctPattern[i]) {
-      sampleAnswers[q.id] = q.correct;
+      sampleAnswers[i] = q.correct;
     } else {
       const wrongOptions = [0,1,2,3].filter(x => x !== q.correct);
-      sampleAnswers[q.id] = wrongOptions[0];
+      sampleAnswers[i] = wrongOptions[0];
     }
+    // Timing also uses index
+    let baseTime = q.difficulty === 'Easy' ? 12000 : q.difficulty === 'Medium' ? 20000 : 30000;
+    sampleQuestionTimes[i] = Math.round(baseTime * (0.8 + Math.random() * 0.4));
   });
+  
+  const sampleTotalTime = Object.values(sampleQuestionTimes).reduce((a, b) => a + b, 0);
   
   // Calculate category scores for preview
   const categoryData = [
@@ -2319,8 +2328,8 @@ const SuffernResultsPage = ({onViewMethodology}) => {
   ];
   
   const categoryScores = categoryData.map(cat => {
-    const catQuestions = questions.filter(q => q.category === cat.key);
-    const correct = catQuestions.filter(q => sampleAnswers[q.id] === q.correct).length;
+    const catQuestions = questions.map((q, i) => ({...q, idx: i})).filter(q => q.category === cat.key);
+    const correct = catQuestions.filter(q => sampleAnswers[q.idx] === q.correct).length;
     return {
       ...cat,
       score: Math.round((correct / Math.max(catQuestions.length, 1)) * 100),
@@ -2328,6 +2337,40 @@ const SuffernResultsPage = ({onViewMethodology}) => {
       total: catQuestions.length
     };
   });
+
+  // If showing full student view, render actual ResultsPage
+  if (showStudentView) {
+    return (
+      <div className="min-h-screen bg-slate-50">
+        {/* Banner indicating sample mode */}
+        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 px-4 sticky top-0 z-50">
+          <div className="max-w-5xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">👁️</span>
+              <div>
+                <div className="font-semibold">Student View Preview</div>
+                <div className="text-amber-100 text-sm">This is exactly what candidates see after completing the assessment</div>
+              </div>
+            </div>
+            <button 
+              onClick={() => setShowStudentView(false)}
+              className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors font-medium"
+            >
+              ← Back to Instructor View
+            </button>
+          </div>
+        </div>
+        
+        {/* Actual ResultsPage */}
+        <ResultsPage 
+          answers={sampleAnswers} 
+          questionTimes={sampleQuestionTimes} 
+          totalTestTime={sampleTotalTime}
+          onViewMethodology={onViewMethodology}
+        />
+      </div>
+    );
+  }
 
   if (viewMode === 'sample') {
     return (
@@ -2371,11 +2414,27 @@ const SuffernResultsPage = ({onViewMethodology}) => {
             </div>
           </div>
           
+          {/* VIEW STUDENT RESULTS BUTTON */}
+          <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl p-6 text-white shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold mb-1">👁️ View Sample Student Results</h2>
+                <p className="text-emerald-100 text-sm">See exactly what candidates see after completing the assessment - full results page with all analytics</p>
+              </div>
+              <button
+                onClick={() => setShowStudentView(true)}
+                className="px-6 py-3 bg-white text-emerald-600 font-semibold rounded-xl hover:bg-emerald-50 transition-colors shadow-md"
+              >
+                View Student Results →
+              </button>
+            </div>
+          </div>
+          
           {/* Sample Results Preview */}
           <div className="bg-white rounded-2xl border border-gray-200 p-6">
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-slate-900">Sample Candidate Results</h2>
-              <p className="text-slate-500 text-sm mt-1">Preview of how results appear after completing the assessment (~80% correct)</p>
+              <h2 className="text-xl font-semibold text-slate-900">Sample Candidate Overview</h2>
+              <p className="text-slate-500 text-sm mt-1">Quick preview of sample results (~80% correct)</p>
             </div>
             
             {/* Simulated Recommendation Box */}
