@@ -160,68 +160,40 @@ const ThanksForTheMemoriesPage = () => {
 
             {/* Decorative elements between sections */}
             {index < essayContent.length - 1 && (
-              <div className="mt-12 mb-4">
-                {/* Callout quotes and animated elements */}
+              <div className="mt-10 mb-6 flex items-center justify-center">
                 {index === 0 && (
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="memory-fragment text-2xl opacity-40">👁️</div>
-                    <div className="px-4 py-2 bg-stone-100 rounded-lg border-l-2 border-stone-300">
-                      <p className="text-sm text-stone-500 italic">"Memory is not a recording — it's a reconstruction"</p>
-                    </div>
-                    <div className="memory-fragment text-2xl opacity-40">👁️</div>
+                  <div className="flex items-center gap-3 opacity-40">
+                    <div className="w-8 h-px bg-stone-300" />
+                    <span className="text-xs text-stone-400 italic tracking-wide">memory reconstructs</span>
+                    <div className="w-8 h-px bg-stone-300" />
                   </div>
                 )}
                 {index === 1 && (
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="flex gap-1">
-                      {[...Array(3)].map((_, i) => (
-                        <div 
-                          key={i} 
-                          className="w-2 h-2 bg-stone-300 rounded-full"
-                          style={{ animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite` }}
-                        />
-                      ))}
-                    </div>
-                    <div className="px-4 py-2 bg-amber-50 rounded-lg border-l-2 border-amber-300">
-                      <p className="text-sm text-amber-700 italic">Key insight: Confidence ≠ Accuracy</p>
-                    </div>
-                    <div className="flex gap-1">
-                      {[...Array(3)].map((_, i) => (
-                        <div 
-                          key={i} 
-                          className="w-2 h-2 bg-stone-300 rounded-full"
-                          style={{ animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite` }}
-                        />
-                      ))}
-                    </div>
+                  <div className="flex items-center gap-3 opacity-40">
+                    <div className="w-8 h-px bg-stone-300" />
+                    <span className="text-xs text-stone-400 italic tracking-wide">confidence ≠ accuracy</span>
+                    <div className="w-8 h-px bg-stone-300" />
                   </div>
                 )}
                 {index === 2 && (
-                  <div className="flex items-center justify-center">
-                    <div className="relative px-4 py-2 bg-stone-100 rounded-lg">
-                      <div className="absolute -left-3 top-1/2 -translate-y-1/2 text-lg camera-flash">📷</div>
-                      <p className="text-sm text-stone-500 italic pl-4">"Cameras don't have schemas or expectations"</p>
-                      <div className="absolute -right-3 top-1/2 -translate-y-1/2 text-lg camera-flash" style={{ animationDelay: '0.5s' }}>📷</div>
-                    </div>
+                  <div className="flex items-center gap-3 opacity-40">
+                    <div className="w-8 h-px bg-stone-300" />
+                    <span className="text-xs text-stone-400 italic tracking-wide">objective vs subjective</span>
+                    <div className="w-8 h-px bg-stone-300" />
                   </div>
                 )}
                 {index === 3 && (
-                  <div className="flex items-center justify-center gap-3">
-                    <div className="w-8 h-px bg-stone-200" />
-                    <div className="text-xl opacity-50 balance-scale">⚖️</div>
-                    <div className="px-3 py-1 bg-rose-50 rounded border-l-2 border-rose-300">
-                      <p className="text-xs text-rose-600 italic">Privacy vs. Safety</p>
-                    </div>
-                    <div className="text-xl opacity-50 balance-scale" style={{ animationDelay: '0.5s' }}>🔒</div>
-                    <div className="w-8 h-px bg-stone-200" />
+                  <div className="flex items-center gap-3 opacity-40">
+                    <div className="w-8 h-px bg-stone-300" />
+                    <span className="text-xs text-stone-400 italic tracking-wide">privacy vs safety</span>
+                    <div className="w-8 h-px bg-stone-300" />
                   </div>
                 )}
                 {index === 4 && (
-                  <div className="flex items-center justify-center">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-lg border-l-2 border-emerald-300">
-                      <span className="text-lg">✓</span>
-                      <p className="text-sm text-emerald-700 italic">Strategic implementation is key</p>
-                    </div>
+                  <div className="flex items-center gap-3 opacity-40">
+                    <div className="w-8 h-px bg-stone-300" />
+                    <span className="text-xs text-stone-400 italic tracking-wide">balance</span>
+                    <div className="w-8 h-px bg-stone-300" />
                   </div>
                 )}
               </div>
