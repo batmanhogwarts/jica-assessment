@@ -2254,11 +2254,45 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
   );
 };
 
+// Instructor Tooltip Component
+const InstructorTooltip = ({title, children, position = 'bottom'}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const positionClasses = {
+    'top': 'bottom-full left-1/2 -translate-x-1/2 mb-2',
+    'bottom': 'top-full left-1/2 -translate-x-1/2 mt-2',
+    'left': 'right-full top-1/2 -translate-y-1/2 mr-2',
+    'right': 'left-full top-1/2 -translate-y-1/2 ml-2',
+  };
+  
+  return (
+    <div className="relative inline-flex">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+          isOpen ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
+        }`}
+      >
+        ?
+      </button>
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+          <div className={`absolute z-50 ${positionClasses[position]} w-56 bg-slate-800 text-white rounded-lg shadow-xl p-3 text-xs`}>
+            <div className="font-semibold mb-1">{title}</div>
+            <div className="text-slate-300 leading-relaxed">{children}</div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 const SuffernResultsPage = ({onViewMethodology}) => {
   const [viewMode, setViewMode] = useState('sample');
   const [expandedQuestion, setExpandedQuestion] = useState(null);
+  const [showFullResults, setShowFullResults] = useState(false);
   
-  // Generate realistic sample answers - a good candidate who got ~75% right
+  // Generate sample answers
   const sampleAnswers = {};
   const correctPattern = [
     1,1,1,0,1,1,1,0,1,1,
@@ -2276,16 +2310,45 @@ const SuffernResultsPage = ({onViewMethodology}) => {
     }
   });
   
-  // Generate realistic timing data
+  // Generate timing data
   const sampleQuestionTimes = {};
-  questions.forEach((q, i) => {
+  questions.forEach((q) => {
     let baseTime = q.difficulty === 'Easy' ? 12000 : q.difficulty === 'Medium' ? 20000 : 30000;
-    sampleQuestionTimes[q.id] = Math.round(baseTime * (0.8 + Math.random() * 0.4));
+    sampleQuestionTimes[q.id] = Math.round(baseTime * 0.9);
   });
   
   const sampleTotalTime = Object.values(sampleQuestionTimes).reduce((a, b) => a + b, 0);
   
+  // Calculate category scores for preview
+  const categoryScores = {};
+  ['Analytical Reasoning', 'Pattern Recognition', 'Working Memory', 'Adaptive Thinking', 'Processing Efficiency'].forEach(cat => {
+    const catQuestions = questions.filter(q => q.category === cat);
+    const correct = catQuestions.filter(q => sampleAnswers[q.id] === q.correct).length;
+    categoryScores[cat] = Math.round((correct / Math.max(catQuestions.length, 1)) * 100);
+  });
+
   if (viewMode === 'sample') {
+    // If showing full results, render ResultsPage
+    if (showFullResults) {
+      return (
+        <div>
+          {/* Instructor overlay header */}
+          <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 px-4 text-center text-sm sticky top-0 z-50">
+            <span className="font-medium">Instructor Preview Mode</span>
+            <span className="mx-2">•</span>
+            <span>Viewing sample candidate results</span>
+            <button onClick={() => setShowFullResults(false)} className="ml-4 underline hover:no-underline">← Back to Overview</button>
+          </div>
+          <ResultsPage 
+            answers={sampleAnswers} 
+            questionTimes={sampleQuestionTimes} 
+            totalTestTime={sampleTotalTime}
+            onViewMethodology={onViewMethodology}
+          />
+        </div>
+      );
+    }
+    
     return (
       <div className="min-h-screen bg-slate-50">
         {/* Instructor header */}
@@ -2315,31 +2378,142 @@ const SuffernResultsPage = ({onViewMethodology}) => {
           </div>
         </div>
         
-        {/* Sample Results Content */}
-        <div className="max-w-5xl mx-auto p-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
-            <h2 className="text-xl font-semibold text-slate-900 mb-4">Sample Candidate Results</h2>
-            <p className="text-slate-600 mb-4">This shows how results appear to candidates after completing the assessment.</p>
-            <div className="grid md:grid-cols-5 gap-4">
-              {Object.entries({analytical: 'Analytical', pattern: 'Pattern', memory: 'Memory', adaptive: 'Adaptive', processing: 'Processing'}).map(([key, label]) => {
-                const categoryQuestions = questions.filter(q => q.category.toLowerCase().includes(key) || (key === 'pattern' && q.category === 'Pattern Recognition') || (key === 'analytical' && q.category === 'Analytical Reasoning') || (key === 'memory' && q.category === 'Working Memory') || (key === 'adaptive' && q.category === 'Adaptive Thinking') || (key === 'processing' && q.category === 'Processing Efficiency'));
-                const correct = categoryQuestions.filter(q => sampleAnswers[q.id] === q.correct).length;
-                const pct = Math.round((correct / Math.max(categoryQuestions.length, 1)) * 100);
-                return (
-                  <div key={key} className="bg-slate-50 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-light text-slate-800 mb-1">{pct}%</div>
-                    <div className="text-xs text-slate-500">{label}</div>
-                  </div>
-                );
-              })}
+        <div className="max-w-5xl mx-auto p-6 space-y-6">
+          {/* Main Sample Results Card */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-900">Sample Candidate Results</h2>
+                <p className="text-slate-500 text-sm mt-1">Preview of how results appear after completing the assessment</p>
+              </div>
+              <button
+                onClick={() => setShowFullResults(true)}
+                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                View Full Results Page →
+              </button>
+            </div>
+            
+            {/* Category Scores */}
+            <div className="grid grid-cols-5 gap-4 mb-6">
+              {Object.entries(categoryScores).map(([cat, score]) => (
+                <div key={cat} className="bg-slate-50 rounded-xl p-4 text-center">
+                  <div className="text-3xl font-light text-slate-800 mb-1">{score}%</div>
+                  <div className="text-xs text-slate-500">{cat.split(' ')[0]}</div>
+                </div>
+              ))}
+            </div>
+            
+            {/* What's Included */}
+            <div className="border-t border-gray-100 pt-4">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3">What candidates see in their results:</h3>
+              <div className="grid md:grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                  Cognitive profile radar chart
+                </div>
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                  Percentile scores with confidence intervals
+                </div>
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                  Role-fit analysis for 6 job types
+                </div>
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                  Cognitive style profile (6 dimensions)
+                </div>
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                  Deep analytics (error patterns, recovery, fatigue)
+                </div>
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                  Hiring recommendation with rationale
+                </div>
+              </div>
             </div>
           </div>
           
+          {/* Key Concepts for Instructors */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">Understanding the Results</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-slate-50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">📊</span>
+                  <span className="font-medium text-slate-800">Percentile Scores</span>
+                  <InstructorTooltip title="About Percentiles" position="right">
+                    Compared to norm group. 50th = average. 70th+ indicates strength. Below 30th may need development.
+                  </InstructorTooltip>
+                </div>
+                <p className="text-sm text-slate-600">Scores are converted to percentiles (1-99) comparing the candidate to a normative sample.</p>
+              </div>
+              
+              <div className="bg-slate-50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">💼</span>
+                  <span className="font-medium text-slate-800">Role-Fit Analysis</span>
+                  <InstructorTooltip title="About Role-Fit" position="right">
+                    Different jobs weight cognitive abilities differently. A data analyst needs more analytical skills than customer service.
+                  </InstructorTooltip>
+                </div>
+                <p className="text-sm text-slate-600">Weighted composites show compatibility with different job types based on required cognitive skills.</p>
+              </div>
+              
+              <div className="bg-slate-50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🧠</span>
+                  <span className="font-medium text-slate-800">Cognitive Style</span>
+                  <InstructorTooltip title="About Cognitive Style" position="right">
+                    Inferred from HOW they answered (timing, patterns), not just correctness. Shows work style tendencies.
+                  </InstructorTooltip>
+                </div>
+                <p className="text-sm text-slate-600">Behavioral tendencies like methodical vs. intuitive thinking, attention to detail, pressure response.</p>
+              </div>
+              
+              <div className="bg-slate-50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🔬</span>
+                  <span className="font-medium text-slate-800">Deep Analytics</span>
+                  <InstructorTooltip title="About Deep Analytics" position="right">
+                    Advanced behavioral metrics including error classification, recovery patterns, fatigue curves, and strategy detection.
+                  </InstructorTooltip>
+                </div>
+                <p className="text-sm text-slate-600">50+ behavioral signals extracted from response patterns, timing, and embedded validity checks.</p>
+              </div>
+              
+              <div className="bg-slate-50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">✅</span>
+                  <span className="font-medium text-slate-800">Validity Checks</span>
+                  <InstructorTooltip title="About Validity" position="right">
+                    7 embedded questions detect rushing, random responding, attention lapses, and inconsistency.
+                  </InstructorTooltip>
+                </div>
+                <p className="text-sm text-slate-600">Embedded checks ensure results accurately represent the candidate's true abilities.</p>
+              </div>
+              
+              <div className="bg-slate-50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🚩</span>
+                  <span className="font-medium text-slate-800">Red Flags</span>
+                  <InstructorTooltip title="About Red Flags" position="right">
+                    Automatic alerts for concerning patterns. High severity flags should be carefully reviewed before hiring decisions.
+                  </InstructorTooltip>
+                </div>
+                <p className="text-sm text-slate-600">Automatic detection of concerning patterns like very low scores, failed validity checks, or rushing.</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Note */}
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
             <p className="text-blue-800 text-sm">
-              <strong>Note:</strong> This is simulated sample data showing approximately 75% correct answers. 
-              In real use, this page displays the actual candidate's results with all analytics, role-fit scores, 
-              cognitive style profiles, and behavioral insights.
+              <strong>Note:</strong> This sample shows a candidate scoring approximately 75-80% correct. 
+              Click "View Full Results Page" above to see exactly what candidates see, including all charts, 
+              analytics, and recommendations.
             </p>
           </div>
         </div>
