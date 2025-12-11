@@ -45,45 +45,45 @@ const memoryPassage = {title:"Meridian Technologies Company Memo",content:'Merid
 const methodologyContent = {
   audience:{title:"Target Audience",icon:"👥",content:"**Target Age Range:** 18-65 years old (working-age adults eligible for employment)\n\n**Psychometric Justification:**\n\n**Cognitive Stability in Adulthood:** Research indicates that fluid intelligence reaches peak development in early adulthood and remains relatively stable through middle adulthood before gradual decline in later years (Salthouse, 2009). The 18-65 range captures the period when cognitive abilities are sufficiently developed and stable to produce reliable and valid psychometric measurements.\n\n**Legal and Practical Considerations:** Age 18 represents the legal threshold for employment in most professional contexts and the age at which individuals have typically completed secondary education, ensuring a baseline of test-taking familiarity. The upper bound of 65 aligns with standard employment age ranges while acknowledging that cognitive assessments remain valid predictors across the adult lifespan.\n\n**Norm Development:** Standardization procedures will establish age-stratified norms (e.g., 18-25, 26-35, 36-45, 46-55, 56-65) to account for documented age-related variations in processing speed and working memory. This ensures that candidate scores are compared against appropriate reference groups, maintaining test fairness and validity across the full age range.\n\n**Purpose Alignment:** As a pre-employment assessment, JICA must be designed for the population it serves: job applicants across career stages. Restricting the age range unnecessarily would limit the test's utility and potentially raise legal concerns regarding age discrimination in hiring."},
   classification:{title:"Test Classification",icon:"📋",content:"**Classification:** JICA is classified as an **aptitude test**.\n\n**Evidence-Based Rationale:**\n\nAptitude tests measure potential for future learning and performance, while achievement tests measure mastery of previously learned content. JICA is designed as an aptitude test for several key reasons:\n\n**Focus on Capacity, Not Content:** JICA items are intentionally designed to minimize reliance on specific prior knowledge. Pattern recognition tasks, abstract reasoning problems, and novel problem-solving scenarios assess how candidates think rather than what they have previously learned.\n\n**Predictive Purpose:** The explicit goal of JICA is to predict future job performance and learning potential—hallmarks of aptitude testing. Research by Schmidt and Hunter (2004) demonstrates that general cognitive ability tests have validity coefficients of approximately .51 for predicting job performance across occupations.\n\n**Fluid Intelligence Emphasis:** By emphasizing fluid intelligence (Gf) over crystallized intelligence (Gc), JICA measures innate reasoning capacity that develops relatively independently of formal education. Carroll's (1993) three-stratum theory supports that Gf is more closely associated with learning potential.\n\n**Practical Implication:** As an aptitude test, JICA provides HR with insight into a candidate's capacity to learn job-specific skills during onboarding and to adapt as role requirements evolve."},
-  purpose:{title:"Purpose & Application",icon:"🎯",content:"**Primary Purpose:** The J-Industries Cognitive Assessment (JICA) is a pre-employment cognitive screening tool designed to evaluate foundational mental abilities that predict workplace success across all roles and departments.\n\n**What It Measures:**\n\nRather than testing job-specific knowledge or technical skills, JICA assesses the underlying cognitive capabilities that enable employees to learn, adapt, and solve problems effectively in any professional context:\n\n• **Problem Solving** — Ability to analyze novel situations, identify patterns, and reach logical conclusions\n• **Information Retention** — Capacity to hold and recall information without reference materials\n• **Adaptive Learning** — Ability to apply feedback and adjust approach when circumstances change\n• **Processing Efficiency** — Speed and accuracy under time pressure\n\n**Application:**\n\nJICA serves as a standardized component of J-Industries' hiring process, administered to all candidates after initial resume screening but before final interviews.\n\n**End-Users:**\n\nThe primary end-users are HR professionals and hiring managers at J-Industries. They receive a multi-dimensional profile of each candidate showing relative strengths across cognitive domains, rather than a simple pass/fail designation."},
-  theoretical:{title:"Theoretical Foundation",icon:"🧠",content:"**Theoretical Framework:**\n\nJICA is grounded in the **Cattell-Horn-Carroll (CHC) theory** of cognitive abilities, specifically drawing on the distinction between fluid intelligence (Gf) and crystallized intelligence (Gc), while incorporating elements of working memory capacity from Baddeley's model.\n\n**Core Constructs Measured:**\n\n**1. Fluid Intelligence (Gf):** The ability to reason, identify patterns, and solve novel problems independent of previously acquired knowledge. This includes:\n• Inductive reasoning (identifying rules from examples)\n• Deductive reasoning (applying rules to reach conclusions)\n• Abstract pattern recognition\n\n**2. Working Memory:** The capacity to hold, manipulate, and retrieve information over short periods during cognitive tasks.\n\n**3. Adaptive Learning:** The ability to integrate feedback and apply new information to improve performance within the assessment itself.\n\n**4. Processing Speed:** The ability to perform cognitive tasks quickly and accurately, particularly under time pressure.\n\n**Why This Framework?**\n\nResearch consistently shows that fluid intelligence is the single best cognitive predictor of job performance across occupations (Schmidt & Hunter, 1998), while working memory capacity underlies the ability to manage complex tasks and learn new information efficiently."},
-  psychometric:{title:"Psychometric Properties",icon:"📊",content:"**Standardization Procedures:**\n\n**Representative Norming Sample:** JICA requires administration to a minimum of 2,000 participants stratified by age (18-25, 26-35, 36-45, 46-55, 56-65), gender, education level, geographic region, and industry background.\n\n**Uniform Administration:** All test administrations follow identical procedures—browser-based delivery, scripted on-screen instructions, programmatic timing enforcement, and recommended testing conditions.\n\n**Norm Establishment:** From the norming sample, mean, standard deviation, and percentile ranks (1st-99th) are calculated for each category and composite score.\n\n---\n\n**Reliability Procedures:**\n\n**Internal Consistency (Cronbach's Alpha):** Target α ≥ .80 for each subscale; α ≥ .85 for total score.\n\n**Split-Half Reliability:** Items divided into matched halves, correlation calculated with Spearman-Brown correction. Target: ≥ .80.\n\n**Test-Retest Reliability:** Subset of 300 participants tested twice with 2-4 week interval. Target: r ≥ .75 for subscales; r ≥ .80 for total score.\n\n---\n\n**Validity Procedures:**\n\n**Content Validity:** Panel of 5-7 subject matter experts rate each item for relevance, clarity, and appropriateness. Target Content Validity Index (CVI) ≥ .90.\n\n**Construct Validity:**\n• Convergent: JICA scores correlated with Raven's Progressive Matrices (target r ≥ .60), Wechsler Digit Span (r ≥ .55), Wonderlic (r ≥ .65)\n• Discriminant: Low correlations with personality measures (r < .30)\n• Factor Analysis: Confirmatory factor analysis verifying five-factor structure (CFI ≥ .95, RMSEA ≤ .06)\n\n**Criterion-Related Validity:**\n• Predictive study: 500 hired candidates assessed, correlated with 6-12 month performance ratings (target r ≥ .30)\n• Concurrent study: 300 current employees, correlated with existing performance data"},
+  purpose:{title:"Purpose & Application",icon:"🎯",content:"**Primary Purpose:** The J-Industries Cognitive Assessment (JICA) is a pre-employment cognitive screening tool designed to evaluate foundational mental abilities that predict workplace success across all roles and departments.\n\n**What It Measures:**\n\nRather than testing job-specific knowledge or technical skills, JICA assesses the underlying cognitive capabilities that enable employees to learn, adapt, and solve problems effectively in any professional context:\n\n• **Problem Solving** — Ability to analyze novel situations, identify patterns, and reach logical conclusions\n• **Information Retention** — Capacity to hold and recall information without reference materials\n• **Adaptive Learning** — Ability to apply feedback and adjust approach when circumstances change\n• **Processing Efficiency** — Speed and accuracy under time pressure\n\n**Role-Fit Analysis:**\n\nJICA now includes role-specific profiling that matches cognitive profiles to job requirements. Different roles prioritize different cognitive abilities, and the system provides fit scores for:\n• Data Analyst (emphasizes analytical + pattern recognition)\n• Software Developer (emphasizes pattern + adaptive thinking)\n• Manager (emphasizes adaptive + memory)\n• Customer Service (emphasizes adaptive + memory)\n• Creative Roles (emphasizes pattern + adaptive)\n\n**Cognitive Style Profiling:**\n\nBeyond raw scores, JICA infers behavioral tendencies from problem-solving patterns, including thinking style, adaptability, attention to detail, pressure response, and learning speed.\n\n**End-Users:**\n\nThe primary end-users are HR professionals and hiring managers at J-Industries. They receive a multi-dimensional profile of each candidate showing relative strengths across cognitive domains, role-fit recommendations, and behavioral insights."},
+  theoretical:{title:"Theoretical Foundation",icon:"🧠",content:"**Theoretical Framework:**\n\nJICA is grounded in the **Cattell-Horn-Carroll (CHC) theory** of cognitive abilities, specifically drawing on the distinction between fluid intelligence (Gf) and crystallized intelligence (Gc), while incorporating elements of working memory capacity from Baddeley's model.\n\n**Core Constructs Measured:**\n\n**1. Fluid Intelligence (Gf):** The ability to reason, identify patterns, and solve novel problems independent of previously acquired knowledge. This includes:\n• Inductive reasoning (identifying rules from examples)\n• Deductive reasoning (applying rules to reach conclusions)\n• Abstract pattern recognition\n\n**2. Working Memory:** The capacity to hold, manipulate, and retrieve information over short periods during cognitive tasks.\n\n**3. Adaptive Learning:** The ability to integrate feedback and apply new information to improve performance within the assessment itself.\n\n**4. Processing Speed:** The ability to perform cognitive tasks quickly and accurately, particularly under time pressure.\n\n**Why This Framework?**\n\nResearch consistently shows that fluid intelligence is the single best cognitive predictor of job performance across occupations (Schmidt & Hunter, 1998), while working memory capacity underlies the ability to manage complex tasks and learn new information efficiently.\n\n**Cognitive Style Inference:**\n\nBased on patterns of responding (not just accuracy), JICA infers behavioral tendencies such as methodical vs. intuitive thinking, adaptability to change, attention to detail, and performance under pressure. These inferences are based on response patterns rather than self-report, providing behavioral evidence of cognitive style."},
+  psychometric:{title:"Psychometric Properties",icon:"📊",content:"**Standardization Procedures:**\n\n**Representative Norming Sample:** JICA requires administration to a minimum of 2,000 participants stratified by age (18-25, 26-35, 36-45, 46-55, 56-65), gender, education level, geographic region, and industry background.\n\n**Uniform Administration:** All test administrations follow identical procedures—browser-based delivery, scripted on-screen instructions, programmatic timing enforcement, and recommended testing conditions.\n\n**Norm Establishment:** From the norming sample, mean, standard deviation, and percentile ranks (1st-99th) are calculated for each category and composite score.\n\n---\n\n**Reliability Procedures:**\n\n**Internal Consistency (Cronbach's Alpha):** Target α ≥ .80 for each subscale; α ≥ .85 for total score.\n\n**Split-Half Reliability:** Items divided into matched halves, correlation calculated with Spearman-Brown correction. Target: ≥ .80.\n\n**Test-Retest Reliability:** Subset of 300 participants tested twice with 2-4 week interval. Target: r ≥ .75 for subscales; r ≥ .80 for total score.\n\n**Consistency Analysis:** Performance across difficulty levels is analyzed to detect response patterns indicative of guessing, fatigue, or inattention.\n\n---\n\n**Validity Procedures:**\n\n**Content Validity:** Panel of 5-7 subject matter experts rate each item for relevance, clarity, and appropriateness. Target Content Validity Index (CVI) ≥ .90.\n\n**Construct Validity:**\n• Convergent: JICA scores correlated with Raven's Progressive Matrices (target r ≥ .60), Wechsler Digit Span (r ≥ .55), Wonderlic (r ≥ .65)\n• Discriminant: Low correlations with personality measures (r < .30)\n• Factor Analysis: Confirmatory factor analysis verifying five-factor structure (CFI ≥ .95, RMSEA ≤ .06)\n\n**Criterion-Related Validity:**\n• Predictive study: 500 hired candidates assessed, correlated with 6-12 month performance ratings (target r ≥ .30)\n• Concurrent study: 300 current employees, correlated with existing performance data\n\n**Confidence Intervals:** All scores are reported with margin of error (±) based on standard error of measurement, acknowledging that a single test administration provides an estimate, not a precise value."},
   biasMitigation:{title:"Bias Mitigation",icon:"⚖️",content:"**Understanding Stereotype Threat:**\n\nStereotype threat occurs when individuals are aware of negative stereotypes about their group's intellectual abilities, leading to anxiety that impairs performance (Steele & Aronson, 1995). Stereotype lift is the complementary effect where non-stereotyped groups experience performance boosts.\n\n---\n\n**Test Design Elements:**\n\n**1. Reframing the Assessment:** JICA is framed as a \"problem-solving exercise\" rather than an \"intelligence test.\" Research shows this reduces stereotype threat effects by ~0.3 standard deviations (Walton & Spencer, 2009).\n\n**2. Growth Mindset Priming:** Candidates read a brief passage explaining cognitive skills are malleable and improve with practice (Dweck, 2006).\n\n**3. Self-Affirmation:** Before testing, candidates select and briefly write about a personal value important to them. This intervention reduced racial achievement gaps by 40% in Cohen et al. (2006).\n\n**4. Demographics After Testing:** Any demographic questions are collected AFTER test completion. Stricker & Ward (2004) showed this improves performance among stereotyped groups.\n\n**5. Culturally Neutral Content:** All items minimize reliance on culturally-specific knowledge. Differential Item Functioning (DIF) analysis identifies and removes biased items.\n\n---\n\n**Administrative Procedures:**\n\n**6. Practice Items:** Each section begins with unscored practice items to reduce initial anxiety.\n\n**7. Transparent Feedback:** Detailed results shift attribution from fixed ability to specific, developable skills.\n\n**8. Adverse Impact Monitoring:** Quarterly analysis using the 4/5ths rule (EEOC guidelines) with corrective action if disparities emerge."},
-  algorithm:{title:"Scoring Algorithm",icon:"⚙️",content:"**Step 1: Response Scoring**\nEach question scored dichotomously: correct = 1 point, incorrect = 0 points. No penalty for guessing.\n\n**Step 2: Category Weight Application**\nEach question has predefined category weights summing to 100%. Correct answers distribute points across categories by weight.\n\n*Example:* Question with 70% Analytical, 30% Pattern weights → correct answer gives AR 0.70 points, PR 0.30 points.\n\n**Step 3: Raw Category Scores**\nSum weighted points per category across all questions.\n\n**Step 4: Percentile Conversion**\nRaw scores converted to percentiles using norm tables from standardization sample.\n\n**Step 5: Composite Score**\nWeighted average of category percentiles:\n**Composite = (AR × 0.25) + (PR × 0.20) + (WM × 0.20) + (AT × 0.20) + (PE × 0.15)**\n\n**Step 6: Critical Threshold Check**\n• Analytical Reasoning: 25th percentile minimum\n• Pattern Recognition: 20th percentile minimum\n• Working Memory: 25th percentile minimum\n• Adaptive Thinking: 30th percentile minimum (highest—inability to adapt is most problematic)\n• Processing Efficiency: 15th percentile minimum\n\n**Step 7: Recommendation**\n• **STRONG HIRE:** Composite ≥ 75th, no category below threshold\n• **RECOMMEND HIRE:** Composite 50th-74th, no category below threshold\n• **CONDITIONAL:** Composite 35th-49th, or one category slightly below threshold\n• **DO NOT RECOMMEND:** Composite < 35th, or multiple/severe threshold breaches\n\n**Step 8: Rationale Generation**\nNatural language summary identifying strengths (>65th), adequate areas (35th-65th), and concerns (<35th) with practical implications for job performance."}
+  algorithm:{title:"Scoring Algorithm",icon:"⚙️",content:"**Step 1: Response Scoring with IRT Weighting**\nEach question scored dichotomously: correct = 1 point, incorrect = 0 points. No penalty for guessing.\n\n**Item Response Theory (IRT) Difficulty Multipliers:**\n• Easy questions: 0.8× weight (less informative when correct)\n• Medium questions: 1.0× weight (baseline)\n• Hard questions: 1.3× weight (more informative when correct)\n\nThis means getting a Hard question right contributes more to your score than an Easy question, reflecting the greater ability required.\n\n**Step 2: Category Weight Application**\nEach question has predefined category weights summing to 100%. Correct answers distribute IRT-weighted points across categories.\n\n*Example:* Hard question with 70% Analytical, 30% Pattern weights → correct answer gives AR 0.91 points (0.70 × 1.3), PR 0.39 points (0.30 × 1.3).\n\n**Step 3: Raw Category Scores**\nSum IRT-weighted points per category across all questions.\n\n**Step 4: Percentile Conversion**\nRaw scores converted to percentiles using norm tables from standardization sample.\n\n**Step 5: Role-Specific Composite Scores**\nDifferent roles use different category weights:\n• **General:** AR 25% | PR 20% | WM 20% | AT 20% | PE 15%\n• **Data Analyst:** AR 35% | PR 30% | WM 15% | AT 10% | PE 10%\n• **Developer:** AR 25% | PR 35% | WM 10% | AT 20% | PE 10%\n• **Manager:** AR 20% | PR 10% | WM 25% | AT 30% | PE 15%\n• **Customer Service:** AR 10% | PR 10% | WM 30% | AT 35% | PE 15%\n• **Creative:** AR 15% | PR 35% | WM 15% | AT 25% | PE 10%\n\n**Step 6: Critical Threshold Check**\n• Analytical Reasoning: 25th percentile minimum\n• Pattern Recognition: 20th percentile minimum\n• Working Memory: 25th percentile minimum\n• Adaptive Thinking: 30th percentile minimum (highest—inability to adapt is most problematic)\n• Processing Efficiency: 15th percentile minimum\n\n**Step 7: Red Flag Detection**\nAutomatic flagging of concerning patterns:\n• Very low scores (<20th) in any category\n• Inconsistent difficulty performance (e.g., better on Hard than Easy)\n• Specific cognitive combinations (e.g., high analytical but low processing)\n• Adaptive section transition failures\n\n**Step 8: Consistency Analysis**\nPerformance across Easy/Medium/Hard questions is compared. Consistent patterns (Easy > Medium > Hard) indicate reliable results. Inconsistent patterns suggest caution in interpretation.\n\n**Step 9: Confidence Interval Calculation**\nMargin of error calculated as: ±(15 / √n × 2) where n = number of questions.\nWith 35 questions: approximately ±5 points.\n\n**Step 10: Recommendation**\n• **STRONG HIRE:** Composite ≥ 75th, no threshold breaches, no high-severity flags\n• **RECOMMEND HIRE:** Composite 50th-74th, no threshold breaches, no high-severity flags\n• **CONDITIONAL:** Composite 35th-49th, or one threshold breach, or medium-severity flags\n• **DO NOT RECOMMEND:** Composite < 35th, or multiple threshold breaches, or multiple high-severity flags\n\n**Step 11: Cognitive Style Inference**\nBehavioral tendencies inferred from response patterns:\n• Thinking Style (methodical vs. intuitive)\n• Adaptability (structured vs. flexible)\n• Attention to Detail (big-picture vs. detail-focused)\n• Pressure Response (careful vs. quick)\n• Learning Curve (gradual vs. rapid)\n• Analytical Depth (practical vs. theoretical)\n\n**Step 12: Rationale Generation**\nNatural language summary identifying strengths (>65th), adequate areas (35th-65th), and concerns (<35th) with practical implications for job performance and role fit."}
 };
 
 const categoryNames = {analytical:"Analytical Reasoning",pattern:"Pattern Recognition",memory:"Working Memory",adaptive:"Adaptive Thinking",processing:"Processing Efficiency"};
 
 const LandingPage = ({onStart,onSuffernAccess}) => (
-  <div className="min-h-screen bg-white flex flex-col">
-    <header className="border-b border-gray-100">
-      <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+  <div className="h-screen bg-white flex flex-col overflow-hidden">
+    <header className="border-b border-gray-100 flex-shrink-0">
+      <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
-            <span className="text-white text-lg font-semibold">J</span>
+          <div className="w-9 h-9 bg-slate-900 rounded-lg flex items-center justify-center">
+            <span className="text-white text-base font-semibold">J</span>
           </div>
           <div>
-            <div className="text-slate-900 font-semibold tracking-tight">J-Industries</div>
+            <div className="text-slate-900 font-semibold tracking-tight text-sm">J-Industries</div>
             <div className="text-slate-400 text-xs tracking-wide uppercase">Talent Assessment</div>
           </div>
         </div>
       </div>
     </header>
-    <main className="flex-1 flex items-center">
-      <div className="max-w-6xl mx-auto px-6 py-16 w-full">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+    <main className="flex-1 flex items-center overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6 py-6 w-full">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <div className="inline-block px-3 py-1 bg-slate-100 rounded-full text-slate-600 text-sm font-medium mb-6">Cognitive Assessment Platform</div>
-            <h1 className="text-5xl font-light text-slate-900 leading-tight mb-6 tracking-tight">Discover your<br/><span className="font-semibold">cognitive profile</span></h1>
-            <p className="text-xl text-slate-500 leading-relaxed mb-8 font-light">A comprehensive assessment measuring problem-solving, information retention, adaptive thinking, and processing efficiency.</p>
-            <button onClick={onStart} className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">Begin Assessment<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg></button>
-            <p className="mt-6 text-sm text-slate-400">Approximately 20-30 minutes to complete</p>
+            <div className="inline-block px-3 py-1 bg-slate-100 rounded-full text-slate-600 text-xs font-medium mb-4">Cognitive Assessment Platform</div>
+            <h1 className="text-4xl font-light text-slate-900 leading-tight mb-4 tracking-tight">Discover your<br/><span className="font-semibold">cognitive profile</span></h1>
+            <p className="text-lg text-slate-500 leading-relaxed mb-6 font-light">A comprehensive assessment measuring problem-solving, information retention, adaptive thinking, and processing efficiency.</p>
+            <button onClick={onStart} className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors text-sm">Begin Assessment<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg></button>
+            <p className="mt-4 text-xs text-slate-400">Approximately 20-30 minutes to complete</p>
           </div>
-          <div className="bg-slate-50 rounded-2xl p-8 lg:p-12">
-            <div className="text-center mb-8">
-              <a href="https://jicaapp.tech" className="group relative inline-block px-6 py-3 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-slate-300 active:scale-95 hover:animate-wiggle">
+          <div className="bg-slate-50 rounded-2xl p-6">
+            <div className="text-center mb-4">
+              <a href="https://jicaapp.tech" className="group relative inline-block px-5 py-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-slate-300 active:scale-95 hover:animate-wiggle">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100 to-transparent opacity-60 animate-sheen"></div>
-                <span className="relative text-2xl tracking-tight flex items-center justify-center">
+                <span className="relative text-xl tracking-tight flex items-center justify-center">
                   <span className="font-bold text-blue-600 animate-pulse-subtle">J</span>
                   <span className="font-medium text-slate-700">ica</span>
                   <span className="font-bold text-blue-600 animate-pulse-subtle">A</span>
@@ -91,10 +91,10 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                   <span className="font-light text-slate-400">.tech</span>
                 </span>
               </a>
-              <div className="mt-4 h-10 flex items-center justify-center">
+              <div className="mt-2 h-8 flex items-center justify-center">
                 <div className="animate-morph-container relative">
                   <div className="animate-pill-bg absolute inset-0 rounded-full"></div>
-                  <span className="relative inline-flex items-center text-sm tracking-wide">
+                  <span className="relative inline-flex items-center text-xs tracking-wide">
                     <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 animate-letter-float">J</span>
                     <span className="text-slate-400 animate-morph-text">-</span>
                     <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 animate-letter-float animation-delay-100">I</span>
@@ -176,7 +176,7 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
               .animate-morph-container {
                 display: inline-flex;
                 align-items: center;
-                padding: 6px 16px;
+                padding: 4px 12px;
                 transition: all 0.3s ease;
               }
               .animate-pill-bg {
@@ -194,27 +194,27 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
               .animation-delay-300 { animation-delay: 0.3s; }
               .animation-delay-400 { animation-delay: 0.4s; }
             `}</style>
-            <div className="grid grid-cols-2 gap-8">
-              <div className="text-center p-6"><div className="text-4xl font-light text-slate-900 mb-2">35</div><div className="text-sm text-slate-500 uppercase tracking-wide">Questions</div></div>
-              <div className="text-center p-6"><div className="text-4xl font-light text-slate-900 mb-2">5</div><div className="text-sm text-slate-500 uppercase tracking-wide">Categories</div></div>
-              <div className="text-center p-6"><div className="text-4xl font-light text-slate-900 mb-2">20</div><div className="text-sm text-slate-500 uppercase tracking-wide">Minutes Avg</div></div>
-              <div className="text-center p-6"><div className="text-4xl font-light text-slate-900 mb-2">1</div><div className="text-sm text-slate-500 uppercase tracking-wide">Profile</div></div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-3"><div className="text-3xl font-light text-slate-900 mb-1">35</div><div className="text-xs text-slate-500 uppercase tracking-wide">Questions</div></div>
+              <div className="text-center p-3"><div className="text-3xl font-light text-slate-900 mb-1">5</div><div className="text-xs text-slate-500 uppercase tracking-wide">Categories</div></div>
+              <div className="text-center p-3"><div className="text-3xl font-light text-slate-900 mb-1">20</div><div className="text-xs text-slate-500 uppercase tracking-wide">Minutes Avg</div></div>
+              <div className="text-center p-3"><div className="text-3xl font-light text-slate-900 mb-1">1</div><div className="text-xs text-slate-500 uppercase tracking-wide">Profile</div></div>
             </div>
-            <div className="mt-8 pt-8 border-t border-slate-200">
-              <p className="text-sm text-slate-500 leading-relaxed text-center">Research shows that cognitive skills develop with experience and practice. Your results reflect your current profile, which evolves over time.</p>
+            <div className="mt-4 pt-4 border-t border-slate-200">
+              <p className="text-xs text-slate-500 leading-relaxed text-center">Research shows that cognitive skills develop with experience and practice. Your results reflect your current profile, which evolves over time.</p>
             </div>
           </div>
         </div>
       </div>
     </main>
-    <footer className="border-t border-gray-100">
-      <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer className="border-t border-gray-100 flex-shrink-0">
+      <div className="max-w-6xl mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-2">
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-          <p className="text-sm text-slate-400">Designed by Jonathan Shiell for AP Psychology</p>
+          <p className="text-xs text-slate-400">Designed by Jonathan Shiell for AP Psychology</p>
           <span className="hidden sm:block text-slate-300">•</span>
-          <a href="https://jicaapp.tech" className="text-sm hover:text-slate-700 font-medium transition-colors"><span className="text-blue-500 font-semibold">J</span><span className="text-slate-500">ica</span><span className="text-blue-500 font-semibold">A</span><span className="text-slate-500">pp.tech</span></a>
+          <a href="https://jicaapp.tech" className="text-xs hover:text-slate-700 font-medium transition-colors"><span className="text-blue-500 font-semibold">J</span><span className="text-slate-500">ica</span><span className="text-blue-500 font-semibold">A</span><span className="text-slate-500">pp.tech</span></a>
         </div>
-        <button onClick={onSuffernAccess} className="text-sm text-slate-400 hover:text-slate-600 transition-colors">Instructor Access →</button>
+        <button onClick={onSuffernAccess} className="text-xs text-slate-400 hover:text-slate-600 transition-colors">Instructor Access →</button>
       </div>
     </footer>
   </div>
@@ -643,6 +643,87 @@ const ResultsPage = ({answers,onViewMethodology}) => {
             </div>
           </div>
         </div>
+
+        {/* Cognitive Style Profile */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-slate-900">🧠 Cognitive Style Profile</h2>
+            <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">Inferred from problem-solving behavior</span>
+          </div>
+          <p className="text-slate-500 text-sm mb-6">These traits are derived from how you approached the assessment, not from a personality test.</p>
+          
+          {(() => {
+            // Calculate cognitive style traits
+            const p = scores.percentiles;
+            const dp = scores.difficultyPerformance;
+            
+            // Thinking Style: Methodical vs Intuitive (based on consistency and processing speed)
+            const thinkingStyle = scores.isConsistent && p.processing < 60 ? 'Methodical' : p.processing > 70 ? 'Intuitive' : 'Balanced';
+            const thinkingScore = p.processing > 70 ? 80 : p.processing < 40 ? 20 : 50;
+            
+            // Adaptability (directly from adaptive score)
+            const adaptability = p.adaptive > 70 ? 'Highly Flexible' : p.adaptive > 50 ? 'Adaptable' : p.adaptive > 30 ? 'Prefers Structure' : 'Rigid';
+            const adaptScore = p.adaptive;
+            
+            // Attention to Detail (based on easy question performance)
+            const easyRate = dp.Easy.total > 0 ? (dp.Easy.correct / dp.Easy.total) * 100 : 50;
+            const detailLevel = easyRate > 85 ? 'Highly Detail-Oriented' : easyRate > 70 ? 'Attentive' : easyRate > 50 ? 'Moderate' : 'Big-Picture Focus';
+            const detailScore = easyRate;
+            
+            // Pressure Response (processing efficiency category)
+            const pressureResponse = p.processing > 70 ? 'Thrives Under Pressure' : p.processing > 50 ? 'Handles Pressure Well' : p.processing > 30 ? 'Needs Time' : 'Struggles Under Pressure';
+            const pressureScore = p.processing;
+            
+            // Learning Speed (improvement in adaptive section - simplified)
+            const learningSpeed = p.adaptive > 60 && p.pattern > 60 ? 'Quick Learner' : p.adaptive > 40 ? 'Steady Learner' : 'Needs Reinforcement';
+            const learnScore = (p.adaptive + p.pattern) / 2;
+            
+            // Analytical Depth
+            const analyticalDepth = p.analytical > 70 ? 'Deep Analyzer' : p.analytical > 50 ? 'Solid Reasoner' : 'Surface-Level';
+            const analyticalScore = p.analytical;
+            
+            const traits = [
+              { name: 'Thinking Style', value: thinkingStyle, score: thinkingScore, left: 'Methodical', right: 'Intuitive', color: 'blue' },
+              { name: 'Adaptability', value: adaptability, score: adaptScore, left: 'Structured', right: 'Flexible', color: 'purple' },
+              { name: 'Attention to Detail', value: detailLevel, score: detailScore, left: 'Big Picture', right: 'Detail-Focused', color: 'emerald' },
+              { name: 'Pressure Response', value: pressureResponse, score: pressureScore, left: 'Careful', right: 'Quick', color: 'amber' },
+              { name: 'Learning Curve', value: learningSpeed, score: learnScore, left: 'Gradual', right: 'Rapid', color: 'cyan' },
+              { name: 'Analytical Depth', value: analyticalDepth, score: analyticalScore, left: 'Practical', right: 'Theoretical', color: 'rose' },
+            ];
+            
+            return (
+              <div className="space-y-4">
+                {traits.map((trait) => (
+                  <div key={trait.name} className="p-4 bg-slate-50 rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-slate-700">{trait.name}</span>
+                      <span className={`text-sm font-semibold text-${trait.color}-600`}>{trait.value}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-slate-400 w-20 text-right">{trait.left}</span>
+                      <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full bg-gradient-to-r from-${trait.color}-400 to-${trait.color}-600 rounded-full transition-all duration-500`}
+                          style={{ width: `${trait.score}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-slate-400 w-20">{trait.right}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+          
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+            <p className="text-blue-800 text-xs">
+              <strong>Disclaimer:</strong> This cognitive style profile is inferred from problem-solving patterns observed during the assessment. 
+              It reflects behavioral tendencies during cognitive tasks, not personality traits. For comprehensive personality assessment, 
+              validated instruments like the Big Five should be used.
+            </p>
+          </div>
+        </div>
+
         <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Question Breakdown</h2>
           <div className="space-y-2">
@@ -653,6 +734,7 @@ const ResultsPage = ({answers,onViewMethodology}) => {
                     <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${answers[i] === q.correct ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>{answers[i] === q.correct ? '✓' : '×'}</span>
                     <span className="text-slate-700 text-sm">Question {q.id}</span>
                     <span className="text-slate-400 text-sm">· {q.category}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded ${q.difficulty === 'Easy' ? 'bg-emerald-100 text-emerald-700' : q.difficulty === 'Medium' ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>{q.difficulty}</span>
                   </div>
                   <svg className={`w-5 h-5 text-slate-400 transition-transform ${expandedQuestion === i ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/></svg>
                 </button>
@@ -669,10 +751,42 @@ const ResultsPage = ({answers,onViewMethodology}) => {
                         <div className="text-emerald-700 text-sm font-medium">{String.fromCharCode(65 + q.correct)}. {q.options[q.correct]}</div>
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {Object.entries(q.weights).map(([cat, weight]) => <span key={cat} className="px-2 py-1 bg-white border border-gray-200 rounded text-xs text-slate-600">{categoryNames[cat]}: {weight}%</span>)}
+                    
+                    {/* Enhanced Weight Visualization */}
+                    <div className="bg-white rounded-lg p-4 border border-gray-200 mb-4">
+                      <div className="text-slate-500 text-xs mb-3">How This Question Affects Your Score</div>
+                      <div className="space-y-2">
+                        {Object.entries(q.weights).map(([cat, weight]) => (
+                          <div key={cat} className="flex items-center gap-3">
+                            <span className="text-xs text-slate-600 w-32">{categoryNames[cat]}</span>
+                            <div className="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full rounded-full ${
+                                  cat === 'analytical' ? 'bg-violet-500' :
+                                  cat === 'pattern' ? 'bg-blue-500' :
+                                  cat === 'memory' ? 'bg-emerald-500' :
+                                  cat === 'adaptive' ? 'bg-orange-500' :
+                                  'bg-rose-500'
+                                }`}
+                                style={{ width: `${weight}%` }}
+                              />
+                            </div>
+                            <span className="text-xs font-medium text-slate-700 w-12 text-right">{weight}%</span>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-xs text-slate-400 mt-3">
+                        {answers[i] === q.correct 
+                          ? `✓ You earned ${Object.entries(q.weights).map(([cat, w]) => `${w}% toward ${categoryNames[cat]}`).join(', ')}`
+                          : `✗ You missed ${Object.entries(q.weights).map(([cat, w]) => `${w}% toward ${categoryNames[cat]}`).join(', ')}`
+                        }
+                      </p>
                     </div>
-                    <div className={`text-sm p-3 rounded-lg ${answers[i] === q.correct ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'}`}>{answers[i] === q.correct ? q.correctIndicates : q.incorrectIndicates}</div>
+                    
+                    <div className={`text-sm p-3 rounded-lg ${answers[i] === q.correct ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'}`}>
+                      <div className="font-medium mb-1">{answers[i] === q.correct ? 'What this indicates:' : 'Area for development:'}</div>
+                      {answers[i] === q.correct ? q.correctIndicates : q.incorrectIndicates}
+                    </div>
                   </div>
                 )}
               </div>
