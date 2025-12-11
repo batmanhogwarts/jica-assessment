@@ -950,7 +950,7 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
             <div className="relative bg-white/90 backdrop-blur rounded-3xl p-8 shadow-2xl shadow-slate-900/10 border border-white/50">
               <div className="text-center mb-8">
                 <a href="https://jicaapp.tech" className="group relative inline-block px-8 py-4 bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100 to-transparent opacity-60 animate-sheen"></div>
                   <span className="relative text-3xl tracking-tight flex items-center justify-center font-medium">
                     <span className="text-blue-600 font-bold">J</span>
                     <span className="text-slate-700">ica</span>
@@ -959,7 +959,75 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                     <span className="text-slate-400 font-light">.tech</span>
                   </span>
                 </a>
-                <p className="mt-3 text-sm text-slate-400">J-Industries Cognitive Assessment App</p>
+                <div className="mt-3 h-8 flex items-center justify-center">
+                  <div className="animate-morph-container relative">
+                    <div className="animate-pill-bg absolute inset-0 rounded-full"></div>
+                    <span className="relative inline-flex items-center text-xs tracking-wide">
+                      <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 animate-letter-float">J</span>
+                      <span className="text-slate-400 animate-morph-text">-</span>
+                      <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 animate-letter-float animation-delay-100">I</span>
+                      <span className="text-slate-400 animate-morph-text">ndustries</span>
+                      <span className="animate-morph-text">&nbsp;</span>
+                      <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500 animate-letter-float animation-delay-200">C</span>
+                      <span className="text-slate-400 animate-morph-text">ognitive</span>
+                      <span className="animate-morph-text">&nbsp;</span>
+                      <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 animate-letter-float animation-delay-300">A</span>
+                      <span className="text-slate-400 animate-morph-text">ssessment</span>
+                      <span className="animate-morph-text">&nbsp;</span>
+                      <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-600 animate-letter-float animation-delay-400">A</span>
+                      <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">pp</span>
+                    </span>
+                  </div>
+                </div>
+                <style>{`
+                  @keyframes sheen {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                  }
+                  @keyframes morph-text {
+                    0%, 45% { max-width: 200px; opacity: 1; }
+                    50%, 95% { max-width: 0; opacity: 0; }
+                    100% { max-width: 200px; opacity: 1; }
+                  }
+                  @keyframes letter-float {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-2px); }
+                  }
+                  @keyframes pill-bg {
+                    0%, 45% { opacity: 1; padding: 4px 12px; }
+                    50%, 95% { opacity: 0.7; padding: 4px 8px; }
+                    100% { opacity: 1; padding: 4px 12px; }
+                  }
+                  .animate-sheen {
+                    animation: sheen 3s ease-in-out infinite;
+                  }
+                  .animate-morph-text {
+                    display: inline-block;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    animation: morph-text 8s ease-in-out infinite;
+                  }
+                  .animate-morph-container {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 4px 12px;
+                    transition: all 0.3s ease;
+                  }
+                  .animate-pill-bg {
+                    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.15) 50%, rgba(59, 130, 246, 0.1) 100%);
+                    border: 1px solid rgba(59, 130, 246, 0.2);
+                    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15), inset 0 1px 2px rgba(255,255,255,0.5);
+                    animation: pill-bg 8s ease-in-out infinite;
+                  }
+                  .animate-letter-float {
+                    display: inline-block;
+                    animation: letter-float 3s ease-in-out infinite;
+                  }
+                  .animation-delay-100 { animation-delay: 0.1s; }
+                  .animation-delay-200 { animation-delay: 0.2s; }
+                  .animation-delay-300 { animation-delay: 0.3s; }
+                  .animation-delay-400 { animation-delay: 0.4s; }
+                `}</style>
               </div>
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="group bg-gradient-to-br from-slate-50 to-slate-100/80 hover:from-slate-100 hover:to-slate-50 rounded-2xl p-6 text-center border border-slate-100 transition-all cursor-default">
@@ -1119,12 +1187,6 @@ const QuestionPage = ({question,questionNumber,totalQuestions,onAnswer,selectedA
       </header>
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="max-w-2xl w-full">
-          <div className="mb-6 flex items-center gap-3">
-            <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border ${categoryColors[question.category]}`}>
-              <span>{categoryIcons[question.category]}</span>
-              {question.category}
-            </span>
-          </div>
           {isAdaptive && question.ruleSet === 1 && questionNumber === 24 && (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5 mb-6 shadow-sm">
               <div className="flex items-start gap-3">
@@ -1972,8 +2034,8 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
 
               {/* Fatigue Curve */}
               <div className="bg-slate-50 rounded-xl p-4">
-                <h3 className="text-sm font-semibold text-slate-900 mb-3">📉 Fatigue Curve</h3>
-                <div className="flex items-end justify-between gap-2 h-24 mb-3">
+                <h3 className="text-sm font-semibold text-slate-900 mb-4">📉 Fatigue Curve</h3>
+                <div className="flex items-end justify-between gap-4 h-28 mb-4 px-2">
                   {advancedAnalysis.fatigue?.quarters?.map((q, i) => (
                     <div key={i} className="flex-1 flex flex-col items-center">
                       <div className="w-full bg-slate-200 rounded-t relative" style={{height: '80px'}}>
@@ -1984,18 +2046,18 @@ const ResultsPage = ({answers, questionTimes, totalTestTime, onViewMethodology})
                           style={{height: `${q.accuracy}%`}}
                         />
                       </div>
-                      <div className="text-xs text-slate-500 mt-1">Q{i + 1}</div>
-                      <div className="text-xs font-medium text-slate-700">{q.accuracy}%</div>
+                      <div className="text-sm text-slate-600 mt-2 font-medium">Q{i + 1}</div>
+                      <div className="text-sm font-semibold text-slate-800">{q.accuracy}%</div>
                     </div>
                   ))}
                 </div>
-                <div className={`p-2 rounded-lg text-xs ${
+                <div className={`p-3 rounded-lg text-sm ${
                   advancedAnalysis.fatigue?.curveType === 'stable' ? 'bg-emerald-50 text-emerald-800' :
                   advancedAnalysis.fatigue?.curveType === 'declining' ? 'bg-rose-50 text-rose-800' :
                   advancedAnalysis.fatigue?.curveType === 'improving' ? 'bg-blue-50 text-blue-800' :
                   'bg-slate-100 text-slate-600'
                 }`}>
-                  <span className="font-medium capitalize">{advancedAnalysis.fatigue?.curveType?.replace('_', ' ')}:</span> {advancedAnalysis.fatigue?.interpretation}
+                  <span className="font-semibold capitalize">{advancedAnalysis.fatigue?.curveType?.replace('_', ' ')}:</span> {advancedAnalysis.fatigue?.interpretation}
                 </div>
               </div>
 
