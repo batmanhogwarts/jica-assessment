@@ -144,7 +144,7 @@ const ThanksForTheMemoriesPage = () => {
         {essayContent.map((section, index) => (
           <section 
             key={section.id}
-            className="essay-section mb-8"
+            className="essay-section mb-12"
           >
             {/* Section highlight phrase */}
             <div className="mb-4">
@@ -158,10 +158,72 @@ const ThanksForTheMemoriesPage = () => {
               {section.content}
             </p>
 
-            {/* Decorative divider (except last) */}
+            {/* Decorative elements between sections */}
             {index < essayContent.length - 1 && (
-              <div className="mt-8 flex items-center justify-center">
-                <div className="w-12 h-px bg-stone-200" />
+              <div className="mt-12 mb-4">
+                {/* Callout quotes and animated elements */}
+                {index === 0 && (
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="memory-fragment text-2xl opacity-40">👁️</div>
+                    <div className="px-4 py-2 bg-stone-100 rounded-lg border-l-2 border-stone-300">
+                      <p className="text-sm text-stone-500 italic">"Memory is not a recording — it's a reconstruction"</p>
+                    </div>
+                    <div className="memory-fragment text-2xl opacity-40">👁️</div>
+                  </div>
+                )}
+                {index === 1 && (
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="flex gap-1">
+                      {[...Array(3)].map((_, i) => (
+                        <div 
+                          key={i} 
+                          className="w-2 h-2 bg-stone-300 rounded-full"
+                          style={{ animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite` }}
+                        />
+                      ))}
+                    </div>
+                    <div className="px-4 py-2 bg-amber-50 rounded-lg border-l-2 border-amber-300">
+                      <p className="text-sm text-amber-700 italic">Key insight: Confidence ≠ Accuracy</p>
+                    </div>
+                    <div className="flex gap-1">
+                      {[...Array(3)].map((_, i) => (
+                        <div 
+                          key={i} 
+                          className="w-2 h-2 bg-stone-300 rounded-full"
+                          style={{ animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite` }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {index === 2 && (
+                  <div className="flex items-center justify-center">
+                    <div className="relative px-4 py-2 bg-stone-100 rounded-lg">
+                      <div className="absolute -left-3 top-1/2 -translate-y-1/2 text-lg camera-flash">📷</div>
+                      <p className="text-sm text-stone-500 italic pl-4">"Cameras don't have schemas or expectations"</p>
+                      <div className="absolute -right-3 top-1/2 -translate-y-1/2 text-lg camera-flash" style={{ animationDelay: '0.5s' }}>📷</div>
+                    </div>
+                  </div>
+                )}
+                {index === 3 && (
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="w-8 h-px bg-stone-200" />
+                    <div className="text-xl opacity-50 balance-scale">⚖️</div>
+                    <div className="px-3 py-1 bg-rose-50 rounded border-l-2 border-rose-300">
+                      <p className="text-xs text-rose-600 italic">Privacy vs. Safety</p>
+                    </div>
+                    <div className="text-xl opacity-50 balance-scale" style={{ animationDelay: '0.5s' }}>🔒</div>
+                    <div className="w-8 h-px bg-stone-200" />
+                  </div>
+                )}
+                {index === 4 && (
+                  <div className="flex items-center justify-center">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-lg border-l-2 border-emerald-300">
+                      <span className="text-lg">✓</span>
+                      <p className="text-sm text-emerald-700 italic">Strategic implementation is key</p>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </section>
@@ -185,6 +247,41 @@ const ThanksForTheMemoriesPage = () => {
         @keyframes float {
           0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
           50% { transform: translateY(-20px) rotate(5deg); opacity: 0.6; }
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.2); }
+        }
+        
+        @keyframes glitch {
+          0%, 90%, 100% { opacity: 0.4; transform: translate(0, 0); }
+          92% { opacity: 0.6; transform: translate(-2px, 1px); }
+          94% { opacity: 0.2; transform: translate(2px, -1px); }
+          96% { opacity: 0.7; transform: translate(-1px, -1px); }
+          98% { opacity: 0.3; transform: translate(1px, 1px); }
+        }
+        
+        @keyframes cameraFlash {
+          0%, 90%, 100% { opacity: 0.5; }
+          95% { opacity: 1; }
+        }
+        
+        @keyframes swing {
+          0%, 100% { transform: rotate(-3deg); }
+          50% { transform: rotate(3deg); }
+        }
+        
+        .memory-fragment {
+          animation: glitch 3s ease-in-out infinite;
+        }
+        
+        .camera-flash {
+          animation: cameraFlash 2s ease-in-out infinite;
+        }
+        
+        .balance-scale {
+          animation: swing 2s ease-in-out infinite;
         }
         
         .essay-section {
