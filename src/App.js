@@ -91,6 +91,12 @@ const LandingPage = ({onStart,onSuffernAccess}) => (
                   <span className="font-light text-slate-400">.tech</span>
                 </span>
               </a>
+              <p className="mt-3 text-sm text-slate-400">
+                <span className="font-semibold text-blue-500">J</span><span>-Industries </span>
+                <span className="font-semibold text-blue-500">C</span><span>ognitive </span>
+                <span className="font-semibold text-blue-500">A</span><span>ssessment </span>
+                <span className="font-semibold text-blue-500">App</span>
+              </p>
             </div>
             <style>{`
               @keyframes sheen {
