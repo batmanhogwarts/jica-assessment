@@ -1,6 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const FortyStudiesPage = () => {
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setScrollProgress(progress);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const readings = [
     {
       id: 1,
@@ -52,14 +66,22 @@ const FortyStudiesPage = () => {
 
   return (
     <div className="min-h-screen bg-stone-50">
+      {/* Progress bar */}
+      <div className="fixed top-0 left-0 w-full h-0.5 bg-stone-200 z-50">
+        <div 
+          className="h-full bg-stone-400 transition-all duration-150"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
+
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-stone-200 sticky top-0 z-50">
+      <header className="bg-white/80 backdrop-blur-sm border-b border-stone-200 sticky top-0 z-40">
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-lg font-bold text-stone-900">Forty Studies</h1>
             <p className="text-xs text-stone-500">Readings 1 & 3</p>
           </div>
-          <a href="/" className="text-sm text-stone-400 hover:text-stone-600">← Back</a>
+          <a href="/" className="text-sm text-stone-400 hover:text-stone-600 transition-colors">← Back</a>
         </div>
       </header>
 
@@ -67,7 +89,7 @@ const FortyStudiesPage = () => {
       <main className="max-w-3xl mx-auto px-6 py-12">
         
         {readings.map((reading, rIndex) => (
-          <section key={reading.id} className="mb-20">
+          <section key={reading.id} className="mb-20 animate-fadeIn" style={{ animationDelay: `${rIndex * 0.15}s` }}>
             
             {/* Reading title */}
             <div className="mb-10">
@@ -83,7 +105,7 @@ const FortyStudiesPage = () => {
                 {reading.questions.map((q, qIndex) => (
                   <li 
                     key={qIndex} 
-                    className={`flex gap-3 p-3 rounded-lg ${
+                    className={`flex gap-3 p-3 rounded-lg transition-all duration-300 hover:translate-x-1 ${
                       qIndex === reading.chosenIndex 
                         ? 'bg-stone-200/70' 
                         : 'bg-stone-100/50'
@@ -137,6 +159,17 @@ const FortyStudiesPage = () => {
           AP Psychology • Forty Studies That Changed Psychology
         </div>
       </footer>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          opacity: 0;
+          animation: fadeIn 0.6s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 };
