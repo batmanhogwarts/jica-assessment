@@ -67,9 +67,9 @@ const FortyStudiesPage = () => {
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Progress bar */}
-      <div className="fixed top-0 left-0 w-full h-0.5 bg-stone-200 z-50">
+      <div className="fixed top-0 left-0 w-full h-1 bg-stone-100 z-50">
         <div 
-          className="h-full bg-stone-400 transition-all duration-150"
+          className="h-full bg-gradient-to-r from-stone-400 via-stone-500 to-stone-400 transition-all duration-150"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
@@ -130,16 +130,6 @@ const FortyStudiesPage = () => {
                   </p>
                 ))}
               </div>
-            </div>
-
-            {/* Sources */}
-            <div className="pt-6 border-t border-stone-200">
-              <h4 className="text-xs text-stone-400 uppercase tracking-wider mb-3">Sources</h4>
-              <ul className="space-y-1">
-                {reading.sources.map((source, sIndex) => (
-                  <li key={sIndex} className="text-sm text-stone-500">{source}</li>
-                ))}
-              </ul>
             </div>
 
             {/* Divider between readings */}
