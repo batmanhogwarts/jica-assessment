@@ -588,8 +588,9 @@ const MnemonicsPage = () => {
             >
               {/* Header */}
               <button
+                type="button"
                 onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
-                className="w-full px-5 py-4 flex items-center gap-4 text-left"
+                className="w-full px-5 py-4 flex items-center gap-4 text-left focus:outline-none"
               >
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm transition-colors ${
                   expandedItem === item.id 
@@ -653,10 +654,10 @@ const MnemonicsPage = () => {
       
       <style>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-        .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
       `}</style>
     </div>
   );
