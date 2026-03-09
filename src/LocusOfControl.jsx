@@ -22,7 +22,7 @@ const DOMAINS = {
 
 const scenarioQuestions = [
   {
-    id: 's1', domain: 'academic',
+    id: 's1', domain: 'academic', format: 'scenario',
     situation: 'You spent several hours preparing for an important exam, but your grade comes back lower than you expected.',
     prompt: "What's your first reaction?",
     options: [
@@ -33,7 +33,7 @@ const scenarioQuestions = [
     ]
   },
   {
-    id: 's2', domain: 'social',
+    id: 's2', domain: 'social', format: 'scenario',
     situation: 'A friend you\'ve been close with starts responding less and gradually spending less time with you.',
     prompt: 'What do you think is happening?',
     options: [
@@ -44,7 +44,7 @@ const scenarioQuestions = [
     ]
   },
   {
-    id: 's3', domain: 'health',
+    id: 's3', domain: 'health', format: 'scenario',
     situation: 'Over the past few weeks, you\'ve been feeling more tired and stressed than usual.',
     prompt: 'What do you attribute it to?',
     options: [
@@ -55,7 +55,7 @@ const scenarioQuestions = [
     ]
   },
   {
-    id: 's4', domain: 'career',
+    id: 's4', domain: 'career', format: 'scenario',
     situation: 'You apply for a position or opportunity you were excited about and don\'t get it.',
     prompt: "What's your takeaway?",
     options: [
@@ -66,7 +66,7 @@ const scenarioQuestions = [
     ]
   },
   {
-    id: 's5', domain: 'academic',
+    id: 's5', domain: 'academic', format: 'scenario',
     situation: 'You receive the highest grade in your class on a major assignment.',
     prompt: 'What do you think made the difference?',
     options: [
@@ -77,7 +77,7 @@ const scenarioQuestions = [
     ]
   },
   {
-    id: 's6', domain: 'social',
+    id: 's6', domain: 'social', format: 'scenario',
     situation: 'You go to an event where you don\'t know many people. By the end, several people seem genuinely interested in staying in touch.',
     prompt: 'Why do you think that happened?',
     options: [
@@ -88,7 +88,7 @@ const scenarioQuestions = [
     ]
   },
   {
-    id: 's7', domain: 'health',
+    id: 's7', domain: 'health', format: 'scenario',
     situation: 'You successfully maintain a consistent exercise routine for an entire month.',
     prompt: 'What kept you going?',
     options: [
@@ -99,7 +99,7 @@ const scenarioQuestions = [
     ]
   },
   {
-    id: 's8', domain: 'career',
+    id: 's8', domain: 'career', format: 'scenario',
     situation: 'An unexpected opportunity comes your way — a recommendation, an introduction, or an offer you didn\'t seek out.',
     prompt: 'What do you think led to it?',
     options: [
@@ -113,49 +113,49 @@ const scenarioQuestions = [
 
 const spectrumQuestions = [
   {
-    id: 'sp1', domain: 'academic',
+    id: 'sp1', domain: 'academic', format: 'spectrum',
     prompt: 'When I do well in school, it\'s usually because...',
     left: "I found the right approach and put in consistent effort.",
     right: "The material aligned with how I naturally think and learn.",
   },
   {
-    id: 'sp2', domain: 'social',
+    id: 'sp2', domain: 'social', format: 'spectrum',
     prompt: 'When there\'s tension between me and someone, it\'s usually because...',
     left: "I wasn't clear enough in how I communicated.",
     right: "People see the world from very different angles sometimes.",
   },
   {
-    id: 'sp3', domain: 'health',
+    id: 'sp3', domain: 'health', format: 'spectrum',
     prompt: 'My overall energy and wellbeing are mostly shaped by...',
     left: "The habits and daily routines I choose to maintain.",
     right: "Factors like genetics, seasonal changes, and life stress.",
   },
   {
-    id: 'sp4', domain: 'career',
+    id: 'sp4', domain: 'career', format: 'spectrum',
     prompt: 'People who end up where they want to be in life usually got there because...',
     left: "They stayed focused and made strategic sacrifices.",
     right: "The right doors opened for them at the right time.",
   },
   {
-    id: 'sp5', domain: 'academic',
+    id: 'sp5', domain: 'academic', format: 'spectrum',
     prompt: 'When I struggle with a new subject or skill...',
     left: "It usually means I need to try a different approach or put in more time.",
     right: "Some things just don't come naturally to certain people.",
   },
   {
-    id: 'sp6', domain: 'social',
+    id: 'sp6', domain: 'social', format: 'spectrum',
     prompt: 'The quality of my closest friendships depends mostly on...',
     left: "How much honesty and effort I bring to those relationships.",
     right: "Whether our personalities naturally complement each other.",
   },
   {
-    id: 'sp7', domain: 'health',
+    id: 'sp7', domain: 'health', format: 'spectrum',
     prompt: 'When it comes to staying healthy...',
     left: "Good habits like sleep, nutrition, and hygiene make the biggest difference.",
     right: "Some people are just more susceptible to illness regardless of lifestyle.",
   },
   {
-    id: 'sp8', domain: 'career',
+    id: 'sp8', domain: 'career', format: 'spectrum',
     prompt: 'Ten years from now, where I am in life will mostly reflect...',
     left: "The decisions and priorities I'm setting right now.",
     right: "How the world around me happens to unfold.",
@@ -163,14 +163,14 @@ const spectrumQuestions = [
 ];
 
 const likertQuestions = [
-  { id: 'l1', domain: 'academic', direction: 'internal', statement: "When I commit to learning something new, I can usually figure it out with enough effort." },
-  { id: 'l2', domain: 'social', direction: 'internal', statement: "I have the ability to resolve most conflicts in my relationships if I approach them thoughtfully." },
-  { id: 'l3', domain: 'health', direction: 'internal', statement: "My physical and mental wellbeing are largely within my control." },
-  { id: 'l4', domain: 'career', direction: 'internal', statement: "The path my life takes will mostly be shaped by my own choices and actions." },
-  { id: 'l5', domain: 'academic', direction: 'external', statement: "Some people are naturally better at academics, and effort can only do so much to close that gap." },
-  { id: 'l6', domain: 'social', direction: 'external', statement: "Whether people connect with you often comes down to chemistry that nobody can control." },
-  { id: 'l7', domain: 'health', direction: 'external', statement: "Most serious health problems are a matter of genetics and circumstances, not personal choices." },
-  { id: 'l8', domain: 'career', direction: 'external', statement: "Success in life depends more on the opportunities you're given than on what you do with them." },
+  { id: 'l1', domain: 'academic', format: 'likert', direction: 'internal', statement: "When I commit to learning something new, I can usually figure it out with enough effort." },
+  { id: 'l2', domain: 'social', format: 'likert', direction: 'internal', statement: "I have the ability to resolve most conflicts in my relationships if I approach them thoughtfully." },
+  { id: 'l3', domain: 'health', format: 'likert', direction: 'internal', statement: "My physical and mental wellbeing are largely within my control." },
+  { id: 'l4', domain: 'career', format: 'likert', direction: 'internal', statement: "The path my life takes will mostly be shaped by my own choices and actions." },
+  { id: 'l5', domain: 'academic', format: 'likert', direction: 'external', statement: "Some people are naturally better at academics, and effort can only do so much to close that gap." },
+  { id: 'l6', domain: 'social', format: 'likert', direction: 'external', statement: "Whether people connect with you often comes down to chemistry that nobody can control." },
+  { id: 'l7', domain: 'health', format: 'likert', direction: 'external', statement: "Most serious health problems are a matter of genetics and circumstances, not personal choices." },
+  { id: 'l8', domain: 'career', format: 'likert', direction: 'external', statement: "Success in life depends more on the opportunities you're given than on what you do with them." },
 ];
 
 const LIKERT_LABELS = ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'];
@@ -224,11 +224,18 @@ const methodologyItems = [
     title: 'Spectrum Results, Not Fixed Labels',
     problem: 'Being told you\'re "external" or "internal" can become self-fulfilling. Multiple students raised concerns that an external score could reinforce learned helplessness — the label becomes the belief, confirming the very passivity the test is supposed to identify.',
     raisedBy: 'Nola Sherrod, Sarah Russell-Isaacs, Helen Rajabov, Olivia Reed, Edmond Choi, Elizabeth Vazquez',
-    solution: 'Results are presented as a position on a continuous spectrum, not a category. Language emphasizes that locus of control is a current tendency that shifts with experience, context, and personal growth. There are no fixed labels — only a snapshot of where you are right now.',
+    solution: 'Results are presented as a position on a continuous spectrum with percentage breakdowns, not a category. Language emphasizes that locus of control is a current tendency that shifts with experience, context, and personal growth.',
+  },
+  {
+    number: '08',
+    title: 'Instinct vs. Belief Comparison',
+    problem: 'The original test had one question format and one score, making it impossible to detect whether someone\'s instinctive reactions aligned with their stated beliefs. People often behave differently than they think they believe — and that disconnect is itself a valuable insight.',
+    raisedBy: 'Helen Rajabov (noted the gap between behavior and stated beliefs), Jonathan Shiell (noted the gap between "what I think I believe and what I actually believe")',
+    solution: 'Three question formats each measure a different cognitive layer: scenarios capture instinctive reactions, spectrum sliders capture comparative weighing, and Likert statements capture explicit beliefs. The results compare scores across formats, revealing whether your instincts, reflections, and stated beliefs align — or where they diverge.',
   },
 ];
 
-// --- SCORING ---
+// --- ADVANCED SCORING ENGINE ---
 const scoreLikert = (optionIndex, direction) => {
   const values = [0, 0.25, 0.5, 0.75, 1];
   if (direction === 'internal') {
@@ -238,55 +245,161 @@ const scoreLikert = (optionIndex, direction) => {
   }
 };
 
-const calculateResults = (answers) => {
-  const domainScores = {};
-  Object.keys(DOMAINS).forEach(d => { domainScores[d] = { total: 0, count: 0 }; });
+const calculateAdvancedResults = (answers) => {
+  // Domain scores
+  const domainData = {};
+  Object.keys(DOMAINS).forEach(d => {
+    domainData[d] = { scores: [], scenario: [], spectrum: [], likert: [] };
+  });
+
+  // Format scores
+  const formatData = { scenario: [], spectrum: [], likert: [] };
 
   Object.entries(answers).forEach(([qId, data]) => {
-    if (domainScores[data.domain]) {
-      domainScores[data.domain].total += data.score;
-      domainScores[data.domain].count += 1;
+    if (domainData[data.domain]) {
+      domainData[data.domain].scores.push(data.score);
+      if (data.format && domainData[data.domain][data.format]) {
+        domainData[data.domain][data.format].push(data.score);
+      }
+    }
+    if (data.format && formatData[data.format]) {
+      formatData[data.format].push(data.score);
     }
   });
 
-  const results = {};
+  // Calculate domain results
+  const domains = {};
   let overallTotal = 0;
   let overallCount = 0;
 
-  Object.entries(domainScores).forEach(([domain, { total, count }]) => {
-    const avg = count > 0 ? total / count : 0.5;
-    results[domain] = Math.round(avg * 100);
-    overallTotal += total;
-    overallCount += count;
+  Object.entries(domainData).forEach(([domain, data]) => {
+    const scores = data.scores;
+    const avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0.5;
+    const internalPct = Math.round((1 - avg) * 100);
+
+    // Consistency: standard deviation of scores in this domain
+    const mean = avg;
+    const variance = scores.length > 1
+      ? scores.reduce((sum, s) => sum + Math.pow(s - mean, 2), 0) / scores.length
+      : 0;
+    const stdDev = Math.sqrt(variance);
+
+    // Consistency classification
+    let consistency;
+    if (stdDev < 0.2) consistency = 'consistent';
+    else if (stdDev < 0.35) consistency = 'moderate';
+    else consistency = 'conflicted';
+
+    domains[domain] = {
+      internalPct,
+      externalPct: 100 - internalPct,
+      rawAvg: avg,
+      consistency,
+      stdDev: Math.round(stdDev * 100),
+      scenarioAvg: data.scenario.length > 0 ? data.scenario.reduce((a, b) => a + b, 0) / data.scenario.length : null,
+      spectrumAvg: data.spectrum.length > 0 ? data.spectrum.reduce((a, b) => a + b, 0) / data.spectrum.length : null,
+      likertAvg: data.likert.length > 0 ? data.likert.reduce((a, b) => a + b, 0) / data.likert.length : null,
+    };
+
+    overallTotal += scores.reduce((a, b) => a + b, 0);
+    overallCount += scores.length;
   });
 
-  results.overall = overallCount > 0 ? Math.round((overallTotal / overallCount) * 100) : 50;
-  return results;
+  // Overall
+  const overallAvg = overallCount > 0 ? overallTotal / overallCount : 0.5;
+  const overallInternalPct = Math.round((1 - overallAvg) * 100);
+
+  // Format comparison (instinct vs belief)
+  const formatAvg = (arr) => arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0.5;
+  const scenarioInternal = Math.round((1 - formatAvg(formatData.scenario)) * 100);
+  const spectrumInternal = Math.round((1 - formatAvg(formatData.spectrum)) * 100);
+  const likertInternal = Math.round((1 - formatAvg(formatData.likert)) * 100);
+
+  // Detect instinct vs belief gap
+  const maxFormat = Math.max(scenarioInternal, spectrumInternal, likertInternal);
+  const minFormat = Math.min(scenarioInternal, spectrumInternal, likertInternal);
+  const formatGap = maxFormat - minFormat;
+
+  let formatInsight = '';
+  if (formatGap < 10) {
+    formatInsight = 'Your instincts, reflections, and stated beliefs are well-aligned. You seem to have a clear and consistent sense of how much control you feel.';
+  } else if (formatGap < 25) {
+    formatInsight = 'There\'s a moderate gap between how you instinctively react and what you explicitly believe. This is common — most people have some disconnect between gut reactions and stated values.';
+  } else {
+    // Identify which layers diverge
+    if (scenarioInternal > likertInternal + 15) {
+      formatInsight = 'Your instinctive reactions are more internal than your stated beliefs. You may act with more personal agency than you give yourself credit for — your reflexes suggest more confidence in your own control than your conscious beliefs do.';
+    } else if (likertInternal > scenarioInternal + 15) {
+      formatInsight = 'Your stated beliefs are more internal than your instinctive reactions. You may intellectually believe in personal control, but your gut reactions in real situations lean more toward seeing external factors at play.';
+    } else {
+      formatInsight = 'There\'s a notable gap between different layers of your thinking. When you reflect comparatively, you weigh things differently than when you react instinctively or state beliefs directly.';
+    }
+  }
+
+  // Strongest and weakest domains
+  const domainEntries = Object.entries(domains);
+  const sorted = [...domainEntries].sort((a, b) => a[1].internalPct - b[1].internalPct);
+  const mostExternal = sorted[0];
+  const mostInternal = sorted[sorted.length - 1];
+  const domainSpread = mostInternal[1].internalPct - mostExternal[1].internalPct;
+
+  let domainInsight = '';
+  if (domainSpread < 10) {
+    domainInsight = `Your sense of control is relatively uniform across all domains. You don't differentiate much between areas of life when it comes to how much influence you feel you have.`;
+  } else {
+    domainInsight = `You feel most in control of ${DOMAINS[mostInternal[0]].name.toLowerCase()} outcomes (${mostInternal[1].internalPct}% internal) and least in control of ${DOMAINS[mostExternal[0]].name.toLowerCase()} outcomes (${mostExternal[1].internalPct}% internal) — a spread of ${domainSpread} points.`;
+  }
+
+  // Consistency across domains
+  const conflictedDomains = domainEntries.filter(([_, d]) => d.consistency === 'conflicted').map(([k]) => DOMAINS[k].name);
+
+  // Generate overall summary
+  let summary = '';
+  const label = getLabel(100 - overallInternalPct);
+
+  if (overallInternalPct >= 70) {
+    summary = `You have a predominantly internal locus of control (${overallInternalPct}% internal). You generally see yourself as the primary driver of your outcomes. `;
+  } else if (overallInternalPct >= 55) {
+    summary = `You lean internal (${overallInternalPct}% internal). You tend to attribute outcomes to your own actions more than to external forces, though you recognize both play a role. `;
+  } else if (overallInternalPct >= 45) {
+    summary = `You hold a balanced perspective (${overallInternalPct}% internal, ${100 - overallInternalPct}% external). You see outcomes as shaped by a genuine mix of personal effort and circumstance. `;
+  } else if (overallInternalPct >= 30) {
+    summary = `You lean external (${100 - overallInternalPct}% external). You tend to see outside forces as playing a significant role in how things turn out, while still acknowledging personal agency. `;
+  } else {
+    summary = `You have a predominantly external locus of control (${100 - overallInternalPct}% external). You tend to see most outcomes as shaped by factors beyond your direct control. `;
+  }
+
+  summary += domainInsight;
+
+  if (formatGap >= 20) {
+    summary += ` Notably, there's a meaningful gap between your instinctive reactions and stated beliefs, suggesting your relationship with control is more complex than a single number can capture.`;
+  }
+
+  if (conflictedDomains.length > 0) {
+    summary += ` You show internal tension in ${conflictedDomains.join(' and ').toLowerCase()}, where your answers pulled in opposing directions — this may reflect genuine ambivalence or context-dependent beliefs in ${conflictedDomains.length === 1 ? 'that area' : 'those areas'}.`;
+  }
+
+  return {
+    overall: { internalPct: overallInternalPct, externalPct: 100 - overallInternalPct, label },
+    domains,
+    format: { scenario: scenarioInternal, spectrum: spectrumInternal, likert: likertInternal, gap: formatGap, insight: formatInsight },
+    insights: { domainInsight, domainSpread, mostInternal: mostInternal[0], mostExternal: mostExternal[0], conflictedDomains },
+    summary,
+  };
 };
 
-const getInterpretation = (score, domain) => {
-  const domainName = DOMAINS[domain]?.name || '';
-  if (score <= 20) return `You believe ${domainName.toLowerCase()} outcomes are almost entirely within your control. You see your own effort and decisions as the primary drivers.`;
-  if (score <= 40) return `You generally see yourself as the main influence on your ${domainName.toLowerCase()} outcomes, while acknowledging that some external factors play a role.`;
-  if (score <= 60) return `You see ${domainName.toLowerCase()} outcomes as shaped by a mix of your own actions and circumstances beyond your control.`;
-  if (score <= 80) return `You tend to see ${domainName.toLowerCase()} outcomes as significantly influenced by external factors, though you recognize your actions still matter.`;
-  return `You believe ${domainName.toLowerCase()} outcomes are largely shaped by forces outside your direct influence.`;
-};
-
-const getOverallInterpretation = (score) => {
-  if (score <= 20) return "You have a strongly internal orientation — you tend to see yourself as the primary architect of your outcomes across most areas of life.";
-  if (score <= 40) return "You lean internal — you generally believe your actions and choices are the biggest factor in your outcomes, with some recognition of external influences.";
-  if (score <= 60) return "You hold a balanced perspective — you see life outcomes as a product of both personal effort and external circumstances, depending on the situation.";
-  if (score <= 80) return "You lean external — you tend to see forces outside your control as playing a significant role in how things turn out, while still valuing personal effort.";
-  return "You have a strongly external orientation — you tend to see most outcomes as shaped by luck, timing, other people, or circumstances beyond your influence.";
-};
-
-const getLabel = (score) => {
-  if (score <= 20) return 'Strongly Internal';
-  if (score <= 40) return 'Mostly Internal';
-  if (score <= 60) return 'Balanced';
-  if (score <= 80) return 'Mostly External';
+const getLabel = (externalScore) => {
+  if (externalScore <= 20) return 'Strongly Internal';
+  if (externalScore <= 40) return 'Mostly Internal';
+  if (externalScore <= 60) return 'Balanced';
+  if (externalScore <= 80) return 'Mostly External';
   return 'Strongly External';
+};
+
+const getConsistencyLabel = (c) => {
+  if (c === 'consistent') return 'Consistent';
+  if (c === 'moderate') return 'Moderate';
+  return 'Mixed signals';
 };
 
 
@@ -301,7 +414,6 @@ const LocusOfControlPage = () => {
   const [sliderTouched, setSliderTouched] = useState(false);
   const [fade, setFade] = useState(true);
 
-  // Shuffle questions and options on mount
   const sections = useMemo(() => {
     const shuffledScenarios = shuffleArray(scenarioQuestions).map(q => ({
       ...q, type: 'scenario', options: shuffleArray(q.options)
@@ -346,7 +458,7 @@ const LocusOfControlPage = () => {
     }
     setAnswers(prev => ({
       ...prev,
-      [q.id]: { score: finalScore, domain: q.domain, optionIndex }
+      [q.id]: { score: finalScore, domain: q.domain, format: q.format || q.type, optionIndex }
     }));
   };
 
@@ -357,7 +469,7 @@ const LocusOfControlPage = () => {
     const score = value / 100;
     setAnswers(prev => ({
       ...prev,
-      [q.id]: { score, domain: q.domain, optionIndex: value }
+      [q.id]: { score, domain: q.domain, format: q.format || 'spectrum', optionIndex: value }
     }));
   };
 
@@ -381,15 +493,7 @@ const LocusOfControlPage = () => {
     });
   };
 
-  const handleBegin = () => {
-    setPhase('sectionIntro');
-  };
-
-  const handleSectionStart = () => {
-    setPhase('test');
-  };
-
-  const results = phase === 'results' ? calculateResults(answers) : null;
+  const results = phase === 'results' ? calculateAdvancedResults(answers) : null;
 
   // --- INTRO ---
   if (phase === 'intro') {
@@ -413,7 +517,7 @@ const LocusOfControlPage = () => {
               than a label. It takes about 5 minutes.
             </p>
             <button
-              onClick={handleBegin}
+              onClick={() => setPhase('sectionIntro')}
               className="inline-flex items-center gap-3 px-10 py-4 bg-stone-800 text-white font-medium rounded-xl hover:bg-stone-700 transition-all hover:-translate-y-0.5 shadow-lg shadow-stone-900/15 text-lg"
             >
               Begin
@@ -453,7 +557,7 @@ const LocusOfControlPage = () => {
             <h2 className="text-2xl md:text-3xl font-serif text-stone-800 mb-4">{sec.name}</h2>
             <p className="text-stone-500 leading-relaxed font-light mb-10">{sec.description}</p>
             <button
-              onClick={handleSectionStart}
+              onClick={() => setPhase('test')}
               className="inline-flex items-center gap-2 px-8 py-3 bg-stone-800 text-white font-medium rounded-xl hover:bg-stone-700 transition-all"
             >
               Continue
@@ -469,7 +573,6 @@ const LocusOfControlPage = () => {
   if (phase === 'test' && currentQuestion) {
     return (
       <div className="min-h-screen flex flex-col" style={{ background: '#faf9f6' }}>
-        {/* Progress */}
         <header className="py-4 px-6 flex-shrink-0">
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center justify-between mb-2">
@@ -484,7 +587,6 @@ const LocusOfControlPage = () => {
           </div>
         </header>
 
-        {/* Question */}
         <main className="flex-1 flex items-center justify-center px-6 py-8">
           <div className={`max-w-2xl w-full transition-all duration-250 ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
 
@@ -619,65 +721,142 @@ const LocusOfControlPage = () => {
 
   // --- RESULTS ---
   if (phase === 'results' && results) {
+    const r = results;
     return (
       <div className="min-h-screen" style={{ background: '#faf9f6' }}>
         <a href="/" className="fixed top-6 left-6 text-stone-400 hover:text-stone-600 transition-colors z-40 text-sm">← Back</a>
 
-        {/* Results Header */}
-        <header className="pt-20 pb-12 px-6">
+        {/* Header */}
+        <header className="pt-20 pb-8 px-6">
           <div className="max-w-2xl mx-auto text-center animate-locFadeUp">
             <p className="text-stone-400 text-xs tracking-[0.3em] uppercase mb-4">Your Results</p>
             <h1 className="text-3xl md:text-4xl font-serif text-stone-800 mb-3">Locus of Control Profile</h1>
-            <p className="text-stone-500 font-light">A snapshot of how you perceive control across four areas of life</p>
           </div>
         </header>
 
-        {/* Overall Score */}
-        <section className="px-6 pb-12">
+        {/* Overall Score — Big Number */}
+        <section className="px-6 pb-10">
           <div className="max-w-2xl mx-auto animate-locFadeUp" style={{ animationDelay: '0.1s' }}>
-            <div className="bg-white rounded-2xl border border-stone-200/60 p-8 shadow-sm">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-sm text-stone-400 tracking-wide uppercase">Overall Orientation</h3>
-                <span className="text-sm font-medium text-stone-600">{getLabel(results.overall)}</span>
+            <div className="bg-white rounded-2xl border border-stone-200/60 p-8 shadow-sm text-center">
+              <div className="flex items-center justify-center gap-4 mb-2">
+                <span className="text-5xl md:text-6xl font-light text-stone-800">{r.overall.internalPct}%</span>
+                <div className="text-left">
+                  <span className="text-sm text-stone-400 block">Internal</span>
+                  <span className="text-sm text-stone-400 block">{r.overall.externalPct}% External</span>
+                </div>
               </div>
-              <SpectrumBar score={results.overall} color="#78716c" />
-              <p className="mt-6 text-stone-600 font-light leading-relaxed">{getOverallInterpretation(results.overall)}</p>
+              <SpectrumBar score={100 - r.overall.internalPct} color="#78716c" />
+              <p className="mt-6 text-stone-600 font-light leading-relaxed text-sm">{r.summary}</p>
             </div>
           </div>
         </section>
 
-        {/* Domain Scores */}
-        <section className="px-6 pb-16">
-          <div className="max-w-2xl mx-auto space-y-4">
-            {Object.entries(DOMAINS).map(([key, domain], i) => (
-              <div
-                key={key}
-                className="bg-white rounded-2xl border border-stone-200/60 p-6 shadow-sm animate-locFadeUp"
-                style={{ animationDelay: `${0.15 + i * 0.05}s` }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: domain.fill }} />
-                    <h3 className="text-stone-700 font-medium">{domain.name}</h3>
+        {/* Domain Breakdown */}
+        <section className="px-6 pb-10">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-xs text-stone-400 tracking-[0.2em] uppercase mb-4 animate-locFadeUp" style={{ animationDelay: '0.15s' }}>By Domain</h2>
+            <div className="space-y-3">
+              {Object.entries(DOMAINS).map(([key, domain], i) => {
+                const d = r.domains[key];
+                return (
+                  <div
+                    key={key}
+                    className="bg-white rounded-2xl border border-stone-200/60 p-6 shadow-sm animate-locFadeUp"
+                    style={{ animationDelay: `${0.2 + i * 0.05}s` }}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-3">
+                        <div className="w-2.5 h-2.5 rounded-full" style={{ background: domain.fill }} />
+                        <h3 className="text-stone-700 font-medium">{domain.name}</h3>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {d.consistency === 'conflicted' && (
+                          <span className="text-[10px] text-stone-400 bg-stone-100 px-2 py-0.5 rounded-full">Mixed signals</span>
+                        )}
+                        <span className="text-lg font-light text-stone-700">{d.internalPct}%<span className="text-xs text-stone-400 ml-1">int</span></span>
+                      </div>
+                    </div>
+                    <SpectrumBar score={100 - d.internalPct} color={domain.fill} />
                   </div>
-                  <span className="text-sm text-stone-400">{getLabel(results[key])}</span>
-                </div>
-                <SpectrumBar score={results[key]} color={domain.fill} />
-                <p className="mt-4 text-stone-500 font-light text-sm leading-relaxed">{getInterpretation(results[key], key)}</p>
-              </div>
-            ))}
+                );
+              })}
+            </div>
           </div>
         </section>
+
+        {/* Instinct vs Belief */}
+        <section className="px-6 pb-10">
+          <div className="max-w-2xl mx-auto animate-locFadeUp" style={{ animationDelay: '0.45s' }}>
+            <h2 className="text-xs text-stone-400 tracking-[0.2em] uppercase mb-4">Instinct vs. Belief</h2>
+            <div className="bg-white rounded-2xl border border-stone-200/60 p-6 shadow-sm">
+              <div className="space-y-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-sm">⚡</div>
+                    <div>
+                      <p className="text-stone-700 text-sm font-medium">Instinctive reactions</p>
+                      <p className="text-stone-400 text-xs">From scenario questions</p>
+                    </div>
+                  </div>
+                  <span className="text-stone-700 font-medium">{r.format.scenario}%<span className="text-xs text-stone-400 ml-1">int</span></span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-sm">⚖️</div>
+                    <div>
+                      <p className="text-stone-700 text-sm font-medium">Comparative weighing</p>
+                      <p className="text-stone-400 text-xs">From perspective sliders</p>
+                    </div>
+                  </div>
+                  <span className="text-stone-700 font-medium">{r.format.spectrum}%<span className="text-xs text-stone-400 ml-1">int</span></span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-sm">💬</div>
+                    <div>
+                      <p className="text-stone-700 text-sm font-medium">Stated beliefs</p>
+                      <p className="text-stone-400 text-xs">From agreement ratings</p>
+                    </div>
+                  </div>
+                  <span className="text-stone-700 font-medium">{r.format.likert}%<span className="text-xs text-stone-400 ml-1">int</span></span>
+                </div>
+              </div>
+              {r.format.gap >= 10 && (
+                <div className="pt-4 border-t border-stone-100">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs font-medium text-stone-500">{r.format.gap}pt gap detected</span>
+                  </div>
+                  <p className="text-stone-500 font-light text-sm leading-relaxed">{r.format.insight}</p>
+                </div>
+              )}
+              {r.format.gap < 10 && (
+                <div className="pt-4 border-t border-stone-100">
+                  <p className="text-stone-500 font-light text-sm leading-relaxed">{r.format.insight}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Key Insight Callout */}
+        {r.insights.domainSpread >= 15 && (
+          <section className="px-6 pb-10">
+            <div className="max-w-2xl mx-auto animate-locFadeUp" style={{ animationDelay: '0.5s' }}>
+              <div className="bg-stone-100/50 rounded-2xl p-6 border border-stone-200/50">
+                <p className="text-stone-600 font-light text-sm leading-relaxed">
+                  <span className="font-medium">Key insight:</span> {r.insights.domainInsight}
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Framing note */}
         <section className="px-6 pb-16">
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-stone-100/50 rounded-2xl p-6 border border-stone-200/50 animate-locFadeUp" style={{ animationDelay: '0.4s' }}>
-              <p className="text-stone-500 font-light text-sm leading-relaxed text-center">
-                This profile reflects your <em>current tendencies</em>, not a fixed trait. Locus of control shifts with experience, context, and personal growth.
-                A balanced orientation isn't inherently better or worse than leaning internal or external — each carries its own strengths and blind spots.
-              </p>
-            </div>
+          <div className="max-w-2xl mx-auto animate-locFadeUp" style={{ animationDelay: '0.55s' }}>
+            <p className="text-stone-400 font-light text-xs leading-relaxed text-center">
+              This profile reflects your <em>current tendencies</em>, not a fixed trait. Locus of control shifts with experience, context, and personal growth.
+            </p>
           </div>
         </section>
 
@@ -690,10 +869,10 @@ const LocusOfControlPage = () => {
           </div>
         </div>
 
-        {/* Methodology Section */}
+        {/* Methodology */}
         <section className="px-6 pt-12 pb-24">
           <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-12 animate-locFadeUp" style={{ animationDelay: '0.5s' }}>
+            <div className="text-center mb-12 animate-locFadeUp" style={{ animationDelay: '0.6s' }}>
               <p className="text-stone-400 text-xs tracking-[0.3em] uppercase mb-4">Methodology</p>
               <h2 className="text-2xl md:text-3xl font-serif text-stone-800 mb-3">Why This Version Is Better</h2>
               <p className="text-stone-500 font-light leading-relaxed">
@@ -707,23 +886,20 @@ const LocusOfControlPage = () => {
                 <div
                   key={item.number}
                   className="bg-white rounded-2xl border border-stone-200/60 p-6 md:p-8 shadow-sm animate-locFadeUp"
-                  style={{ animationDelay: `${0.55 + i * 0.05}s` }}
+                  style={{ animationDelay: `${0.65 + i * 0.05}s` }}
                 >
                   <div className="flex items-start gap-5">
                     <span className="text-stone-300 text-sm font-light mt-1 flex-shrink-0">{item.number}</span>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-stone-800 font-medium text-lg mb-3">{item.title}</h3>
-
                       <div className="mb-4">
                         <p className="text-stone-400 text-xs tracking-wide uppercase mb-1.5">The Problem</p>
                         <p className="text-stone-600 font-light leading-relaxed text-sm">{item.problem}</p>
                       </div>
-
                       <div className="mb-4">
                         <p className="text-stone-400 text-xs tracking-wide uppercase mb-1.5">Identified By</p>
                         <p className="text-stone-500 font-light text-sm italic">{item.raisedBy}</p>
                       </div>
-
                       <div>
                         <p className="text-stone-400 text-xs tracking-wide uppercase mb-1.5">How This Version Solves It</p>
                         <p className="text-stone-600 font-light leading-relaxed text-sm">{item.solution}</p>
@@ -753,26 +929,19 @@ const LocusOfControlPage = () => {
   return null;
 };
 
-// --- SPECTRUM BAR COMPONENT ---
+// --- SPECTRUM BAR ---
 const SpectrumBar = ({ score, color }) => {
-  const clampedScore = Math.max(0, Math.min(100, score));
+  const c = Math.max(0, Math.min(100, score));
   return (
     <div>
       <div className="relative h-2 bg-stone-100 rounded-full overflow-visible">
         <div
           className="absolute top-0 left-0 h-full rounded-full transition-all duration-700 ease-out"
-          style={{
-            width: `${clampedScore}%`,
-            background: `linear-gradient(90deg, ${color}20, ${color}60)`,
-          }}
+          style={{ width: `${c}%`, background: `linear-gradient(90deg, ${color}20, ${color}60)` }}
         />
         <div
           className="absolute top-1/2 w-4 h-4 rounded-full shadow-md border-2 border-white transition-all duration-700 ease-out"
-          style={{
-            left: `${clampedScore}%`,
-            transform: `translateX(-50%) translateY(-50%)`,
-            background: color,
-          }}
+          style={{ left: `${c}%`, transform: 'translateX(-50%) translateY(-50%)', background: color }}
         />
       </div>
       <div className="flex justify-between mt-2">
@@ -793,7 +962,6 @@ const locStyles = `
     opacity: 0;
     animation: locFadeUp 0.6s ease-out forwards;
   }
-  
   .loc-slider {
     -webkit-appearance: none;
     appearance: none;
