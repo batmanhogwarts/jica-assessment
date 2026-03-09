@@ -111,70 +111,54 @@ const scenarioQuestions = [
   },
 ];
 
-const forcedChoiceQuestions = [
+const spectrumQuestions = [
   {
-    id: 'fc1', domain: 'academic',
+    id: 'sp1', domain: 'academic',
     prompt: 'When I do well in school, it\'s usually because...',
-    options: [
-      { text: "I found the right approach and put in consistent effort.", score: 0 },
-      { text: "The material aligned with how I naturally think and learn.", score: 1 },
-    ]
+    left: "I found the right approach and put in consistent effort.",
+    right: "The material aligned with how I naturally think and learn.",
   },
   {
-    id: 'fc2', domain: 'social',
+    id: 'sp2', domain: 'social',
     prompt: 'When there\'s tension between me and someone, it\'s usually because...',
-    options: [
-      { text: "I wasn't clear enough in how I communicated.", score: 0 },
-      { text: "People see the world from very different angles sometimes.", score: 1 },
-    ]
+    left: "I wasn't clear enough in how I communicated.",
+    right: "People see the world from very different angles sometimes.",
   },
   {
-    id: 'fc3', domain: 'health',
+    id: 'sp3', domain: 'health',
     prompt: 'My overall energy and wellbeing are mostly shaped by...',
-    options: [
-      { text: "The habits and daily routines I choose to maintain.", score: 0 },
-      { text: "Factors like genetics, seasonal changes, and life stress.", score: 1 },
-    ]
+    left: "The habits and daily routines I choose to maintain.",
+    right: "Factors like genetics, seasonal changes, and life stress.",
   },
   {
-    id: 'fc4', domain: 'career',
+    id: 'sp4', domain: 'career',
     prompt: 'People who end up where they want to be in life usually got there because...',
-    options: [
-      { text: "They stayed focused and made strategic sacrifices.", score: 0 },
-      { text: "The right doors opened for them at the right time.", score: 1 },
-    ]
+    left: "They stayed focused and made strategic sacrifices.",
+    right: "The right doors opened for them at the right time.",
   },
   {
-    id: 'fc5', domain: 'academic',
+    id: 'sp5', domain: 'academic',
     prompt: 'When I struggle with a new subject or skill...',
-    options: [
-      { text: "It usually means I need to try a different approach or put in more time.", score: 0 },
-      { text: "Some things just don't come naturally to certain people.", score: 1 },
-    ]
+    left: "It usually means I need to try a different approach or put in more time.",
+    right: "Some things just don't come naturally to certain people.",
   },
   {
-    id: 'fc6', domain: 'social',
+    id: 'sp6', domain: 'social',
     prompt: 'The quality of my closest friendships depends mostly on...',
-    options: [
-      { text: "How much honesty and effort I bring to those relationships.", score: 0 },
-      { text: "Whether our personalities naturally complement each other.", score: 1 },
-    ]
+    left: "How much honesty and effort I bring to those relationships.",
+    right: "Whether our personalities naturally complement each other.",
   },
   {
-    id: 'fc7', domain: 'health',
+    id: 'sp7', domain: 'health',
     prompt: 'When it comes to staying healthy...',
-    options: [
-      { text: "Good habits like sleep, nutrition, and hygiene make the biggest difference.", score: 0 },
-      { text: "Some people are just more susceptible to illness regardless of lifestyle.", score: 1 },
-    ]
+    left: "Good habits like sleep, nutrition, and hygiene make the biggest difference.",
+    right: "Some people are just more susceptible to illness regardless of lifestyle.",
   },
   {
-    id: 'fc8', domain: 'career',
+    id: 'sp8', domain: 'career',
     prompt: 'Ten years from now, where I am in life will mostly reflect...',
-    options: [
-      { text: "The decisions and priorities I'm setting right now.", score: 0 },
-      { text: "How the world around me happens to unfold.", score: 1 },
-    ]
+    left: "The decisions and priorities I'm setting right now.",
+    right: "How the world around me happens to unfold.",
   },
 ];
 
@@ -198,21 +182,21 @@ const methodologyItems = [
     title: 'From Binary to Multi-Format',
     problem: 'The original test used only yes/no answers. Nearly every respondent noted this couldn\'t capture how people actually think about control — forcing extremes on what is almost always a nuanced, situational belief.',
     raisedBy: 'Haram Park (suggested Likert scale), Lev Newhall, Nola Sherrod, Dael Song, Alec Siegal, Clarissa Castanon, June Oh',
-    solution: 'This version uses three distinct question formats across three sections: realistic scenarios with four interpretive options, forced-choice pairs between equally valid perspectives, and a five-point agreement scale. No question on this test has only two answers.',
+    solution: 'This version uses three distinct question formats across three sections: realistic scenarios with four interpretive options, a continuous spectrum slider between two valid perspectives, and a five-point agreement scale. No question on this test has only two answers.',
   },
   {
     number: '02',
     title: 'Neutralizing Social Desirability',
     problem: 'When you can tell which answer is the "right" one, people perform rather than reflect. Multiple students noted they answered to look good or picked what felt socially acceptable rather than what they actually believed.',
     raisedBy: 'Alec Siegal (named the bias explicitly), Haram Park, Brenna Reilly, Davis Kim (noted scoring was transparent), Christopher Shiell (discovered the algorithm by clicking on cells)',
-    solution: 'Forced-choice pairs present two genuinely reasonable perspectives — neither option looks "better." Scenario questions offer four plausible interpretations where the internal/external mapping isn\'t obvious. The scoring logic is not visible to the test-taker.',
+    solution: 'The spectrum slider presents two genuinely reasonable perspectives with no "better" side — you simply position yourself between them. Scenario questions offer four plausible interpretations where the internal/external mapping isn\'t obvious. The scoring logic is not visible to the test-taker.',
   },
   {
     number: '03',
     title: 'Breaking the Priming Effect',
     problem: 'The original survey grouped similar questions together. When several parent-related or luck-related questions appeared in a row, respondents felt pushed toward consistency rather than honest reflection — their earlier answers shaped their later ones.',
     raisedBy: 'Nitya Kannepalli (identified the pattern), Jonathan Shiell (expanded on the systemic implication)',
-    solution: 'Questions are randomized within each section so the same domain never appears twice in a row. The three different formats also serve as natural pattern-breakers — switching from scenarios to forced-choice to scaled statements resets the respondent\'s mental framing.',
+    solution: 'Questions are randomized within each section so the same domain never appears twice in a row. The three different formats also serve as natural pattern-breakers — switching from scenarios to spectrum sliders to scaled statements resets the respondent\'s mental framing.',
   },
   {
     number: '04',
@@ -246,14 +230,11 @@ const methodologyItems = [
 
 // --- SCORING ---
 const scoreLikert = (optionIndex, direction) => {
-  // optionIndex: 0=SD, 1=D, 2=N, 3=A, 4=SA
   const values = [0, 0.25, 0.5, 0.75, 1];
   if (direction === 'internal') {
-    // Agree with internal statement = internal (low score)
-    return values[4 - optionIndex]; // SA=0, SD=1
+    return values[4 - optionIndex];
   } else {
-    // Agree with external statement = external (high score)
-    return values[optionIndex]; // SD=0, SA=1
+    return values[optionIndex];
   }
 };
 
@@ -316,6 +297,8 @@ const LocusOfControlPage = () => {
   const [questionIdx, setQuestionIdx] = useState(0);
   const [answers, setAnswers] = useState({});
   const [selected, setSelected] = useState(null);
+  const [sliderValue, setSliderValue] = useState(50);
+  const [sliderTouched, setSliderTouched] = useState(false);
   const [fade, setFade] = useState(true);
 
   // Shuffle questions and options on mount
@@ -323,8 +306,8 @@ const LocusOfControlPage = () => {
     const shuffledScenarios = shuffleArray(scenarioQuestions).map(q => ({
       ...q, type: 'scenario', options: shuffleArray(q.options)
     }));
-    const shuffledForced = shuffleArray(forcedChoiceQuestions).map(q => ({
-      ...q, type: 'forced', options: shuffleArray(q.options)
+    const shuffledSpectrum = shuffleArray(spectrumQuestions).map(q => ({
+      ...q, type: 'spectrum'
     }));
     const shuffledLikert = shuffleArray(likertQuestions).map(q => ({
       ...q, type: 'likert'
@@ -332,7 +315,7 @@ const LocusOfControlPage = () => {
 
     return [
       { name: 'Situations', description: 'Read each scenario and choose the response that feels closest to your genuine first reaction. There are no right or wrong answers.', questions: shuffledScenarios },
-      { name: 'Perspectives', description: 'For each prompt, choose the perspective that better reflects what you actually believe. Both options are valid — pick the one closer to your truth.', questions: shuffledForced },
+      { name: 'Perspectives', description: 'For each prompt, two perspectives sit at opposite ends of a slider. Drag to where you actually fall between them — you don\'t have to pick a side.', questions: shuffledSpectrum },
       { name: 'Reflections', description: 'Rate how much you agree or disagree with each statement. Go with your gut.', questions: shuffledLikert },
     ];
   }, []);
@@ -348,6 +331,8 @@ const LocusOfControlPage = () => {
     setTimeout(() => {
       callback();
       setSelected(null);
+      setSliderValue(50);
+      setSliderTouched(false);
       setFade(true);
     }, 250);
   }, []);
@@ -365,8 +350,24 @@ const LocusOfControlPage = () => {
     }));
   };
 
+  const handleSliderChange = (value) => {
+    setSliderValue(value);
+    setSliderTouched(true);
+    const q = currentQuestion;
+    const score = value / 100;
+    setAnswers(prev => ({
+      ...prev,
+      [q.id]: { score, domain: q.domain, optionIndex: value }
+    }));
+  };
+
+  const isAnswered = () => {
+    if (currentQuestion?.type === 'spectrum') return sliderTouched;
+    return selected !== null;
+  };
+
   const handleContinue = () => {
-    if (selected === null) return;
+    if (!isAnswered()) return;
     transition(() => {
       if (questionIdx < currentSection.questions.length - 1) {
         setQuestionIdx(questionIdx + 1);
@@ -512,24 +513,54 @@ const LocusOfControlPage = () => {
               </div>
             )}
 
-            {/* FORCED CHOICE */}
-            {currentQuestion.type === 'forced' && (
+            {/* SPECTRUM SLIDER */}
+            {currentQuestion.type === 'spectrum' && (
               <div>
-                <p className="text-stone-800 text-xl md:text-2xl font-serif leading-relaxed mb-8 text-center">{currentQuestion.prompt}</p>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {currentQuestion.options.map((opt, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleSelect(i, opt.score)}
-                      className={`text-left p-6 rounded-xl border transition-all duration-200 min-h-[120px] flex items-center ${
-                        selected === i
-                          ? 'bg-stone-800 border-stone-800 text-white shadow-lg'
-                          : 'bg-white border-stone-200 text-stone-700 hover:border-stone-300 hover:shadow-sm'
-                      }`}
-                    >
-                      <span className="font-light leading-relaxed">{opt.text}</span>
-                    </button>
-                  ))}
+                <p className="text-stone-800 text-xl md:text-2xl font-serif leading-relaxed mb-10 text-center">{currentQuestion.prompt}</p>
+                <div className="bg-white rounded-2xl border border-stone-200/60 p-6 md:p-8">
+                  <div className="flex justify-between items-start gap-6 mb-8">
+                    <p className={`text-sm leading-relaxed flex-1 transition-all duration-300 ${
+                      sliderTouched && sliderValue < 40 ? 'text-stone-800 font-medium' : 'text-stone-500 font-light'
+                    }`}>
+                      {currentQuestion.left}
+                    </p>
+                    <p className={`text-sm leading-relaxed flex-1 text-right transition-all duration-300 ${
+                      sliderTouched && sliderValue > 60 ? 'text-stone-800 font-medium' : 'text-stone-500 font-light'
+                    }`}>
+                      {currentQuestion.right}
+                    </p>
+                  </div>
+                  <div className="relative px-1">
+                    <div className="absolute top-1/2 left-0 right-0 h-2 bg-stone-100 rounded-full -translate-y-1/2" />
+                    <div
+                      className="absolute top-1/2 left-0 h-2 rounded-full -translate-y-1/2 transition-all duration-100"
+                      style={{
+                        width: `${sliderValue}%`,
+                        background: `linear-gradient(90deg, #78716c40, #78716c90)`,
+                      }}
+                    />
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={sliderValue}
+                      onChange={(e) => handleSliderChange(parseInt(e.target.value))}
+                      className="loc-slider relative w-full h-2 appearance-none bg-transparent cursor-pointer z-10"
+                    />
+                  </div>
+                  <div className="flex justify-between mt-3">
+                    <span className="text-[11px] text-stone-300 uppercase tracking-wider">Internal</span>
+                    <span className={`text-[11px] transition-all duration-200 ${sliderTouched ? 'text-stone-500' : 'text-stone-300'}`}>
+                      {sliderTouched ? (
+                        sliderValue < 30 ? 'Leaning internal' :
+                        sliderValue < 45 ? 'Slightly internal' :
+                        sliderValue <= 55 ? 'Balanced' :
+                        sliderValue <= 70 ? 'Slightly external' :
+                        'Leaning external'
+                      ) : 'Drag to respond'}
+                    </span>
+                    <span className="text-[11px] text-stone-300 uppercase tracking-wider">External</span>
+                  </div>
                 </div>
               </div>
             )}
@@ -549,11 +580,15 @@ const LocusOfControlPage = () => {
                           : 'hover:bg-stone-100'
                       }`}
                     >
-                      <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 transition-all ${
+                      <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full transition-all flex items-center justify-center ${
                         selected === i
-                          ? 'bg-white border-white scale-110'
-                          : 'border-stone-300 bg-white'
-                      }`} />
+                          ? 'scale-110'
+                          : 'border-2 border-stone-300 bg-white'
+                      }`}>
+                        {selected === i && (
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7"/></svg>
+                        )}
+                      </div>
                       <span className={`text-[10px] sm:text-xs leading-tight text-center transition-colors ${
                         selected === i ? 'text-white font-medium' : 'text-stone-400'
                       }`}>
@@ -566,7 +601,7 @@ const LocusOfControlPage = () => {
             )}
 
             {/* Continue button */}
-            <div className={`mt-10 flex justify-center transition-all duration-300 ${selected !== null ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}>
+            <div className={`mt-10 flex justify-center transition-all duration-300 ${isAnswered() ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}>
               <button
                 onClick={handleContinue}
                 className="inline-flex items-center gap-2 px-8 py-3 bg-stone-800 text-white font-medium rounded-xl hover:bg-stone-700 transition-all"
@@ -622,7 +657,7 @@ const LocusOfControlPage = () => {
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className={`w-2.5 h-2.5 rounded-full`} style={{ background: domain.fill }} />
+                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: domain.fill }} />
                     <h3 className="text-stone-700 font-medium">{domain.name}</h3>
                   </div>
                   <span className="text-sm text-stone-400">{getLabel(results[key])}</span>
@@ -724,7 +759,6 @@ const SpectrumBar = ({ score, color }) => {
   return (
     <div>
       <div className="relative h-2 bg-stone-100 rounded-full overflow-visible">
-        {/* Fill */}
         <div
           className="absolute top-0 left-0 h-full rounded-full transition-all duration-700 ease-out"
           style={{
@@ -732,9 +766,8 @@ const SpectrumBar = ({ score, color }) => {
             background: `linear-gradient(90deg, ${color}20, ${color}60)`,
           }}
         />
-        {/* Marker */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full shadow-md border-2 border-white transition-all duration-700 ease-out"
+          className="absolute top-1/2 w-4 h-4 rounded-full shadow-md border-2 border-white transition-all duration-700 ease-out"
           style={{
             left: `${clampedScore}%`,
             transform: `translateX(-50%) translateY(-50%)`,
@@ -759,6 +792,42 @@ const locStyles = `
   .animate-locFadeUp {
     opacity: 0;
     animation: locFadeUp 0.6s ease-out forwards;
+  }
+  
+  .loc-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: transparent;
+    outline: none;
+  }
+  .loc-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #44403c;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .loc-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  }
+  .loc-slider::-webkit-slider-thumb:active {
+    transform: scale(1.05);
+  }
+  .loc-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #44403c;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
 `;
 
