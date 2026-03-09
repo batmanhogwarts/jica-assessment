@@ -12,10 +12,10 @@ const shuffleArray = (arr) => {
 
 // --- DOMAIN DEFINITIONS ---
 const DOMAINS = {
-  academic: { name: 'Academic', accent: 'blue', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', fill: '#3b82f6', light: '#dbeafe' },
-  social: { name: 'Social', accent: 'violet', bg: 'bg-violet-50', text: 'text-violet-700', border: 'border-violet-200', fill: '#8b5cf6', light: '#ede9fe' },
-  health: { name: 'Health & Wellbeing', accent: 'emerald', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', fill: '#10b981', light: '#d1fae5' },
-  career: { name: 'Career & Future', accent: 'amber', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', fill: '#f59e0b', light: '#fef3c7' },
+  academic: { name: 'Academic', fill: '#78716c', light: '#f5f5f4' },
+  social: { name: 'Social', fill: '#a18072', light: '#faf5f3' },
+  health: { name: 'Health & Wellbeing', fill: '#8a9a7b', light: '#f4f7f2' },
+  career: { name: 'Career & Future', fill: '#b0a08a', light: '#faf8f5' },
 };
 
 // --- QUESTION DATA ---
@@ -533,7 +533,7 @@ const LocusOfControlPage = () => {
                   <div className="relative px-1">
                     <div className="absolute top-1/2 left-0 right-0 h-2 bg-stone-100 rounded-full -translate-y-1/2" />
                     <div
-                      className="absolute top-1/2 left-0 h-2 rounded-full -translate-y-1/2 transition-all duration-100"
+                      className="absolute top-1/2 left-0 h-2 rounded-full -translate-y-1/2"
                       style={{
                         width: `${sliderValue}%`,
                         background: `linear-gradient(90deg, #78716c40, #78716c90)`,
