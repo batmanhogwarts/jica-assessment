@@ -792,7 +792,9 @@ const LocusOfControlPage = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-sm">⚡</div>
+                    <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
+                    </div>
                     <div>
                       <p className="text-stone-700 text-sm font-medium">Instinctive reactions</p>
                       <p className="text-stone-400 text-xs">From scenario questions</p>
@@ -802,7 +804,9 @@ const LocusOfControlPage = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-sm">⚖️</div>
+                    <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971z" /></svg>
+                    </div>
                     <div>
                       <p className="text-stone-700 text-sm font-medium">Comparative weighing</p>
                       <p className="text-stone-400 text-xs">From perspective sliders</p>
@@ -812,7 +816,9 @@ const LocusOfControlPage = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-sm">💬</div>
+                    <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" /></svg>
+                    </div>
                     <div>
                       <p className="text-stone-700 text-sm font-medium">Stated beliefs</p>
                       <p className="text-stone-400 text-xs">From agreement ratings</p>
